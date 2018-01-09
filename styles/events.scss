@@ -39,8 +39,8 @@
   .description {
     white-space: pre-wrap;
     font-weight: 400;
-    font-size: 18px;
     margin-top: 20px;
+    text-align: justify;
   }
 
   a {
@@ -62,5 +62,13 @@
     font-size: 16px;
     font-weight: bold;
     text-transform: uppercase;
+    text-align: right;
+  }
+
+  .phone {
+    margin-top: 10px;
+    font-size: 18px;
+    color: orange;
+    text-align: right;
   }
 }

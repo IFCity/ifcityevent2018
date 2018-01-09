@@ -31,3 +31,12 @@ export const EventPrice = ({event}) => {
             {price.str}
         </Button>;
 };
+
+export const EventPhone = ({phone}) => {
+    return (
+        <div className="phone">
+            <span className="glyphicon glyphicon-earphone" aria-hidden="true"/>&nbsp;
+            {phone}
+        </div>
+    );
+};

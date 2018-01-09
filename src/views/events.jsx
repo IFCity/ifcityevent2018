@@ -5,7 +5,7 @@ import {Row, Col} from 'react-bootstrap';
 
 import { getEventsAction } from '../actions/eventsActions';
 import { NoData, Loading } from '../components/tools.jsx';
-import { EventTime, EventPlace, EventPrice } from '../components/eventAttributes.jsx';
+import { EventTime, EventPlace, EventPrice, EventPhone } from '../components/eventAttributes.jsx';
 
 
 const EventDefault = (props) => {
@@ -22,6 +22,7 @@ const EventDefault = (props) => {
                     <EventPrice event={event}/>
                 </Col>
             </Row>
+            <EventPhone phone="+38 (096) 751-61-85"/>
             <p className="description">{event.description}</p>
             <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
                 детальніше у Facebook →
