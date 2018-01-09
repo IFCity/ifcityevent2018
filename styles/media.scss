@@ -1,0 +1,18 @@
+.img-preview {
+  width: 220px;
+  float: left;
+  height: 250px;
+  overflow: hidden;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.content-wrapper {
+
+  &:after {
+    content: ' ';
+    clear: both;
+    float: none;
+    display: table;
+  }
+}

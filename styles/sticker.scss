@@ -1,0 +1,17 @@
+.sticker {
+  padding: 10px;
+  background-color: #fff;
+  border-bottom: 1px solid #ccc;
+  top: 50px;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  opacity: 0.7;
+
+  > span {
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+  }
+}
