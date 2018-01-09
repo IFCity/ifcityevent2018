@@ -9,8 +9,14 @@
   }
 
   &.event-default-even {
+
     > div:nth-child(2) {
+
       img {
+        float: right;
+      }
+
+      .btn-price {
         float: right;
       }
     }
@@ -27,17 +33,34 @@
   h4 {
     font-size: 28px;
     font-weight: bold;
+    margin-top: 0;
   }
 
   .description {
     white-space: pre-wrap;
     font-weight: 400;
     font-size: 18px;
+    margin-top: 20px;
   }
 
   a {
     color: #0070c9;
     text-decoration: none;
     font-size: 17px;
+  }
+
+  .place {
+    margin-bottom: 8px;
+  }
+
+  .btn-price {
+    width: 100%;
+  }
+
+  .price {
+    color: #5cb85c;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 }

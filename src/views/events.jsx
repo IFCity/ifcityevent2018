@@ -3,16 +3,25 @@ import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import {Row, Col} from 'react-bootstrap';
 
-import {getEventsAction} from '../actions/eventsActions';
-import {NoData, Loading} from '../components/tools.jsx';
+import { getEventsAction } from '../actions/eventsActions';
+import { NoData, Loading } from '../components/tools.jsx';
+import { EventTime, EventPlace, EventPrice } from '../components/eventAttributes.jsx';
 
 
 const EventDefault = (props) => {
     const {event, even} = props;
     const info =
         <Col xs={5}>
-            <strong>{event.start_time}</strong>
             <h4>{event.name}</h4>
+            <Row style={{marginLeft: '-15px', marginRight: '-15px'}}>
+                <Col xs={8}>
+                    <EventPlace place={event.place}/>
+                    <EventTime event={event}/>
+                </Col>
+                <Col xs={4}>
+                    <EventPrice event={event}/>
+                </Col>
+            </Row>
             <p className="description">{event.description}</p>
             <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
                 детальніше у Facebook →
