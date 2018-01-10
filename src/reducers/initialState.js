@@ -12,4 +12,8 @@ export default {
         data: [],
         metadata: {}
     },
+    authorization: {
+        data: {},
+        metadata: {}
+    }
 };

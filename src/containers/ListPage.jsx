@@ -15,7 +15,7 @@ class ListPage extends Component {
                         <Events {...this.props}/>
                     </Col>
                     <Col sm={3}>
-                        Right side
+                        <h4>Вас також можуть зацікавити</h4>
                     </Col>
                 </Row>
             </div>

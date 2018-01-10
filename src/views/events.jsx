@@ -92,7 +92,7 @@ class EventsList extends Component {
             </NoData>;
         return (
             <div>
-                <Search/>
+                {/*<Search/>*/}
                 {events.length ?
                     events.map((event, index) => (
                         <EventDefault

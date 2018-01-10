@@ -1,5 +1,5 @@
-import Events from '../views/events.jsx';
 import ListPage from '../containers/ListPage.jsx';
+import AdminPage from '../containers/AdminPage.jsx';
 import { fetchEvents } from '../api/events';
 
 
@@ -35,5 +35,20 @@ export default [
                 }}
         },
         pageTitle: 'Події'
-    }
+    },
+    {
+        path: '/admin',
+        key: 'admin',
+        component: AdminPage,
+        loadData: () => fetchEvents(),
+        getPreloadedState: data => {
+            let metadata = data[0].metadata || {};
+            return {
+                events: {
+                    data: data[0].data || [],
+                    metadata
+                }}
+        },
+        pageTitle: 'Адміністрування'
+    },
 ];
