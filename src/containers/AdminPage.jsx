@@ -1,65 +1,47 @@
 import React, {Component} from 'react';
+import { Switch, Route } from 'react-router';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Row, Col} from 'react-bootstrap';
 
-import {checkLoginStatus} from '../services/authorizationService';
-import fb from 'facebook-login-promises';
-import appSettings from '../constants/aplication';
+import Aggregation from '../views/admin/aggregation.jsx';
+import { NotFound } from '../components/tools.jsx';
 
-
-const params = {
-    appId: appSettings.FBPageId
-};
 
 class AdminPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            status: undefined,
-            user: {
-                id: null,
-                name: ''
-            }
-        };
         this.authorize = this.authorize.bind(this);
     }
 
     authorize() {
-        if (!this.state.loading && (this.state.status !== 'connected')) {
+        if (!_.get(this.props, 'authorization.data.authData.accessToken')) {
             this.context.router.history.push('/');
         }
     }
 
-    /* componentDidMount() {
-        /*checkLoginStatus(response => {
-            this.setState(
-                response,
-                () => this.authorize()
-            );
-        });
-    } */
-
     componentDidMount() {
-        fb.callback.checkStatus(params, response => console.log(response));
+        this.authorize();
     }
 
     render() {
         return (
             <div className="content-wrapper">
-                <Row>
-                    <Col sm={12}>
-                        <h1>Admin</h1>
-                        <h2>{this.state.user.name}</h2>
-                    </Col>
-                </Row>
+                <Switch>
+                    <Route
+                        path="/admin/aggregation"
+                        key="admin_aggregation"
+                        exact={true}
+                        component={Aggregation}
+                    />
+                    <Route component={NotFound}/>
+                </Switch>
             </div>
         );
     }
 }
 
 AdminPage.propTypes = {
-    events: PropTypes.object,
+    authorization: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
 
@@ -71,7 +53,7 @@ AdminPage.contextTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        events: state.events
+        authorization: state.authorization
     };
 };
 

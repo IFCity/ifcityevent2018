@@ -2,6 +2,7 @@ import { takeLatest, cancel, take, put, takeEvery } from 'redux-saga/effects';
 import { searchMediaSaga, getImageDetails } from './mediaSagas';
 import { getEventsSaga } from './eventsSaga';
 import { loginSaga, logoutSaga, checkStatusSaga } from './authorizationSaga';
+import { aggregateFBSaga } from './aggregationSaga';
 import * as types from '../constants/actionTypes';
 
 
@@ -27,4 +28,8 @@ export function* watchLogout() {
 
 export function* watchCheckStatus() {
     yield takeEvery(types.CHECK_STATUS_REQUEST, checkStatusSaga);
+}
+
+export function* watchAggregateFB() {
+    yield takeEvery(types.GET_AGGREGATION_REQUEST, aggregateFBSaga);
 }

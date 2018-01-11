@@ -12,8 +12,15 @@ export default {
         data: [],
         metadata: {}
     },
+    aggregation: {
+        data: [],
+        metadata: {}
+    },
     authorization: {
-        data: {},
+        data: {
+            userData: {},
+            authData: {}
+        },
         metadata: {}
     }
 };

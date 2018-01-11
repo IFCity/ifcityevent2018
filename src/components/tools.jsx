@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'class-names';
 import {Row, Col} from 'react-bootstrap';
+import { Route } from 'react-router';
 
 
 export const NoData = ({children}) => {
@@ -20,8 +21,32 @@ export const Spinner = ({style}) => (
 
 export const Error = ({error}) => (
     <div className="alert alert-danger" role="alert">
-        <strong>Loading error</strong> {error.message || 'Unknown error'}
+        <strong>Помилка завантаження</strong> {error.message || 'Невідома помилка'}
     </div>
+);
+
+export const Status = ({ code, children }) => (
+    <Route render={({ staticContext }) => {
+        if (staticContext)
+            staticContext.status = code;
+        return children
+    }}/>
+);
+
+export const NotFound = () => (
+    <Status code={404}>
+        <Row>
+            <Col xs={12}>
+                <h1>Не можу знайти дану сторінку</h1>
+                <p>
+                    Дана сторінка більше не існує. Якщо ви перейшли на дану сторінку через пряме посилання, спробуйте знайти
+                    те, що вас цікавить почавши з головної сторінки</p>
+                <p>
+                    В іншому випадку повідомте нам про помилку
+                </p>
+            </Col>
+        </Row>
+    </Status>
 );
 
 class Loading extends Component {

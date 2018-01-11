@@ -1,35 +1,69 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import appSettings from '../constants/aplication';
+import { loginAction, logoutAction, checkStatusAction } from '../actions/authorizationActions';
 
 
 class MainNavbar extends Component {
+    constructor(props) {
+        super(props);
+        this.doLogin = this.doLogin.bind(this);
+        this.doLogout = this.doLogout.bind(this);
+    }
+
+    doLogin() {
+        this.props.dispatch(loginAction());
+    }
+
+    doLogout() {
+        this.props.dispatch(logoutAction());
+        this.context.router.history.push('/');
+    }
+
+    componentDidMount() {
+        this.props.dispatch(checkStatusAction());
+    }
+
     render() {
-        const {doLogin, doLogout, user} = this.props;
-        const userMenu = user.id ?
-            <ul className="nav navbar-nav navbar-right">
+        const { userData, authData } = this.props.authorization.data;
+        const adminMenuItems = userData.id && (authData.role === 'admin') ?
+            [
                 <li>
-                    <Link to="/admin/fbfetch">FB Агрегація</Link>
-                </li>
+                    <Link to="/admin/aggregation">FB Агрегація</Link>
+                </li>,
                 <li>
                     <Link to="/admin/events">Редагування подій</Link>
-                </li>
+                </li>,
                 <li>
                     <Link to="/admin/pages">Редагування сторінок</Link>
+                </li>,
+                <li>
+                    <Link to="/admin/categories">Редагування категорій</Link>
                 </li>
+            ]
+            : null;
+        const userMenu = userData.id ?
+            <ul className="nav navbar-nav navbar-right">
                 <li className="dropdown">
                     <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        Вітаємо, {user.first_name} <span className="caret"></span>
+                        Вітаємо, {userData.first_name} <span className="caret"></span>
                     </a>
                     <ul className="dropdown-menu">
-                        <li><a href="#" onClick={doLogout}>Вийти</a></li>
+                        {adminMenuItems}
+                        <li role="separator" className="divider"></li>
+                        <li>
+                            <a href="#" onClick={this.doLogout}>Вийти</a>
+                        </li>
                     </ul>
                 </li>
             </ul>:
             <form className="navbar-form navbar-right">
-                <Button bsStyle="success" onClick={doLogin}>Вхід</Button>
+                <Button bsStyle="success" onClick={this.doLogin}>Вхід</Button>
             </form>;
         return (
             <nav className="navbar navbar-inverse navbar-fixed-top">
@@ -77,4 +111,21 @@ class MainNavbar extends Component {
     }
 }
 
-export default MainNavbar;
+MainNavbar.propTypes = {
+    authorization: PropTypes.object,
+    dispatch: PropTypes.func.isRequired
+};
+
+MainNavbar.contextTypes = {
+    router: PropTypes.shape({
+        history: PropTypes.object.isRequired,
+    })
+};
+
+const mapStateToProps = (state) => {
+    return {
+        authorization: state.authorization
+    };
+};
+
+export default connect(mapStateToProps)(MainNavbar);
