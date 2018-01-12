@@ -1,13 +1,15 @@
 import React from 'react';
-import { eventTimeStr, placeObj, priceObj } from '../services/logicHelper';
+import { eventTimeObj, placeObj, priceObj } from '../services/logicHelper';
 import { Button } from 'react-bootstrap';
 
 
 export const EventTime = ({event}) => {
+    const fullTime = eventTimeObj(event).fullTime;
     return (
         <div className="date">
             <span className="glyphicon glyphicon-calendar" aria-hidden="true"/>&nbsp;
-            {eventTimeStr(event)}
+            {eventTimeObj(event).shortTime}
+            {fullTime ? [<br/>, <span>{fullTime}</span>] : null}
         </div>
     );
 };

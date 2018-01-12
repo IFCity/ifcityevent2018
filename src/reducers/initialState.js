@@ -12,6 +12,10 @@ export default {
         data: [],
         metadata: {}
     },
+    pages: {
+        data: [],
+        metadata: {}
+    },
     aggregation: {
         data: [],
         metadata: {}

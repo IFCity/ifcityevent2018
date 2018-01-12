@@ -1,6 +1,7 @@
-import { takeLatest, cancel, take, put, takeEvery } from 'redux-saga/effects';
+import { takeLatest, takeEvery } from 'redux-saga/effects';
 import { searchMediaSaga, getImageDetails } from './mediaSagas';
 import { getEventsSaga } from './eventsSaga';
+import { getPagesSaga } from './pagesSaga';
 import { loginSaga, logoutSaga, checkStatusSaga } from './authorizationSaga';
 import { aggregateFBSaga } from './aggregationSaga';
 import * as types from '../constants/actionTypes';
@@ -16,6 +17,10 @@ export function* watchGetImageDetails() {
 
 export function* watchGetEvents() {
     yield takeEvery(types.GET_EVENTS_REQUEST, getEventsSaga);
+}
+
+export function* watchGetPages() {
+    yield takeEvery(types.GET_PAGES_REQUEST, getPagesSaga);
 }
 
 export function* watchLogin() {

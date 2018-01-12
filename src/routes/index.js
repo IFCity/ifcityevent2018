@@ -52,3 +52,51 @@ export default [
         pageTitle: 'Адміністрування'
     },
 ];
+
+
+export const mainMenuRoutes = [
+    {
+        path: '/',
+        title: 'Всі події'
+    }, {
+        path: '/category/film',
+        title: 'Кіно'
+    }, {
+        path: '/category/concert',
+        title: 'Концерти'
+    }, {
+        path: '/category/sport',
+        title: 'Спорт'
+    }, {
+        path: '/category/teatr',
+        title: 'Театр'
+    }, {
+        path: '/category/exibition',
+        title: 'Виставки'
+    }, {
+        path: '/category/disco',
+        title: 'Клуб'
+    }, {
+        path: '/category/not_set',
+        title: 'Масові заходи'
+    }, {
+        path: '/category/attention',
+        title: 'Увага!'
+    }
+];
+
+export const adminMenuRoutes = [
+    {
+        path: '/admin/aggregation',
+        title: 'Імпорт подій з Facebook'
+    }, {
+        path: '/admin/events',
+        title: 'Події'
+    }, {
+        path: '/admin/pages',
+        title: 'Fecebook-сторінки'
+    }, {
+        path: '/admin/categories',
+        title: 'Категорії'
+    }
+];

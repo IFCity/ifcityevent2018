@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import Aggregation from '../views/admin/aggregation.jsx';
+import Pages from '../views/admin/pages.jsx';
 import { NotFound } from '../components/tools.jsx';
 
 
@@ -32,6 +33,12 @@ class AdminPage extends Component {
                         key="admin_aggregation"
                         exact={true}
                         component={Aggregation}
+                    />
+                    <Route
+                        path="/admin/pages"
+                        key="admin_pages"
+                        exact={true}
+                        component={Pages}
                     />
                     <Route component={NotFound}/>
                 </Switch>

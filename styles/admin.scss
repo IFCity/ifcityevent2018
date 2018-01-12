@@ -1,0 +1,41 @@
+.table-admin-events, .table-edit-events {
+
+  .image {
+    width: 200px;
+
+    &.promo {
+      border: 5px solid yellow;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  .author, .place {
+    font-weight: bold;
+  }
+
+  .author {
+    color: blue;
+  }
+
+  .place {
+    color: orange;
+  }
+
+  .description {
+    font-size: 12px;
+    max-width: 400px;
+  }
+}
+
+.container-wrapper {
+
+  &.admin {
+
+    > .nav {
+      margin: 10px 0;
+    }
+  }
+}

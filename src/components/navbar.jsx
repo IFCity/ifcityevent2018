@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import appSettings from '../constants/aplication';
 import { loginAction, logoutAction, checkStatusAction } from '../actions/authorizationActions';
+import { mainMenuRoutes, adminMenuRoutes } from '../routes';
 
 
 class MainNavbar extends Component {
@@ -31,21 +32,25 @@ class MainNavbar extends Component {
 
     render() {
         const { userData, authData } = this.props.authorization.data;
+        const mainMenuItems = _(mainMenuRoutes)
+            .map(item => {
+                return (
+                    <li>
+                        <Link to={item.path}>{item.title}</Link>
+                    </li>
+                );
+            })
+            .value();
         const adminMenuItems = userData.id && (authData.role === 'admin') ?
-            [
-                <li>
-                    <Link to="/admin/aggregation">FB Агрегація</Link>
-                </li>,
-                <li>
-                    <Link to="/admin/events">Редагування подій</Link>
-                </li>,
-                <li>
-                    <Link to="/admin/pages">Редагування сторінок</Link>
-                </li>,
-                <li>
-                    <Link to="/admin/categories">Редагування категорій</Link>
-                </li>
-            ]
+            _(adminMenuRoutes)
+                .map(item => {
+                    return (
+                        <li>
+                            <Link to={item.path}>{item.title}</Link>
+                        </li>
+                    );
+                })
+                .value()
             : null;
         const userMenu = userData.id ?
             <ul className="nav navbar-nav navbar-right">
@@ -75,33 +80,7 @@ class MainNavbar extends Component {
                     </div>
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav">
-                            <li>
-                                <Link to="/">Всі події</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/film">Кіно</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/concert">Концерти</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/sport">Cпорт</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/teatr">Театр</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/exibition">Виставка</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/disco">Клуб/диско</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/not_set">Масовий захід</Link>
-                            </li>
-                            <li>
-                                <Link to="/category/attention">Увага!</Link>
-                            </li>
+                            {mainMenuItems}
                         </ul>
                         {userMenu}
                     </div>

@@ -14,11 +14,11 @@ const EventDefault = (props) => {
         <Col xs={5}>
             <h4>{event.name}</h4>
             <Row style={{marginLeft: '-15px', marginRight: '-15px'}}>
-                <Col xs={8}>
+                <Col xs={7}>
                     <EventPlace place={event.place}/>
                     <EventTime event={event}/>
                 </Col>
-                <Col xs={4}>
+                <Col xs={5}>
                     <EventPrice event={event}/>
                 </Col>
             </Row>
@@ -59,36 +59,6 @@ class EventsList extends Component {
         const noData =
             <NoData>
                 <h1>Вибачте, в даній категорії немає наразі подій</h1>
-                <p>Можливо наступні події вас зацікавлять:</p>
-                <ul>
-                    <li>
-                        <Link to="/">Всі події</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/film">Кіно</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/concert">Концерти</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/sport">Cпорт</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/teatr">Театр</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/exibition">Виставка</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/disco">Клуб/диско</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/not_set">Масовий захід</Link>
-                    </li>
-                    <li>
-                        <Link to="/category/attention">Увага!</Link>
-                    </li>
-                </ul>
             </NoData>;
         return (
             <div>

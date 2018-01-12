@@ -51,6 +51,10 @@
 
   .place {
     margin-bottom: 8px;
+
+    span:nth-child(3) {
+      color: #bbb;
+    }
   }
 
   .btn-price {
@@ -70,5 +74,12 @@
     font-size: 18px;
     color: orange;
     text-align: right;
+  }
+
+  .date {
+
+    span:nth-child(3) {
+      color: #bbb;
+    }
   }
 }

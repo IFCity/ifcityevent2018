@@ -1,6 +1,8 @@
 import {promises, prepareIdQuery} from './fbHelper';
 import appSettings from '../constants/aplication';
 import moment from 'moment';
+import apiSettings from "../constants/api";
+import fetch from "../services/fetchAdapter";
 
 const fmt = appSettings.formats.date.system;
 
@@ -25,7 +27,7 @@ export const aggregateFB = (token) => {
                 _(response.data)
                     .map(item => {
                         promisesList.push(promises.runQuery(prepareIdQuery(item.id), token));
-                        placesList.push(item.id);
+                        placesList.push(item);
                     })
                     .value();
                 return Promise.all(promisesList)
@@ -34,8 +36,15 @@ export const aggregateFB = (token) => {
                             let events = [];
                             _(response)
                                 .forEach((resp, index) => {
-                                    let items = _(_.get(resp, `${placesList[index]}.events.data`, []))
+                                    let items = _(_.get(resp[placesList[index].id], 'events.data', []))
                                         .filter(event => isNewEvent(event.start_time, event.end_time))
+                                        .map(item => {
+                                            item.author = {
+                                                id: placesList[index].id,
+                                                name: _.get(placesList[index], 'name')
+                                            };
+                                            return item;
+                                        })
                                         .value();
                                     events = events.concat(items);
                                 })
@@ -55,28 +64,57 @@ export const aggregateFB = (token) => {
             error => { throw error; }
         )
         .then(
-            (placeResponse) => {
+            placeResponse => {
+                return fetch(`${apiSettings.apiURL}/pages`)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(json => {
+                        return {
+                            pages: json,
+                            places: placeResponse
+                        };
+                    })
+                    .catch(ex => (
+                        {
+                            metadata: {
+                                error: ex
+                            }
+                        }
+                    ));
+            },
+            error => { throw error; }
+        )
+        .then(
+            placeResponse => {
                 let promisesList = [];
                 let pagesList = [];
-                _(appSettings.pages)
+                _(placeResponse.pages)
                     .map(item => {
                         promisesList.push(promises.runQuery(prepareIdQuery(item.id), token));
-                        pagesList.push(item.id);
+                        pagesList.push(item);
                     })
                     .value();
                 return Promise.all(promisesList)
                     .then(
                         response => {
-                            let events = placeResponse;
+                            let events = placeResponse.places;
                             _(response)
                                 .forEach((resp, index) => {
-                                    let items = _(_.get(resp, `${pagesList[index]}.events.data`, []))
+                                    let items = _(_.get(resp[pagesList[index].id], 'events.data', []))
                                         .filter(event => isNewEvent(event.start_time, event.end_time))
+                                        .map(item => {
+                                            item.author = {
+                                                id: pagesList[index].id,
+                                                name: _.get(pagesList[index], 'title')
+                                            };
+                                            return item;
+                                        })
                                         .value();
                                     events = events.concat(items);
                                 })
                                 .value;
-                            return { data: events };
+                            return events;
                         },
                         error => { throw error; }
                     )
@@ -87,6 +125,40 @@ export const aggregateFB = (token) => {
                             }
                         };
                     });
+            },
+            error => { throw error; }
+        ).
+        then(
+            fbEvents => {
+                let events = [];
+                return fetch(`${apiSettings.apiURL}/events`)
+                    .then(response => {
+                        return response.json();
+                    })
+                    .then(dbEvents => {
+                        const events = _(fbEvents)
+                            .filter(item => _(dbEvents).findIndex({id: item.id}) === -1)
+                            .map(item => {
+                                item.category = 'not_set';
+                                item.source = 'facebook';
+                                item.tags = [
+                                    'facebook'
+                                ];
+                                item.integrate = true;
+                                return item;
+                            })
+                            .value();
+                        return {
+                            data: events
+                        }
+                    })
+                    .catch(ex => (
+                        {
+                            metadata: {
+                                error: ex
+                            }
+                        }
+                    ));
             },
             error => { throw error; }
         )

@@ -7,6 +7,10 @@ export const eventOneTimeStr = (eventTime) => {
     return moment(eventTime).format('LL о LT');
 };
 
+export const eventSimpleOneTimeStr = (eventTime) => {
+    return moment(eventTime).format('D MMMM о LT');
+};
+
 export const eventSameDateStr = ({start_time, end_time}) => {
     return `${moment(start_time).format('LL з LT')} по ${moment(end_time).format('LT')}`;
 };
@@ -15,17 +19,31 @@ export const eventDefaultRangeStr = ({start_time, end_time}) => {
     return `з ${moment(start_time).format('LL, LT')} по ${moment(end_time).format('LL, LT')}`;
 };
 
-export const eventTimeStr = ({start_time, end_time}) => {
+export const eventSimpleRangeStr = ({start_time, end_time}) => {
+    return `${moment(start_time).format('D MMMM')} - ${moment(end_time).format('D MMMM')}`;
+};
+
+export const eventTimeObj = ({start_time, end_time}) => {
     if (!start_time) {
-        return 'Дата події не вказана';
+        return {
+            shortTime: 'Дата події не вказана'
+        };
     }
     if (!end_time) {
-        return eventOneTimeStr(start_time);
+        return {
+            shortTime: eventOneTimeStr(start_time)
+        };
     }
     if (moment(start_time).format('LL') === moment(end_time).format('LL')) {
-        return eventSameDateStr({start_time, end_time});
+        return {
+            shortTime: eventSimpleOneTimeStr(start_time),
+            fullTime: eventSameDateStr({start_time, end_time})
+        };
     }
-    return eventDefaultRangeStr({start_time, end_time});
+    return {
+        shortTime: eventSimpleRangeStr({start_time, end_time}),
+        fullTime: eventDefaultRangeStr({start_time, end_time})
+    };
 };
 
 
