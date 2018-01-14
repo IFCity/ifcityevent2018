@@ -4,25 +4,40 @@ import {Row, Col, Button, FormControl, FormGroup, ControlLabel} from 'react-boot
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import { aggregateFBAction } from '../../actions/aggregationActions';
+import {
+    aggregateFBAction,
+    toggleValidAction,
+    toggleIntegrateAction,
+    setMinPriceAction,
+    setMaxPriceAction
+} from '../../actions/aggregationActions';
+import { saveEventsAction } from '../../actions/eventsActions';
 import { Loading, NoData } from '../../components/tools.jsx';
 
 
 class EventToAggregate extends Component {
-    handleMinPraiseChange() {
-
+    constructor(props) {
+        super(props);
+        this.toggleValid = this.toggleValid.bind(this);
+        this.toggleIntegrate = this.toggleIntegrate.bind(this);
+        this.handleMinPriceChange = this.handleMinPriceChange.bind(this);
+        this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
     }
 
-    handleMaxPraiseChange() {
-
+    handleMinPriceChange(e) {
+        this.props.dispatch(setMinPriceAction({id: this.props.event.id, value: e.target.value}));
     }
 
-    handleValidChange() {
-
+    handleMaxPriceChange(e) {
+        this.props.dispatch(setMaxPriceAction({id: this.props.event.id, value: e.target.value}));
     }
 
-    handleIntegrate() {
+    toggleValid() {
+        this.props.dispatch(toggleValidAction(this.props.event.id));
+    }
 
+    toggleIntegrate() {
+        this.props.dispatch(toggleIntegrateAction(this.props.event.id));
     }
 
     render() {
@@ -57,14 +72,14 @@ class EventToAggregate extends Component {
                             type="text"
                             value={_.get(event, 'price.from', '')}
                             placeholder="min"
-                            onChange={this.handleMinPraiseChange}
+                            onChange={this.handleMinPriceChange}
                         />
                         <ControlLabel>До</ControlLabel>
                         <FormControl
                             type="text"
                             value={_.get(event, 'price.to', '')}
                             placeholder="max"
-                            onChange={this.handleMaxPraiseChange}
+                            onChange={this.handleMaxPriceChange}
                         />
                     </FormGroup>
                 </td>
@@ -80,19 +95,19 @@ class EventToAggregate extends Component {
                         name="isValid"
                         type="checkbox"
                         checked={!this.props.event.invalid}
-                        onChange={this.handleValidChange}/>
+                        onChange={this.toggleValid}/>
                 </td>
                 <td>
                     <input
                         name="readyToSync"
                         type="checkbox"
                         checked={this.props.event.integrate}
-                        onChange={this.handleIntegrate}/>
+                        onChange={this.toggleIntegrate}/>
                 </td>
             </tr>
         );
     }
-};
+}
 
 class AggregationList extends Component {
     render() {
@@ -151,10 +166,18 @@ class Aggregation extends Component {
     constructor(props) {
         super(props);
         this.doAggregate = this.doAggregate.bind(this);
+        this.doSave = this.doSave.bind(this);
     }
 
     doAggregate() {
         this.props.dispatch(aggregateFBAction(this.props.authorization.data.authData.accessToken));
+    }
+
+    doSave() {
+        this.props.dispatch(saveEventsAction({
+            token: this.props.authorization.data.authData.accessToken,
+            events: this.props.aggregation.data
+        }));
     }
 
     componentDidMount() {
@@ -173,13 +196,16 @@ class Aggregation extends Component {
                 <Col xs={12}>
                     <Button bsStyle="success" onClick={this.doAggregate}>Перечитати Facebook-події</Button>
                     &nbsp;
-                    <Button bsStyle="danger" onClick={this.doAggregate}>Записати в базу</Button>
+                    <Button bsStyle="danger" onClick={this.doSave}>Записати в базу</Button>
                 </Col>
             </Row>,
             <Row>
                 <Col xs={12}>
                     <Loading {...metadata} mask={true}>
-                        <AggregationList events={data}/>
+                        <AggregationList
+                            {...this.props}
+                            events={data}
+                        />
                     </Loading>
                 </Col>
             </Row>

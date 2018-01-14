@@ -27,3 +27,29 @@ export const fetchEvents = (category) => {
             }
         ));
 };
+
+export const saveEvents = ({token, events}) => {
+    console.log(token);
+    console.log(events);
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(events)
+    };
+    return fetch(`${apiSettings.apiURL}/events`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};

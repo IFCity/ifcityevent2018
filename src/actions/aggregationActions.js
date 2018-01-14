@@ -5,3 +5,23 @@ export const aggregateFBAction = (payload) => ({
     type: types.GET_AGGREGATION_REQUEST,
     payload
 });
+
+export const toggleValidAction = (id) => ({
+    type: types.TOGGLE_VALID,
+    id
+});
+
+export const toggleIntegrateAction = (id) => ({
+    type: types.TOGGLE_INTEGRATE,
+    id
+});
+
+export const setMinPriceAction = payload => ({
+    type: types.SET_MIN_PRICE,
+    payload
+});
+
+export const setMaxPriceAction = payload => ({
+    type: types.SET_MAX_PRICE,
+    payload
+});

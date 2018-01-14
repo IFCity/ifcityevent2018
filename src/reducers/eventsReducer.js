@@ -11,6 +11,12 @@ export default function (state = initialState.events, action) {
             return mapMetadataSuccess(state, action, 'events');
         case types.GET_EVENTS_FAILURE:
             return mapMetadataFailure(state, action, 'events');
+        case types.SAVE_EVENTS_REQUEST:
+            return mapMetadataRequest(state);
+        case types.SAVE_EVENTS_SUCCESS:
+            return mapMetadataSuccess(state, action, 'events');
+        case types.SAVE_EVENTS_FAILURE:
+            return mapMetadataFailure(state, action, 'events');
         default:
             return state;
     }
