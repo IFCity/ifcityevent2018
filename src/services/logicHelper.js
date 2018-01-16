@@ -48,7 +48,7 @@ export const eventTimeObj = ({start_time, end_time}) => {
 
 
 const noPlace = 'Локація не вказана';
-const noPrice = 'Ціна не вказана';
+const noPrice = 'Вартість не вказана';
 const freePrice = 'Безкоштовно';
 
 export const placeLocation = (location) => {

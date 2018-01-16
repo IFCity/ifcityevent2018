@@ -28,6 +28,23 @@ const getLongLiveToken = authResponse => {
         });
 };
 
+const updateUserName = user => {
+    let config = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    };
+    return fetch(`${apiSettings.apiURL}/users/${user.id}`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { response: json };
+        });
+};
+
 export const login = () => {
     let authData = {};
     return promises.init(params)
@@ -51,12 +68,15 @@ export const login = () => {
             error => { throw error; }
         )
         .then(
-            response => ({
-                data: {
-                    userData: response,
-                    authData
+            response => {
+                updateUserName(response);
+                return {
+                    data: {
+                        userData: response,
+                        authData
+                    }
                 }
-            }),
+            },
             error => { throw error; }
         )
         .catch(ex => {

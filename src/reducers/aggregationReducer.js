@@ -55,6 +55,16 @@ export default function (state = initialState.events, action) {
                 })
                 .value();
             return { ...state, data: newMaxPrice };
+        case types.SET_CATEGORY:
+            const newCategory = _(_.cloneDeep(state.data))
+                .map(item => {
+                    if (item.id === action.payload.id) {
+                        item.category = action.payload.value;
+                    }
+                    return item;
+                })
+                .value();
+            return { ...state, data: newCategory };
         default:
             return state;
     }

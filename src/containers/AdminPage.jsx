@@ -5,8 +5,32 @@ import {connect} from 'react-redux';
 
 import Aggregation from '../views/admin/aggregation.jsx';
 import Pages from '../views/admin/pages.jsx';
+import Categories from '../views/admin/categories.jsx';
+import Users from '../views/admin/users.jsx';
 import { NotFound } from '../components/tools.jsx';
 
+
+const routes = [{
+    path: '/admin/aggregation',
+    key: 'admin_aggregation',
+    exact: true,
+    component: Aggregation
+}, {
+    path: '/admin/pages',
+    key: 'admin_pages',
+    exact: true,
+    component: Pages
+}, {
+    path: '/admin/categories',
+    key: 'admin_categories',
+    exact: true,
+    component: Categories
+}, {
+    path: '/admin/users',
+    key: 'admin_users',
+    exact: true,
+    component: Users
+}];
 
 class AdminPage extends Component {
     constructor(props) {
@@ -28,18 +52,9 @@ class AdminPage extends Component {
         return (
             <div className="content-wrapper">
                 <Switch>
-                    <Route
-                        path="/admin/aggregation"
-                        key="admin_aggregation"
-                        exact={true}
-                        component={Aggregation}
-                    />
-                    <Route
-                        path="/admin/pages"
-                        key="admin_pages"
-                        exact={true}
-                        component={Pages}
-                    />
+                    {_(routes)
+                        .map(route => <Route {...route}/>)
+                        .value()}
                     <Route component={NotFound}/>
                 </Switch>
             </div>

@@ -30,7 +30,8 @@ ListPage.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        events: state.events
+        events: state.events,
+        categories: state.categories
     };
 };
 

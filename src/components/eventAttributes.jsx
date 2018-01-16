@@ -1,6 +1,9 @@
 import React from 'react';
-import { eventTimeObj, placeObj, priceObj } from '../services/logicHelper';
 import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import _ from 'lodash';
+
+import { eventTimeObj, placeObj, priceObj } from '../services/logicHelper';
 
 
 export const EventTime = ({event}) => {
@@ -27,9 +30,9 @@ export const EventPlace = ({place}) => {
 
 export const EventPrice = ({event}) => {
     const price = priceObj(event.price);
-    return price.isFree ?
+    return price.isFree || !price.mayBuy ?
         <h2 className="price">{price.str}</h2> :
-        <Button className="btn-price" bsStyle="success" disabled={!price.mayBuy}>
+        <Button className="btn-price" bsStyle="success">
             {price.str}
         </Button>;
 };
@@ -39,6 +42,17 @@ export const EventPhone = ({phone}) => {
         <div className="phone">
             <span className="glyphicon glyphicon-earphone" aria-hidden="true"/>&nbsp;
             {phone}
+        </div>
+    );
+};
+
+export const EventType = ({category, categories}) => {
+    const categoryName = _(categories)
+        .filter(item => item.id === category)
+        .value();
+    return (
+        <div className="event-type">
+            <Link to={`/category/${category}`}>{_.get(categoryName, '[0].name', category)}</Link>
         </div>
     );
 };

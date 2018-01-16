@@ -1,27 +1,22 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 import {Row, Col} from 'react-bootstrap';
 
 import { getEventsAction } from '../actions/eventsActions';
+import { getCategoriesAction } from '../actions/categoriesActions';
 import { NoData, Loading } from '../components/tools.jsx';
-import { EventTime, EventPlace, EventPrice, EventPhone } from '../components/eventAttributes.jsx';
+import { EventTime, EventPlace, EventPrice, EventPhone, EventType } from '../components/eventAttributes.jsx';
 
 
 const EventDefault = (props) => {
-    const {event, even} = props;
+    const {event, even, categories} = props;
     const info =
-        <Col xs={5}>
+        <Col xs={6}>
             <h4>{event.name}</h4>
-            <Row style={{marginLeft: '-15px', marginRight: '-15px'}}>
-                <Col xs={7}>
-                    <EventPlace place={event.place}/>
-                    <EventTime event={event}/>
-                </Col>
-                <Col xs={5}>
-                    <EventPrice event={event}/>
-                </Col>
-            </Row>
+            <EventType category={event.category} categories={categories}/>
+            <EventPlace place={event.place}/>
+            <EventTime event={event}/>
+            <EventPrice event={event}/>
             <EventPhone phone="+38 (096) 751-61-85"/>
             <p className="description">{event.description}</p>
             <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
@@ -29,7 +24,7 @@ const EventDefault = (props) => {
             </a>
         </Col>;
     const cover =
-        <Col xs={7}>
+        <Col xs={6}>
             <img src={event.cover.source}/>
         </Col>;
     return (
@@ -81,10 +76,12 @@ class Events extends Component {
     constructor(props) {
         super(props);
         this.search = this.search.bind(this);
+        this.fetchCategories = this.fetchCategories.bind(this);
     }
 
     componentDidMount() {
         this.search(this.props.match.params.categoryid || null);
+        this.fetchCategories();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -97,11 +94,15 @@ class Events extends Component {
         this.props.dispatch(getEventsAction(category));
     }
 
+    fetchCategories() {
+        this.props.dispatch(getCategoriesAction());
+    }
+
     render() {
         const {data, metadata} = this.props.events;
         return (
             <Loading {...metadata} mask={true}>
-                <EventsList events={data} dispatch={this.props.dispatch}/>
+                <EventsList events={data} categories={this.props.categories.data} dispatch={this.props.dispatch}/>
             </Loading>
         );
     }
@@ -109,6 +110,7 @@ class Events extends Component {
 
 Events.propTypes = {
     events: PropTypes.object,
+    categories: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
 

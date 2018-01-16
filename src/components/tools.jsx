@@ -7,8 +7,8 @@ import { Route } from 'react-router';
 
 export const NoData = ({children}) => {
     return (
-        <Row>
-            <Col xs={12}>{children || 'Вибачте, в даній категорії немає наразі подій'}</Col>
+        <Row className="no-data">
+            <Col xs={12}>{children || 'Немає даних для відображення'}</Col>
         </Row>
     );
 };

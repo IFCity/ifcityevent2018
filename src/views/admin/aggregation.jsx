@@ -9,10 +9,14 @@ import {
     toggleValidAction,
     toggleIntegrateAction,
     setMinPriceAction,
-    setMaxPriceAction
+    setMaxPriceAction,
+    setCategoryAction
 } from '../../actions/aggregationActions';
 import { saveEventsAction } from '../../actions/eventsActions';
+import { getCategoriesAction } from '../../actions/categoriesActions';
 import { Loading, NoData } from '../../components/tools.jsx';
+import { CategoryDropdown } from '../../components/formElements.jsx';
+
 
 
 class EventToAggregate extends Component {
@@ -22,6 +26,7 @@ class EventToAggregate extends Component {
         this.toggleIntegrate = this.toggleIntegrate.bind(this);
         this.handleMinPriceChange = this.handleMinPriceChange.bind(this);
         this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
+        this.handleCategoryChange = this.handleCategoryChange.bind(this);
     }
 
     handleMinPriceChange(e) {
@@ -40,8 +45,13 @@ class EventToAggregate extends Component {
         this.props.dispatch(toggleIntegrateAction(this.props.event.id));
     }
 
+    handleCategoryChange(category) {
+        this.props.dispatch(setCategoryAction({id: this.props.event.id, value: category}));
+    }
+
     render() {
         const {event} = this.props;
+        console.log(this.props);
         return (
             <tr>
                 <td>
@@ -84,11 +94,11 @@ class EventToAggregate extends Component {
                     </FormGroup>
                 </td>
                 <td>
-                    {/*<CategoryDropdown
-                    event={event}
-                    categories={this.props.categories}
-                    onChange={this.handleCategoryChange}
-                />*/}
+                    <CategoryDropdown
+                        event={event}
+                        categories={this.props.categories.data}
+                        onChange={this.handleCategoryChange}
+                    />
                 </td>
                 <td>
                     <input
@@ -167,10 +177,15 @@ class Aggregation extends Component {
         super(props);
         this.doAggregate = this.doAggregate.bind(this);
         this.doSave = this.doSave.bind(this);
+        this.fetchCategories = this.fetchCategories.bind(this);
     }
 
     doAggregate() {
         this.props.dispatch(aggregateFBAction(this.props.authorization.data.authData.accessToken));
+    }
+
+    fetchCategories() {
+        this.props.dispatch(getCategoriesAction());
     }
 
     doSave() {
@@ -182,6 +197,7 @@ class Aggregation extends Component {
 
     componentDidMount() {
         this.doAggregate();
+        this.fetchCategories();
     }
 
     render() {
@@ -215,6 +231,7 @@ class Aggregation extends Component {
 
 Aggregation.propTypes = {
     aggregation: PropTypes.object,
+    categories: PropTypes.object,
     authorization: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
@@ -222,6 +239,7 @@ Aggregation.propTypes = {
 const mapStateToProps = (state) => {
     return {
         aggregation: state.aggregation,
+        categories: state.categories,
         authorization: state.authorization
     };
 };

@@ -49,7 +49,7 @@
     font-size: 17px;
   }
 
-  .place {
+  .place, .date {
     margin-bottom: 8px;
 
     span:nth-child(3) {
@@ -58,28 +58,30 @@
   }
 
   .btn-price {
-    width: 100%;
+    min-width: 50%;
   }
 
   .price {
     color: #5cb85c;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-    text-align: right;
   }
 
   .phone {
     margin-top: 10px;
     font-size: 18px;
     color: orange;
-    text-align: right;
   }
 
-  .date {
-
-    span:nth-child(3) {
-      color: #bbb;
+  .event-type {
+    padding-bottom: 8px;
+    
+    a {
+      padding: 6px;
+      background-color: #999;
+      color: #fff;
+      text-transform: lowercase;
     }
   }
 }

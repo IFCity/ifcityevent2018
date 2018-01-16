@@ -12,7 +12,15 @@ export default {
         data: [],
         metadata: {}
     },
+    categories: {
+        data: [],
+        metadata: {}
+    },
     pages: {
+        data: [],
+        metadata: {}
+    },
+    users: {
         data: [],
         metadata: {}
     },

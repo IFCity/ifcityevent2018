@@ -130,8 +130,14 @@ export const aggregateFB = (token) => {
         ).
         then(
             fbEvents => {
-                let events = [];
-                return fetch(`${apiSettings.apiURL}/events`)
+                const config = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({show_invalid: true})
+                };
+                return fetch(`${apiSettings.apiURL}/events/search`, config)
                     .then(response => {
                         return response.json();
                     })
@@ -149,7 +155,7 @@ export const aggregateFB = (token) => {
                             })
                             .value();
                         return {
-                            data: events
+                            data: _.uniqBy(events, 'id')
                         }
                     })
                     .catch(ex => (

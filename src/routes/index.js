@@ -98,5 +98,8 @@ export const adminMenuRoutes = [
     }, {
         path: '/admin/categories',
         title: 'Категорії'
+    }, {
+        path: '/admin/users',
+        title: 'Користувачі'
     }
 ];

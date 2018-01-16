@@ -25,3 +25,8 @@ export const setMaxPriceAction = payload => ({
     type: types.SET_MAX_PRICE,
     payload
 });
+
+export const setCategoryAction = payload => ({
+    type: types.SET_CATEGORY,
+    payload
+});

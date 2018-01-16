@@ -29,8 +29,6 @@ export const fetchEvents = (category) => {
 };
 
 export const saveEvents = ({token, events}) => {
-    console.log(token);
-    console.log(events);
     let config = {
         method: 'POST',
         headers: {
