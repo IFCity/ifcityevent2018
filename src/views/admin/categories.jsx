@@ -75,12 +75,12 @@ class Categories extends Component {
         const {data, metadata} = this.props.categories;
         return [
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <h4>Категорії подій</h4>
                 </Col>
             </Row>,
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <Loading {...metadata} mask={true}>
                         <CategoriesList categories={data}/>
                     </Loading>

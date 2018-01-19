@@ -11,10 +11,10 @@ class ListPage extends Component {
         return (
             <div className="content-wrapper">
                 <Row>
-                    <Col sm={9}>
+                    <Col md={9}>
                         <Events {...this.props}/>
                     </Col>
-                    <Col sm={3}>
+                    <Col md={3}>
                         <h4>Вас також можуть зацікавити</h4>
                     </Col>
                 </Row>

@@ -1,5 +1,4 @@
 import fetch from '../services/fetchAdapter';
-import apiSettings from '../constants/api';
 import appSettings from '../constants/aplication';
 import {promises} from './fbHelper';
 
@@ -19,7 +18,7 @@ const getLongLiveToken = authResponse => {
             userId: authResponse.userID
         })
     };
-    return fetch(`${apiSettings.apiURL}/authorization/gettoken`, config)
+    return fetch(`${appSettings.apiURL}/authorization/gettoken`, config)
         .then(response => {
             return response.json();
         })
@@ -36,7 +35,7 @@ const updateUserName = user => {
         },
         body: JSON.stringify(user)
     };
-    return fetch(`${apiSettings.apiURL}/users/${user.id}`, config)
+    return fetch(`${appSettings.apiURL}/users/${user.id}`, config)
         .then(response => {
             return response.json();
         })

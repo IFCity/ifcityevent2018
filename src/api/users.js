@@ -1,9 +1,9 @@
 import fetch from '../services/fetchAdapter';
-import apiSettings from '../constants/api';
+import appSettings from '../constants/aplication';
 
 
 export const fetchUsers = () => {
-    return fetch(`${apiSettings.apiURL}/users`)
+    return fetch(`${appSettings.apiURL}/users`)
         .then(response => {
             return response.json();
         })

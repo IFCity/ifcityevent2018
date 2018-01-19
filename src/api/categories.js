@@ -1,9 +1,9 @@
 import fetch from '../services/fetchAdapter';
-import apiSettings from '../constants/api';
+import appSettings from '../constants/aplication';
 
 
 export const fetchCategories = () => {
-    return fetch(`${apiSettings.apiURL}/categories`)
+    return fetch(`${appSettings.apiURL}/categories`)
         .then(response => {
             return response.json();
         })

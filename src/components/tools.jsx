@@ -8,7 +8,7 @@ import { Route } from 'react-router';
 export const NoData = ({children}) => {
     return (
         <Row className="no-data">
-            <Col xs={12}>{children || 'Немає даних для відображення'}</Col>
+            <Col md={12}>{children || 'Немає даних для відображення'}</Col>
         </Row>
     );
 };
@@ -36,7 +36,7 @@ export const Status = ({ code, children }) => (
 export const NotFound = () => (
     <Status code={404}>
         <Row>
-            <Col xs={12}>
+            <Col md={12}>
                 <h1>Не можу знайти дану сторінку</h1>
                 <p>
                     Дана сторінка більше не існує. Якщо ви перейшли на дану сторінку через пряме посилання, спробуйте знайти

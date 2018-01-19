@@ -64,13 +64,16 @@
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
+    "react-ga": "^2.4.1",
     "react-redux": "^5.0.6",
-    "react-redux-saga-server-side-render-helper": "^2.1.0",
+    "react-redux-saga-server-side-render-helper": "^3.3.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
+    "react-share": "^1.19.0",
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
+    "transliteration": "^1.6.2",
     "whatwg-fetch": "^2.0.3"
   },
   "repository": {

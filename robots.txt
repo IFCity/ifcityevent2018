@@ -1,0 +1,3 @@
+User-agent: Googlebot
+Allow: /*.jpg*
+Allow: /*.jpeg*

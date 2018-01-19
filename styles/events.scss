@@ -47,6 +47,10 @@
     color: #0070c9;
     text-decoration: none;
     font-size: 17px;
+
+    > h4 {
+      color: #333;
+    }
   }
 
   .place, .date {
@@ -83,5 +87,22 @@
       color: #fff;
       text-transform: lowercase;
     }
+  }
+}
+
+.invalid {
+  background-color: #a94442;
+}
+
+.divider {
+
+  > span {
+    text-align: center;
+    display: block;
+    color: #fff;
+    text-transform: lowercase;
+    background-color: #ccc;
+    padding: 4px;
+    border-radius: 6px;
   }
 }

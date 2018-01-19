@@ -81,12 +81,12 @@ class Users extends Component {
         const {data, metadata} = this.props.users;
         return [
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <h4>Зареєстровані Facebook користувачі</h4>
                 </Col>
             </Row>,
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <Loading {...metadata} mask={true}>
                         <UsersList users={data}/>
                     </Loading>

@@ -70,12 +70,12 @@ class Pages extends Component {
         const {data, metadata} = this.props.pages;
         return [
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <h4>Facebook сторінки</h4>
                 </Col>
             </Row>,
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <Loading {...metadata} mask={true}>
                         <PagesList pages={data}/>
                     </Loading>

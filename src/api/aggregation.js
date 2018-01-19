@@ -1,7 +1,6 @@
 import {promises, prepareIdQuery} from './fbHelper';
 import appSettings from '../constants/aplication';
 import moment from 'moment';
-import apiSettings from "../constants/api";
 import fetch from "../services/fetchAdapter";
 
 const fmt = appSettings.formats.date.system;
@@ -65,7 +64,7 @@ export const aggregateFB = (token) => {
         )
         .then(
             placeResponse => {
-                return fetch(`${apiSettings.apiURL}/pages`)
+                return fetch(`${appSettings.apiURL}/pages`)
                     .then(response => {
                         return response.json();
                     })
@@ -137,7 +136,7 @@ export const aggregateFB = (token) => {
                     },
                     body: JSON.stringify({show_invalid: true})
                 };
-                return fetch(`${apiSettings.apiURL}/events/search`, config)
+                return fetch(`${appSettings.apiURL}/events/search`, config)
                     .then(response => {
                         return response.json();
                     })

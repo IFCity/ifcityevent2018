@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, Button, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {Row, Col, Button, FormControl, FormGroup, ControlLabel, Form} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import ReactGA from 'react-ga';
+
 
 import {
     aggregateFBAction,
@@ -10,13 +12,14 @@ import {
     toggleIntegrateAction,
     setMinPriceAction,
     setMaxPriceAction,
-    setCategoryAction
+    setCategoryAction,
+    setPhoneAction,
+    setTicketUrlAction
 } from '../../actions/aggregationActions';
 import { saveEventsAction } from '../../actions/eventsActions';
 import { getCategoriesAction } from '../../actions/categoriesActions';
 import { Loading, NoData } from '../../components/tools.jsx';
 import { CategoryDropdown } from '../../components/formElements.jsx';
-
 
 
 class EventToAggregate extends Component {
@@ -27,6 +30,8 @@ class EventToAggregate extends Component {
         this.handleMinPriceChange = this.handleMinPriceChange.bind(this);
         this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
+        this.handlePhoneChange = this.handlePhoneChange.bind(this);
+        this.handleTicketUrlChange = this.handleTicketUrlChange.bind(this);
     }
 
     handleMinPriceChange(e) {
@@ -49,11 +54,18 @@ class EventToAggregate extends Component {
         this.props.dispatch(setCategoryAction({id: this.props.event.id, value: category}));
     }
 
+    handlePhoneChange(e) {
+        this.props.dispatch(setPhoneAction({id: this.props.event.id, value: e.target.value}));
+    }
+
+    handleTicketUrlChange(e) {
+        this.props.dispatch(setTicketUrlAction({id: this.props.event.id, value: e.target.value}));
+    }
+
     render() {
         const {event} = this.props;
-        console.log(this.props);
         return (
-            <tr>
+            <tr className={event.invalid ? 'invalid' : ''}>
                 <td>
                     <div className="image">
                         <img src={_.get(event, 'cover.source', '')}/>
@@ -70,49 +82,85 @@ class EventToAggregate extends Component {
                     </p>
                 </td>
                 <td>
-                    {moment(event.start_time).format('YYYY-MM-DD HH:mm')}&nbsp;
-                    {event.end_time ? ` - ${moment(event.end_time).format('YYYY-MM-DD HH:mm')}` : ''}
-                </td>
-                <td>
-                    <FormGroup
-                        controlId="praice"
-                    >
-                        <ControlLabel>Від</ControlLabel>
-                        <FormControl
-                            type="text"
-                            value={_.get(event, 'price.from', '')}
-                            placeholder="min"
-                            onChange={this.handleMinPriceChange}
-                        />
-                        <ControlLabel>До</ControlLabel>
-                        <FormControl
-                            type="text"
-                            value={_.get(event, 'price.to', '')}
-                            placeholder="max"
-                            onChange={this.handleMaxPriceChange}
-                        />
-                    </FormGroup>
-                </td>
-                <td>
-                    <CategoryDropdown
-                        event={event}
-                        categories={this.props.categories.data}
-                        onChange={this.handleCategoryChange}
-                    />
-                </td>
-                <td>
-                    <input
-                        name="isValid"
-                        type="checkbox"
-                        checked={!this.props.event.invalid}
-                        onChange={this.toggleValid}/>
-                </td>
-                <td>
-                    <input
-                        name="readyToSync"
-                        type="checkbox"
-                        checked={this.props.event.integrate}
-                        onChange={this.toggleIntegrate}/>
+                    <Row>
+                        <Col md={6}>
+                            <ControlLabel>Час від</ControlLabel>
+                            <FormControl
+                                disabled
+                                type="text"
+                                value={moment(event.start_time).format('YYYY-MM-DD HH:mm')}
+                            />
+                        </Col>
+                        <Col md={6}>
+                            <ControlLabel>Час до </ControlLabel>
+                            <FormControl
+                                disabled
+                                type="text"
+                                value={event.end_time ? moment(event.end_time).format('YYYY-MM-DD HH:mm') : null}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <ControlLabel>Ціна від</ControlLabel>
+                            <FormControl
+                                type="text"
+                                value={_.get(event, 'price.from', '')}
+                                placeholder="min"
+                                onChange={this.handleMinPriceChange}
+                            />
+                        </Col>
+                        <Col md={6}>
+                            <ControlLabel>Ціна до</ControlLabel>
+                            <FormControl
+                                type="text"
+                                value={_.get(event, 'price.to', '')}
+                                placeholder="max"
+                                onChange={this.handleMaxPriceChange}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <ControlLabel>Категорія</ControlLabel>
+                                <CategoryDropdown
+                                    event={event}
+                                    categories={this.props.categories.data}
+                                    onChange={this.handleCategoryChange}
+                                />
+                        </Col>
+                        <Col md={6}>
+                            <ControlLabel>Телефон</ControlLabel>
+                            <FormControl
+                                type="text"
+                                value={_.get(event, 'phone', '')}
+                                placeholder="phone"
+                                onChange={this.handlePhoneChange}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <ControlLabel>Лінк на сервіс покупки квитка</ControlLabel>
+                            <FormControl
+                                type="text"
+                                value={_.get(event, 'ticketUrl', '')}
+                                placeholder="ticket url"
+                                onChange={this.handleTicketUrlChange}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <ControlLabel>Валідна подія</ControlLabel>
+                            {' '}
+                            <input
+                                name="isValid"
+                                type="checkbox"
+                                checked={!this.props.event.invalid}
+                                onChange={this.toggleValid}/>
+                        </Col>
+                    </Row>
                 </td>
             </tr>
         );
@@ -141,19 +189,7 @@ class AggregationList extends Component {
                         Основні дані
                     </th>
                     <th>
-                        Дата
-                    </th>
-                    <th>
-                        Ціна
-                    </th>
-                    <th>
-                        Категорія
-                    </th>
-                    <th>
-                        Валідність
-                    </th>
-                    <th>
-                        IFCity синхронізація
+                        Дані для редагування
                     </th>
                 </tr>
                 </thead>
@@ -181,6 +217,12 @@ class Aggregation extends Component {
     }
 
     doAggregate() {
+        ReactGA.ga('send', {
+            hitType: 'event',
+            eventCategory: 'Facebook Aggregation',
+            eventAction: 'search',
+            eventLabel: this.props.authorization.data.authData.name
+        });
         this.props.dispatch(aggregateFBAction(this.props.authorization.data.authData.accessToken));
     }
 
@@ -189,6 +231,12 @@ class Aggregation extends Component {
     }
 
     doSave() {
+        ReactGA.ga('send', {
+            hitType: 'event',
+            eventCategory: 'Facebook Aggregation',
+            eventAction: 'save',
+            eventLabel: this.props.authorization.data.authData.name
+        });
         this.props.dispatch(saveEventsAction({
             token: this.props.authorization.data.authData.accessToken,
             events: this.props.aggregation.data
@@ -204,19 +252,19 @@ class Aggregation extends Component {
         const {data, metadata} = this.props.aggregation;
         return [
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <h4>Агрегація з Facebook</h4>
                 </Col>
             </Row>,
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <Button bsStyle="success" onClick={this.doAggregate}>Перечитати Facebook-події</Button>
                     &nbsp;
                     <Button bsStyle="danger" onClick={this.doSave}>Записати в базу</Button>
                 </Col>
             </Row>,
             <Row>
-                <Col xs={12}>
+                <Col md={12}>
                     <Loading {...metadata} mask={true}>
                         <AggregationList
                             {...this.props}

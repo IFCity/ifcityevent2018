@@ -13,6 +13,12 @@ export default function (state = initialState.events, action) {
             return mapMetadataSuccess(state, action, 'aggregation');
         case types.GET_AGGREGATION_FAILURE:
             return mapMetadataFailure(state, action, 'aggregation');
+
+        case types.SAVE_EVENTS_SUCCESS:
+            return { ...state, data: [] };
+        case types.SAVE_EVENTS_FAILURE:
+            return mapMetadataFailure(state, action, 'aggregation');
+
         case types.TOGGLE_VALID:
             const newValidData = _(_.cloneDeep(state.data))
                 .map(item => {
@@ -65,6 +71,29 @@ export default function (state = initialState.events, action) {
                 })
                 .value();
             return { ...state, data: newCategory };
+
+        case types.SET_PHONE:
+            const newPhone = _(_.cloneDeep(state.data))
+                .map(item => {
+                    if (item.id === action.payload.id) {
+                        item.phone = action.payload.value;
+                    }
+                    return item;
+                })
+                .value();
+            return { ...state, data: newPhone };
+
+        case types.SET_TICKET_URL:
+            const newTicketUrl = _(_.cloneDeep(state.data))
+                .map(item => {
+                    if (item.id === action.payload.id) {
+                        item.ticketUrl = action.payload.value;
+                    }
+                    return item;
+                })
+                .value();
+            return { ...state, data: newTicketUrl };
+
         default:
             return state;
     }

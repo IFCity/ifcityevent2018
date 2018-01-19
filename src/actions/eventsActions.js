@@ -9,3 +9,8 @@ export const saveEventsAction = (payload) => ({
     type: types.SAVE_EVENTS_REQUEST,
     payload
 });
+
+export const getEventAction = (payload) => ({
+    type: types.GET_EVENT_REQUEST,
+    payload
+});

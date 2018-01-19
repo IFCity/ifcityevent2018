@@ -1,7 +1,44 @@
-import ListPage from '../containers/ListPage.jsx';
-import AdminPage from '../containers/AdminPage.jsx';
-import { fetchEvents } from '../api/events';
+import _ from 'lodash';
 
+import ListPage from '../containers/ListPage.jsx';
+import EventPage from '../containers/EventPage.jsx';
+import AdminPage from '../containers/AdminPage.jsx';
+import { fetchEvents, fetchEvent } from '../api/events';
+import { fetchCategories } from '../api/categories';
+
+const eventsLoadData = match => {
+    return Promise.all([fetchEvents(match && match.params.categoryid), fetchCategories()]);
+};
+
+const eventsPreloadedState = data => {
+    return {
+        events: {
+            data: data[0][0].data || [],
+            metadata: data[0][0].metadata || {}
+        },
+        categories: {
+            data: data[0][1].data || [],
+            metadata : data[0][1].metadata || {}
+        }
+    }
+};
+
+const eventLoadData = match => {
+    return Promise.all([fetchEvent(match && match.params.eventid), fetchCategories()]);
+};
+
+const eventPreloadedState = data => {
+    return {
+        event: {
+            data: data[0][0].data || [],
+            metadata: data[0][0].metadata || {}
+        },
+        categories: {
+            data: data[0][1].data || [],
+            metadata : data[0][1].metadata || {}
+        }
+    }
+};
 
 export default [
     {
@@ -9,46 +46,32 @@ export default [
         key: 'root',
         exact: true,
         component: ListPage,
-        loadData: () => fetchEvents(),
-        getPreloadedState: data => {
-            let metadata = data[0].metadata || {};
-            return {
-                events: {
-                    data: data[0].data || [],
-                    metadata
-                }}
-        },
-        pageTitle: 'Всі події'
+        loadData: () => eventsLoadData(),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => 'Всі події'
     },
     {
         path: '/category/:categoryid',
         key: 'sport',
         exact: true,
         component: ListPage,
-        loadData: (match) => fetchEvents(match && match.params.categoryid),
-        getPreloadedState: data => {
-            let metadata = data[0].metadata || {};
-            return {
-                events: {
-                    data: data[0].data || [],
-                    metadata
-                }}
-        },
-        pageTitle: 'Події'
+        loadData: match => eventsLoadData(match),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => 'Категорія'
+    },
+    {
+        path: '/event/:eventid/:trname',
+        key: 'sport',
+        exact: true,
+        component: EventPage,
+        loadData: match => eventLoadData(match),
+        getPreloadedState: data => eventPreloadedState(data),
+        pageTitle: data => data[0][0].data.name
     },
     {
         path: '/admin',
         key: 'admin',
         component: AdminPage,
-        loadData: () => fetchEvents(),
-        getPreloadedState: data => {
-            let metadata = data[0].metadata || {};
-            return {
-                events: {
-                    data: data[0].data || [],
-                    metadata
-                }}
-        },
         pageTitle: 'Адміністрування'
     },
 ];
@@ -82,6 +105,9 @@ export const mainMenuRoutes = [
     }, {
         path: '/category/attention',
         title: 'Увага!'
+    }, {
+        path: '/category/discounts',
+        title: 'Акції та знижки'
     }
 ];
 

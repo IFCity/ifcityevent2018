@@ -30,3 +30,13 @@ export const setCategoryAction = payload => ({
     type: types.SET_CATEGORY,
     payload
 });
+
+export const setPhoneAction = payload => ({
+    type: types.SET_PHONE,
+    payload
+});
+
+export const setTicketUrlAction = payload => ({
+    type: types.SET_TICKET_URL,
+    payload
+});

@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router';
 import routes from '../routes';
 import Navbar from '../components/navbar.jsx';
 import {NotFound } from '../components/tools.jsx';
+import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
 
 class App extends Component {
@@ -18,6 +19,7 @@ class App extends Component {
                         ))}
                         <Route component={NotFound}/>
                     </Switch>
+                    <GoogleAnalytics />
                 </div>
             </div>
         );

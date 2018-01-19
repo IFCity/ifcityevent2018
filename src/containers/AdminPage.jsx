@@ -8,6 +8,7 @@ import Pages from '../views/admin/pages.jsx';
 import Categories from '../views/admin/categories.jsx';
 import Users from '../views/admin/users.jsx';
 import { NotFound } from '../components/tools.jsx';
+import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
 
 const routes = [{
@@ -57,6 +58,7 @@ class AdminPage extends Component {
                         .value()}
                     <Route component={NotFound}/>
                 </Switch>
+                <GoogleAnalytics/>
             </div>
         );
     }

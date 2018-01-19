@@ -1,31 +1,47 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Row, Col} from 'react-bootstrap';
+import moment from 'moment';
+import _ from 'lodash';
+import { Link } from 'react-router-dom';
+import { slugify } from 'transliteration';
 
 import { getEventsAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
 import { NoData, Loading } from '../components/tools.jsx';
-import { EventTime, EventPlace, EventPrice, EventPhone, EventType } from '../components/eventAttributes.jsx';
+import {
+    EventTime,
+    EventPlace,
+    EventPrice,
+    EventPhone,
+    EventType,
+    EventShare
+} from '../components/eventAttributes.jsx';
 
 
-const EventDefault = (props) => {
-    const {event, even, categories} = props;
+export const EventDefault = (props) => {
+    const {event, even, categories, showShareLinks, deepLinking} = props;
     const info =
-        <Col xs={6}>
-            <h4>{event.name}</h4>
+        <Col md={6}>
+            {deepLinking ?
+                <Link to={`/event/${event._id}/${slugify(event.name)}`}>
+                    <h4>{event.name}</h4>
+                </Link> :
+                <h4>{event.name}</h4>}
             <EventType category={event.category} categories={categories}/>
             <EventPlace place={event.place}/>
             <EventTime event={event}/>
             <EventPrice event={event}/>
-            <EventPhone phone="+38 (096) 751-61-85"/>
+            <EventPhone phone={event.phone}/>
+            {showShareLinks ? <EventShare event={event}/> : null}
             <p className="description">{event.description}</p>
             <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
                 детальніше у Facebook →
             </a>
         </Col>;
     const cover =
-        <Col xs={6}>
-            <img src={event.cover.source}/>
+        <Col md={6}>
+            <img src={_.get(event, 'cover.source', '')}/>
         </Col>;
     return (
         <Row
@@ -48,25 +64,58 @@ class Search extends Component {
     }
 }
 
+const Divider = ({text}) => (
+    <div className="divider">
+        <span>{text}</span>
+    </div>
+);
+
+const today = moment();
+const isToday = event => {
+    return moment(event.start_time).format('YYYY-MM-DD') <= today.format('YYYY-MM-DD');
+};
+
 class EventsList extends Component {
     render() {
-        const {events} = this.props;
-        const noData =
+        let {events} = this.props;
+        let todayEvents = _(events)
+            .filter(event => isToday(event))
+            .value();
+        let laterEvents = _(events)
+            .filter(event => !isToday(event))
+            .value();
+        const noTodayData =
             <NoData>
-                <h1>Вибачте, в даній категорії немає наразі подій</h1>
+                <h1>Сьогодні тут немає подій</h1>
+            </NoData>;
+        const noLaterData =
+            <NoData>
+                <h1>Немає наразі більше подій</h1>
             </NoData>;
         return (
             <div>
-                {/*<Search/>*/}
-                {events.length ?
-                    events.map((event, index) => (
+                <Divider text="Сьогодні"/>
+                {todayEvents.length ?
+                    todayEvents.map((event, index) => (
                         <EventDefault
                             {...this.props}
+                            deepLinking
                             event={event}
                             even={index % 2 === 0}
                         />
                     ))
-                    : noData}
+                    : noTodayData}
+                <Divider text="Пізніше"/>
+                {laterEvents.length ?
+                    laterEvents.map((event, index) => (
+                        <EventDefault
+                            {...this.props}
+                            deepLinking
+                            event={event}
+                            even={index % 2 === 0}
+                        />
+                    ))
+                    : noLaterData}
             </div>
         );
     }
