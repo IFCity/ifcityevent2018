@@ -5,6 +5,7 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { slugify } from 'transliteration';
+import Truncate from 'react-truncate';
 
 import { getEventsAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
@@ -21,10 +22,11 @@ import {
 
 export const EventDefault = (props) => {
     const {event, even, categories, showShareLinks, deepLinking} = props;
+    const detailedLink = `/event/${event._id}/${slugify(event.name)}`;
     const info =
         <Col md={6}>
             {deepLinking ?
-                <Link to={`/event/${event._id}/${slugify(event.name)}`}>
+                <Link to={detailedLink}>
                     <h4>{event.name}</h4>
                 </Link> :
                 <h4>{event.name}</h4>}
@@ -33,11 +35,18 @@ export const EventDefault = (props) => {
             <EventTime event={event}/>
             <EventPrice event={event}/>
             <EventPhone phone={event.phone}/>
+            <p>Джерело:&nbsp;
+                <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
+                    Facebook
+                </a>
+            </p>
             {showShareLinks ? <EventShare event={event}/> : null}
-            <p className="description">{event.description}</p>
-            <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
-                детальніше у Facebook →
-            </a>
+            {deepLinking ?
+                <Truncate lines={7} ellipsis={<span>... <a href={detailedLink}>детальніше</a></span>}>
+                    <p className="description">{event.description}</p>
+                </Truncate> :
+                <p className="description">{event.description}</p>
+            }
         </Col>;
     const cover =
         <Col md={6}>
@@ -80,6 +89,8 @@ class EventsList extends Component {
         let {events} = this.props;
         let todayEvents = _(events)
             .filter(event => isToday(event))
+            .orderBy(event => moment(event.update_time))
+            .reverse()
             .value();
         let laterEvents = _(events)
             .filter(event => !isToday(event))

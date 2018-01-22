@@ -16,7 +16,7 @@ export default {
     appName: 'IF City Event',
     FBPageId: '111526136320923',
     GAID: 'UA-112754571-1',
-    ...dev,
+    ...prod,
     queries: {
         places: '&q=*&type=place&center=48.9166666667%2C24.7166666667&distance=10000&limit=200'
     },

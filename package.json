@@ -71,6 +71,7 @@
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^4.0.8",
     "react-share": "^1.19.0",
+    "react-truncate": "^2.3.0",
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "transliteration": "^1.6.2",
