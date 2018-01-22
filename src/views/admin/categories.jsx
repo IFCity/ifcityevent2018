@@ -18,6 +18,9 @@ const Category = ({category}) => {
             <td>
                 {category.name}
             </td>
+            <td>
+                {category.ifc_type}
+            </td>
         </tr>
     );
 };
@@ -40,6 +43,9 @@ class CategoriesList extends Component {
                         </th>
                         <th>
                             Назва
+                        </th>
+                        <th>
+                            IFCity type
                         </th>
                     </tr>
                 </thead>
