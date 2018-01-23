@@ -19,7 +19,10 @@ export const EventShare = ({event}) => {
     );
 };
 
-export const EventPlace = ({place}) => {
+export const EventPlace = ({place, plain}) => {
+    if (plain) {
+        return placeObj(place).name;
+    }
     const detailedAddress = placeObj(place).location;
     return (
         <div className="place">
@@ -30,7 +33,10 @@ export const EventPlace = ({place}) => {
     );
 };
 
-export const EventPrice = ({event}) => {
+export const EventPrice = ({event, plain}) => {
+    if (plain) {
+        return priceObj(event.price).str;
+    }
     const price = priceObj(event.price);
     const btn = event.ticketUrl ?
         <a href={event.ticketUrl} target="_blank">
@@ -68,7 +74,10 @@ export const EventType = ({category, categories}) => {
     );
 };
 
-export const EventTime = ({event}) => {
+export const EventTime = ({event, plain}) => {
+    if (plain) {
+        return eventTimeObj(event).shortTime;
+    }
     const fullTime = eventTimeObj(event).fullTime;
     return (
         <div className="date">

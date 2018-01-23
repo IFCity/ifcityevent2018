@@ -7,6 +7,7 @@ import Aggregation from '../views/admin/aggregation.jsx';
 import Pages from '../views/admin/pages.jsx';
 import Categories from '../views/admin/categories.jsx';
 import Users from '../views/admin/users.jsx';
+import TextParser from '../views/admin/textParser.jsx';
 import { NotFound } from '../components/tools.jsx';
 import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
@@ -31,6 +32,11 @@ const routes = [{
     key: 'admin_users',
     exact: true,
     component: Users
+}, {
+    path: '/admin/text',
+    key: 'admin_text',
+    exact: true,
+    component: TextParser
 }];
 
 class AdminPage extends Component {

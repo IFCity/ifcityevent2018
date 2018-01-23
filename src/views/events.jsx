@@ -18,6 +18,7 @@ import {
     EventType,
     EventShare
 } from '../components/eventAttributes.jsx';
+import appSettings from '../constants/aplication';
 
 
 export const EventDefault = (props) => {
@@ -59,6 +60,20 @@ export const EventDefault = (props) => {
         >
             {even ? [info, cover] : [cover, info]}
         </Row>
+    );
+};
+
+export const EventText = (props) => {
+    const {event, categories} = props;
+    const detailedLink = `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`;
+    return (
+        <p>
+            {event.name}{' ('}
+            <EventPlace place={event.place} plain/>{'; '}
+            <EventTime event={event} plain/>{'; '}
+            <EventPrice event={event} plain/>{'; '}
+            {detailedLink}{')'}
+        </p>
     );
 };
 
@@ -151,7 +166,7 @@ class Events extends Component {
     }
 
     search(category) {
-        this.props.dispatch(getEventsAction(category));
+        this.props.dispatch(getEventsAction({category: category}));
     }
 
     fetchCategories() {

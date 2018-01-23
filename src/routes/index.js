@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import ListPage from '../containers/ListPage.jsx';
 import EventPage from '../containers/EventPage.jsx';
 import AdminPage from '../containers/AdminPage.jsx';
@@ -7,7 +5,7 @@ import { fetchEvents, fetchEvent } from '../api/events';
 import { fetchCategories } from '../api/categories';
 
 const eventsLoadData = match => {
-    return Promise.all([fetchEvents(match && match.params.categoryid), fetchCategories()]);
+    return Promise.all([fetchEvents(match && match.params.categoryid ? {category: match.params.categoryid} : null), fetchCategories()]);
 };
 
 const eventsPreloadedState = data => {
@@ -127,5 +125,8 @@ export const adminMenuRoutes = [
     }, {
         path: '/admin/users',
         title: 'Користувачі'
+    }, {
+        path: '/admin/text',
+        title: 'Текстовий парсер'
     }
 ];

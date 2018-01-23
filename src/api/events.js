@@ -2,15 +2,22 @@ import fetch from '../services/fetchAdapter';
 import appSettings from '../constants/aplication';
 
 
-export const fetchEvents = (category) => {
+export const fetchEvents = (payload) => {
     let config = {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
     };
-    if (category) {
-        config.body = JSON.stringify({categories: [category]});
+    if (payload) {
+        config.body = {};
+        if (payload.category) {
+            config.body.categories = [payload.category];
+        }
+        if (payload.new) {
+            config.body.new = payload.new;
+        }
+        config.body = JSON.stringify(config.body);
     }
     return fetch(`${appSettings.apiURL}/events/search`, config)
         .then(response => {
