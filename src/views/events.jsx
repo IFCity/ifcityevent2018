@@ -5,7 +5,6 @@ import moment from 'moment';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
 import { slugify } from 'transliteration';
-import Truncate from 'react-truncate';
 
 import { getEventsAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
@@ -16,7 +15,8 @@ import {
     EventPrice,
     EventPhone,
     EventType,
-    EventShare
+    EventShare,
+    EventSource
 } from '../components/eventAttributes.jsx';
 import appSettings from '../constants/aplication';
 
@@ -36,18 +36,10 @@ export const EventDefault = (props) => {
             <EventTime event={event}/>
             <EventPrice event={event}/>
             <EventPhone phone={event.phone}/>
-            <p>Джерело:&nbsp;
-                <a target="_blank" href={`https://www.facebook.com/events/${event.id}`}>
-                    Facebook
-                </a>
-            </p>
+            <EventSource event={event}/>
             {showShareLinks ? <EventShare event={event}/> : null}
-            {deepLinking ?
-                <Truncate lines={7} ellipsis={<span>... <a href={detailedLink}>детальніше</a></span>}>
-                    <p className="description">{event.description}</p>
-                </Truncate> :
-                <p className="description">{event.description}</p>
-            }
+            <p className={deepLinking ? 'description wrap' : 'description'}>{event.description}</p>
+            {deepLinking ? <a className="detailed" href={detailedLink}>...показати більше</a> : null}
         </Col>;
     const cover =
         <Col md={6}>
@@ -64,7 +56,7 @@ export const EventDefault = (props) => {
 };
 
 export const EventText = (props) => {
-    const {event, categories} = props;
+    const {event} = props;
     const detailedLink = `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`;
     return (
         <p>

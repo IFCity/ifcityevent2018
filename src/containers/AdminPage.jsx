@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 
 import Aggregation from '../views/admin/aggregation.jsx';
 import Pages from '../views/admin/pages.jsx';
+import Events from '../views/admin/events.jsx';
 import Categories from '../views/admin/categories.jsx';
 import Users from '../views/admin/users.jsx';
 import TextParser from '../views/admin/textParser.jsx';
@@ -22,6 +23,11 @@ const routes = [{
     key: 'admin_pages',
     exact: true,
     component: Pages
+}, {
+    path: '/admin/events',
+    key: 'admin_events',
+    exact: true,
+    component: Events
 }, {
     path: '/admin/categories',
     key: 'admin_categories',

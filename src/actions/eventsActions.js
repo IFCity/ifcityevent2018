@@ -14,3 +14,13 @@ export const getEventAction = (payload) => ({
     type: types.GET_EVENT_REQUEST,
     payload
 });
+
+export const removeEventAction = (payload) => ({
+    type: types.REMOVE_EVENT_REQUEST,
+    payload
+});
+
+export const updateEventAction = (payload) => ({
+    type: types.UPDATE_EVENT_REQUEST,
+    payload
+});

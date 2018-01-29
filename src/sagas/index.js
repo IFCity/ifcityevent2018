@@ -2,6 +2,8 @@ import { fork, all } from 'redux-saga/effects';
 import {
     watchGetEvents,
     watchGetEvent,
+    watchRemoveEvent,
+    watchUpdateEvent,
     watchSaveEvents,
     watchGetCategories,
     watchGetPages,
@@ -17,6 +19,8 @@ export default function* root() {
     yield all([
         fork(watchGetEvents),
         fork(watchGetEvent),
+        fork(watchRemoveEvent),
+        fork(watchUpdateEvent),
         fork(watchSaveEvents),
         fork(watchGetCategories),
         fork(watchGetPages),

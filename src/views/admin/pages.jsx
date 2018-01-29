@@ -4,7 +4,7 @@ import {Row, Col, Button} from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import { Loading, NoData } from '../../components/tools.jsx';
-import { getPagesAction } from "../../actions/pagesActions";
+import { getPagesAction } from '../../actions/pagesActions';
 
 
 const Page = ({page}) => {

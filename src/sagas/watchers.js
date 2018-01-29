@@ -1,6 +1,6 @@
-import { takeLatest, takeEvery } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga/effects';
 import { getEventsSaga, saveEventsSaga } from './eventsSaga';
-import { getEventSaga } from './eventSaga';
+import { getEventSaga, removeEventSaga, updateEventSaga } from './eventSaga';
 import { getCategoriesSaga } from './categoriesSaga';
 import { getPagesSaga } from './pagesSaga';
 import { getUsersSaga } from './usersSaga';
@@ -15,6 +15,14 @@ export function* watchGetEvents() {
 
 export function* watchGetEvent() {
     yield takeEvery(types.GET_EVENT_REQUEST, getEventSaga);
+}
+
+export function* watchRemoveEvent() {
+    yield takeEvery(types.REMOVE_EVENT_REQUEST, removeEventSaga);
+}
+
+export function* watchUpdateEvent() {
+    yield takeEvery(types.UPDATE_EVENT_REQUEST, updateEventSaga);
 }
 
 export function* watchSaveEvents() {

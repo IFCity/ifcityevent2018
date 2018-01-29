@@ -7,6 +7,7 @@ import { EventDefault } from '../views/events.jsx';
 import { getEventAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
 import { Loading } from '../components/tools.jsx';
+import { EventJSON } from '../components/eventAttributes.jsx';
 
 
 class EventPage extends Component {
@@ -54,6 +55,7 @@ class EventPage extends Component {
                         <h4>Вас також можуть зацікавити</h4>
                     </Col>
                 </Row>
+                <EventJSON event={data}/>
             </div>
         );
     }

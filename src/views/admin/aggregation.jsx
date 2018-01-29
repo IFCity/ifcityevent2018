@@ -9,6 +9,7 @@ import ReactGA from 'react-ga';
 import {
     aggregateFBAction,
     toggleValidAction,
+    toggleHiddenAction,
     toggleIntegrateAction,
     setMinPriceAction,
     setMaxPriceAction,
@@ -26,6 +27,7 @@ class EventToAggregate extends Component {
     constructor(props) {
         super(props);
         this.toggleValid = this.toggleValid.bind(this);
+        this.toggleHidden = this.toggleHidden.bind(this);
         this.toggleIntegrate = this.toggleIntegrate.bind(this);
         this.handleMinPriceChange = this.handleMinPriceChange.bind(this);
         this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
@@ -44,6 +46,10 @@ class EventToAggregate extends Component {
 
     toggleValid() {
         this.props.dispatch(toggleValidAction(this.props.event.id));
+    }
+
+    toggleHidden() {
+        this.props.dispatch(toggleHiddenAction(this.props.event.id));
     }
 
     toggleIntegrate() {
@@ -159,6 +165,14 @@ class EventToAggregate extends Component {
                                 type="checkbox"
                                 checked={!this.props.event.invalid}
                                 onChange={this.toggleValid}/>
+                            <br/>
+                            <ControlLabel>Прихована подія</ControlLabel>
+                            {' '}
+                            <input
+                                name="isHidden"
+                                type="checkbox"
+                                checked={this.props.event.hidden}
+                                onChange={this.toggleHidden}/>
                         </Col>
                     </Row>
                 </td>
@@ -181,17 +195,17 @@ class AggregationList extends Component {
         return (
             <table className="table table-admin-events">
                 <thead>
-                <tr>
-                    <th>
-                        Зображення
-                    </th>
-                    <th>
-                        Основні дані
-                    </th>
-                    <th>
-                        Дані для редагування
-                    </th>
-                </tr>
+                    <tr>
+                        <th>
+                            Зображення
+                        </th>
+                        <th>
+                            Основні дані
+                        </th>
+                        <th>
+                            Дані для редагування
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
                     {events.length ?

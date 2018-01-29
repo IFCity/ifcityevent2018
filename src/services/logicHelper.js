@@ -31,16 +31,21 @@ export const eventTimeObj = ({start_time, end_time}) => {
     }
     if (!end_time) {
         return {
+            startTime: moment(start_time).format('YYYY-MM-DDThh:mm'),
             shortTime: eventOneTimeStr(start_time)
         };
     }
     if (moment(start_time).format('LL') === moment(end_time).format('LL')) {
         return {
+            startTime: moment(start_time).format('YYYY-MM-DDThh:mm'),
+            endTime: moment(end_time).format('YYYY-MM-DDThh:mm'),
             shortTime: eventSimpleOneTimeStr(start_time),
             fullTime: eventSameDateStr({start_time, end_time})
         };
     }
     return {
+        startTime: moment(start_time).format('YYYY-MM-DDThh:mm'),
+        endTime: moment(end_time).format('YYYY-MM-DDThh:mm'),
         shortTime: eventSimpleRangeStr({start_time, end_time}),
         fullTime: eventDefaultRangeStr({start_time, end_time})
     };

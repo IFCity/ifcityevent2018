@@ -8,6 +8,12 @@ import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
 
 class App extends Component {
+    componentDidMount() {
+        this.state = {
+            isClient: true
+        }
+    }
+
     render() {
         return (
             <div>

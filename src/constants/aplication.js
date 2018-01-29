@@ -14,7 +14,6 @@ const prod = {
 
 export default {
     appName: 'IF City Event',
-    FBPageId: '111526136320923',
     GAID: 'UA-112754571-1',
     ...prod,
     queries: {

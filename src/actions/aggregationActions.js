@@ -11,6 +11,11 @@ export const toggleValidAction = (id) => ({
     id
 });
 
+export const toggleHiddenAction = (id) => ({
+    type: types.TOGGLE_HIDDEN,
+    id
+});
+
 export const toggleIntegrateAction = (id) => ({
     type: types.TOGGLE_INTEGRATE,
     id

@@ -29,6 +29,16 @@ export default function (state = initialState.events, action) {
                 })
                 .value();
             return { ...state, data: newValidData };
+        case types.TOGGLE_HIDDEN:
+            const newHiddenData = _(_.cloneDeep(state.data))
+                .map(item => {
+                    if (item.id === action.id) {
+                        item.hidden = !item.hidden;
+                    }
+                    return item;
+                })
+                .value();
+            return { ...state, data: newHiddenData };
         case types.TOGGLE_INTEGRATE:
             const newIntegrateData = _(_.cloneDeep(state.data))
                 .map(item => {

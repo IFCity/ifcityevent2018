@@ -134,7 +134,7 @@ export const aggregateFB = (token) => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({show_invalid: true})
+                    body: JSON.stringify({show_invalid: true, show_hidden: true})
                 };
                 return fetch(`${appSettings.apiURL}/events/search`, config)
                     .then(response => {
