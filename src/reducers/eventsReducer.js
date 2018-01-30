@@ -5,7 +5,8 @@ import {
     mapMetadataSuccess,
     mapMetadataFailure,
     mapMetadataSuccessRemove,
-    mapMetadataSuccessUpdate
+    mapMetadataSuccessUpdate,
+    mapMetadataSuccessAdd
 } from '../services/reduserHelper';
 
 
@@ -38,6 +39,13 @@ export default function (state = initialState.events, action) {
         case types.UPDATE_EVENT_SUCCESS:
             return mapMetadataSuccessUpdate(state, action, 'events');
         case types.UPDATE_EVENT_FAILURE:
+            return mapMetadataFailure(state, action, 'events');
+
+        case types.ADD_EVENT_REQUEST:
+            return mapMetadataRequest(state);
+        case types.ADD_EVENT_SUCCESS:
+            return mapMetadataSuccessAdd(state, action, 'events');
+        case types.ADD_EVENT_FAILURE:
             return mapMetadataFailure(state, action, 'events');
 
         default:

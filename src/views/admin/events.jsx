@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, ControlLabel, Button} from 'react-bootstrap';
+import {Row, Col, ControlLabel, Button, Modal} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { slugify } from 'transliteration';
 import _ from 'lodash';
 
 import { Loading, NoData } from '../../components/tools.jsx';
-import { getEventsAction, removeEventAction, updateEventAction } from '../../actions/eventsActions';
+import { getEventsAction, removeEventAction, updateEventAction, addEventAction } from '../../actions/eventsActions';
 import { getCategoriesAction } from '../../actions/categoriesActions';
 import {
     EventType,
@@ -28,7 +28,7 @@ class Event extends Component {
     }
 
     removeEvent() {
-        this.props.dispatch(removeEventAction(this.props.event._id));
+        this.props.removeEvent(this.props.event);
     }
 
     updateEvent() {
@@ -187,7 +187,7 @@ class Toolbar extends Component {
                     checked={!this.state.invalid}
                     onChange={this.toggleValid}/>
                 {' '}
-                <ControlLabel>валідні</ControlLabel>
+                <ControlLabel>показувати тільки валідні</ControlLabel>
                 <br/>
                 <input
                     name="isHidden"
@@ -195,7 +195,7 @@ class Toolbar extends Component {
                     checked={this.state.hidden}
                     onChange={this.toggleHidden}/>
                 {' '}
-                <ControlLabel>приховані</ControlLabel>
+                <ControlLabel>показати також приховані</ControlLabel>
                 <br/>
                 <input
                     name="isFeature"
@@ -211,7 +211,7 @@ class Toolbar extends Component {
                     checked={this.state.all}
                     onChange={this.toggleAll}/>
                 {' '}
-                <ControlLabel>минулі</ControlLabel>
+                <ControlLabel>показати також минулі</ControlLabel>
             </div>
         )
     }
@@ -227,6 +227,7 @@ class Events extends Component {
             hidden: false,
             new: false,
             showModal: false,
+            showRemoveModal: false,
             event: {},
             modalTitle: 'Нова подія'
         };
@@ -238,6 +239,10 @@ class Events extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.saveModal = this.saveModal.bind(this);
         this.updateEvent = this.updateEvent.bind(this);
+
+        this.closeRemoveModal = this.closeRemoveModal.bind(this);
+        this.removeEvent = this.removeEvent.bind(this);
+        this.applyRemove = this.applyRemove.bind(this);
     }
 
     componentDidMount() {
@@ -260,18 +265,35 @@ class Events extends Component {
                 this.search();
             }
         );
-
     }
 
     closeModal() {
         this.setState({ showModal: false });
     }
 
+    removeEvent(event) {
+        this.setState({
+            showRemoveModal: true,
+            event
+        });
+    }
+
+    closeRemoveModal() {
+        this.setState({ showRemoveModal: false });
+    }
+
+    applyRemove(event) {
+        this.closeRemoveModal();
+        this.props.dispatch(removeEventAction(event._id));
+    }
+
     newEvent() {
         this.setState({
             showModal: true,
             event: {
-                name: 'Нова подія'
+                name: 'Нова подія',
+                category: 'not_set',
+                tags: 'ifcityevent'
             },
             modalTitle: 'Нова подія',
             editType: 'new'
@@ -292,7 +314,7 @@ class Events extends Component {
         if (this.state.editType === 'update') {
             this.props.dispatch(updateEventAction(event));
         } else {
-            //this.props.dispatch(addEventAction(event));
+            this.props.dispatch(addEventAction(event));
         }
     }
 
@@ -313,7 +335,13 @@ class Events extends Component {
             <Row>
                 <Col md={12}>
                     <Loading {...metadata} mask={true}>
-                        <EventsList {...this.props} events={data} categories={this.props.categories.data} updateEvent={this.updateEvent}/>
+                        <EventsList
+                            {...this.props}
+                            events={data}
+                            categories={this.props.categories.data}
+                            updateEvent={this.updateEvent}
+                            removeEvent={this.removeEvent}
+                        />
                     </Loading>
                 </Col>
             </Row>,
@@ -324,8 +352,34 @@ class Events extends Component {
                 onSave={this.saveModal}
                 event={this.state.event}
                 categories={this.props.categories.data}
+            />,
+            <Dialog
+                event={this.state.event}
+                show={this.state.showRemoveModal}
+                onHide={this.closeRemoveModal}
+                onRemove={this.applyRemove}
             />
         ];
+    }
+}
+
+class Dialog extends Component {
+    render() {
+        const {onHide, show, event, onRemove} = this.props;
+        return (
+            <Modal show={show} onHide={onHide}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Видалення</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Видалити <strong>{event.name}</strong>?
+                </Modal.Body>
+            <Modal.Footer>
+                <Button bsStyle="success" onClick={() => onRemove(event)}>Видалити</Button>
+                <Button onClick={onHide}>Закрити</Button>
+            </Modal.Footer>
+        </Modal>
+        );
     }
 }
 

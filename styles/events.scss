@@ -109,6 +109,19 @@ $lines-to-show: 8;
       text-transform: lowercase;
     }
   }
+
+  .metadata {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    .title {
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-style: italic;
+    }
+  }
 }
 
 .invalid {

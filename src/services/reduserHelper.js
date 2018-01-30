@@ -25,7 +25,6 @@ export const mapMetadataSuccessRemove = (state, action, reducerName) => {
 };
 
 export const mapMetadataSuccessUpdate = (state, action, reducerName) => {
-    console.log(action[reducerName]);
     const events = _.cloneDeep(state.data);
     const data = _(events)
         .map(event => {
@@ -36,6 +35,12 @@ export const mapMetadataSuccessUpdate = (state, action, reducerName) => {
         })
         .value();
     return { ...state, data, metadata: getMetadata(action, reducerName) };
+};
+
+export const mapMetadataSuccessAdd = (state, action, reducerName) => {
+    let events = _.cloneDeep(state.data);
+    events.unshift(action[reducerName].data);
+    return { ...state, data: events, metadata: getMetadata(action, reducerName) };
 };
 
 export const mapMetadataFailure = (state, action, reducerName) => {

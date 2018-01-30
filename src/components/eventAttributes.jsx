@@ -295,3 +295,52 @@ export const EventSource = ({event}) => {
         </div>
     );
 };
+
+export const EventMetadata = ({event}) => {
+    if (!event.metadata) {
+        return null;
+    }
+    const formatValues = value => {
+        if (!_.isArray(value)) {
+            return value;
+        }
+        const items = _(value)
+            .map(item => {
+                return (
+                    <Row>
+                        <Col md={3} className="subtitle" style={{paddingLeft: 0}}>
+                            {item.name}
+                        </Col>
+                        <Col md={9} style={{paddingRight: 0}}>
+                            {formatValues(item.value)}
+                        </Col>
+                    </Row>
+                );
+            })
+            .value();
+        return (
+            <div>
+                {items}
+            </div>
+        )
+    };
+    const items = _(event.metadata)
+        .map(item => {
+            return (
+                <Row>
+                    <Col md={3} className="title" style={{paddingLeft: 0}}>
+                        {item.name}
+                    </Col>
+                    <Col md={9} style={{paddingRight: 0}}>
+                        {formatValues(item.value)}
+                    </Col>
+                </Row>
+            );
+        })
+        .value();
+    return (
+        <div className="metadata">
+            {items}
+        </div>
+    );
+};

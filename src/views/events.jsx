@@ -16,7 +16,8 @@ import {
     EventPhone,
     EventType,
     EventShare,
-    EventSource
+    EventSource,
+    EventMetadata
 } from '../components/eventAttributes.jsx';
 import appSettings from '../constants/aplication';
 
@@ -37,6 +38,7 @@ export const EventDefault = (props) => {
             <EventPrice event={event}/>
             <EventPhone phone={event.phone}/>
             <EventSource event={event}/>
+            <EventMetadata event={event}/>
             {showShareLinks ? <EventShare event={event}/> : null}
             <p className={deepLinking ? 'description wrap' : 'description'}>{event.description}</p>
             {deepLinking ? <a className="detailed" href={detailedLink}>...показати більше</a> : null}

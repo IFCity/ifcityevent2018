@@ -132,9 +132,37 @@ export const updateEvent = (event) => {
             return response.json();
         })
         .then(json => {
-            console.log(json);
             return {
                 data: json,
+                metadata: {
+                    success: true
+                }
+            };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const addEvent = (event) => {
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify([event])
+    };
+    return fetch(`${appSettings.apiURL}/events/`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return {
+                data: json && json[0],
                 metadata: {
                     success: true
                 }

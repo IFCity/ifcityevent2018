@@ -24,3 +24,8 @@ export const updateEventAction = (payload) => ({
     type: types.UPDATE_EVENT_REQUEST,
     payload
 });
+
+export const addEventAction = (payload) => ({
+    type: types.ADD_EVENT_REQUEST,
+    payload
+});

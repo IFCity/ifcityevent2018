@@ -1,5 +1,5 @@
 import { put, call } from 'redux-saga/effects';
-import { fetchEvent, removeEvent, updateEvent } from '../api/events';
+import { fetchEvent, removeEvent, updateEvent, addEvent } from '../api/events';
 import * as types from '../constants/actionTypes';
 
 
@@ -50,5 +50,21 @@ export function* updateEventSaga({ payload }) {
             }
         };
         yield put({ type: types.UPDATE_EVENT_FAILURE, events: response });
+    }
+}
+
+export function* addEventSaga({ payload }) {
+    try {
+        const response = yield call(addEvent, payload);
+        yield [
+            put({ type: types.ADD_EVENT_SUCCESS, payload, events: response }),
+        ]
+    } catch (error) {
+        const response = {
+            metadata: {
+                error
+            }
+        };
+        yield put({ type: types.ADD_EVENT_FAILURE, events: response });
     }
 }
