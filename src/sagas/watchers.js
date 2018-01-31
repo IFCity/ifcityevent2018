@@ -1,11 +1,12 @@
 import { takeEvery } from 'redux-saga/effects';
 import { getEventsSaga, saveEventsSaga } from './eventsSaga';
-import { getEventSaga, removeEventSaga, updateEventSaga, addEventSaga } from './eventSaga';
+import { getEventSaga, removeEventSaga, updateEventSaga, addEventSaga, incViewEventSaga } from './eventSaga';
 import { getCategoriesSaga } from './categoriesSaga';
 import { getPagesSaga } from './pagesSaga';
 import { getUsersSaga } from './usersSaga';
 import { loginSaga, logoutSaga, checkStatusSaga } from './authorizationSaga';
 import { aggregateFBSaga } from './aggregationSaga';
+import { getMostviewedSaga } from './mostviewedSaga';
 import * as types from '../constants/actionTypes';
 
 
@@ -27,6 +28,10 @@ export function* watchUpdateEvent() {
 
 export function* watchAddEvent() {
     yield takeEvery(types.ADD_EVENT_REQUEST, addEventSaga);
+}
+
+export function* watchIncViewEvent() {
+    yield takeEvery(types.INCVIEW_EVENT_REQUEST, incViewEventSaga);
 }
 
 export function* watchSaveEvents() {
@@ -59,4 +64,8 @@ export function* watchCheckStatus() {
 
 export function* watchAggregateFB() {
     yield takeEvery(types.GET_AGGREGATION_REQUEST, aggregateFBSaga);
+}
+
+export function* watchMostviewed() {
+    yield takeEvery(types.GET_MOSTVIEWEDEVENTS_REQUEST, getMostviewedSaga);
 }

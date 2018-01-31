@@ -13,6 +13,10 @@ export const EventShare = ({event}) => {
     const shareUrl = `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`;
     return (
         <div className="share">
+            <div className="views">
+                <span className="glyphicon glyphicon-eye-open" aria-hidden="true"/>&nbsp;
+                {event.view_count || 0}
+            </div>
             <div className="fb-share-button"
                  data-href={shareUrl}
                  data-layout="button_count">
@@ -242,9 +246,6 @@ class EventRecurrenceCheckboxes extends Component {
             days: this.getDays(bits)
         });
         this.props.onChange(bits);
-        console.log(days);
-        console.log(bits);
-        console.log(this.getDays(bits));
     }
 
     render() {

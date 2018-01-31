@@ -148,6 +148,34 @@ export const updateEvent = (event) => {
         ));
 };
 
+export const incViewCountEvent = (eventId) => {
+    let config = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    return fetch(`${appSettings.apiURL}/events/view/${eventId}`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return {
+                data: json,
+                metadata: {
+                    success: true
+                }
+            };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
 export const addEvent = (event) => {
     let config = {
         method: 'POST',
@@ -167,6 +195,23 @@ export const addEvent = (event) => {
                     success: true
                 }
             };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const fetchMostViewedEvents = (payload) => {
+    return fetch(`${appSettings.apiURL}/events/mostviewed`)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
         })
         .catch(ex => (
             {

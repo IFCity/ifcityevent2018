@@ -29,5 +29,9 @@ export default {
             authData: {}
         },
         metadata: {}
+    },
+    mostviewed: {
+        data: [],
+        metadata: {}
     }
 };

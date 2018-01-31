@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
 
 import { EventDefault } from '../views/events.jsx';
-import { getEventAction } from '../actions/eventsActions';
+import { getEventAction, incViewEventAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
 import { Loading } from '../components/tools.jsx';
 import { EventJSON } from '../components/eventAttributes.jsx';
@@ -25,11 +25,14 @@ class EventPage extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.match.params.eventid !== nextProps.match.params.eventid) {
             this.fetch(nextProps);
+            this.incViewCount(nextProps);
         }
     }
 
     fetch(props) {
+        console.log('fetch and inc');
         props.dispatch(getEventAction(props.match.params.eventid));
+        props.dispatch(incViewEventAction(props.match.params.eventid));
     }
 
     fetchCategories() {

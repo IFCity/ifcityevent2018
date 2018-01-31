@@ -29,3 +29,8 @@ export const addEventAction = (payload) => ({
     type: types.ADD_EVENT_REQUEST,
     payload
 });
+
+export const incViewEventAction = (payload) => ({
+    type: types.INCVIEW_EVENT_REQUEST,
+    payload
+});

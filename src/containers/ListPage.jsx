@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
 
 import Events from '../views/events.jsx';
-
+import MostViewed from '../views/mostViewed.jsx';
 
 class ListPage extends Component {
     render() {
@@ -15,7 +15,7 @@ class ListPage extends Component {
                         <Events {...this.props}/>
                     </Col>
                     <Col md={3}>
-                        <h4>Вас також можуть зацікавити</h4>
+                        <MostViewed/>
                     </Col>
                 </Row>
             </div>
