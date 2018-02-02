@@ -18,6 +18,7 @@ import {
     EventSource
 } from '../../components/eventAttributes.jsx';
 import EventForm from './form/eventForm.jsx';
+import { syncEvent } from '../../api/sync';
 
 
 class Event extends Component {
@@ -25,6 +26,7 @@ class Event extends Component {
         super(props);
         this.removeEvent = this.removeEvent.bind(this);
         this.updateEvent = this.updateEvent.bind(this);
+        this.syncEvent = this.syncEvent.bind(this);
     }
 
     removeEvent() {
@@ -33,6 +35,10 @@ class Event extends Component {
 
     updateEvent() {
         this.props.updateEvent(this.props.event);
+    }
+
+    syncEvent() {
+        this.props.syncEvent(this.props.event);
     }
 
     render() {
@@ -53,7 +59,16 @@ class Event extends Component {
                     <EventPrice event={event}/>
                     <EventPhone phone={event.phone}/>
                     <EventSource event={event}/>
-                    {event.isSync ? <span><span className="label label-success">IFCity</span>{' '}</span> : null}
+                    {event.isSync || event.syncId ?
+                        <span>
+                            <span className="label label-success">
+                                {event.isSync ?
+                                    `Синхронізовано з IFCity (${event.syncId})`
+                                    : `Змінено, не відповідає IFCity (${event.syncId})`
+                                }
+                            </span>
+                            {' '}
+                        </span> : null}
                     {event.hidden ? <span><span className="label label-warning">прихована</span>{' '}</span> : null}
                     {event.invalid ? <span className="label label-danger">невалідна</span> : null}
                 </td>
@@ -67,7 +82,12 @@ class Event extends Component {
                     <Button bsStyle="danger" onClick={this.removeEvent}>Видалити</Button>
                     <br/>
                     <br/>
-                    {!event.isSync && !event.invalid ? <Button bsStyle="warning" disabled>Синхронізувати з IFCity</Button> : null}
+                    {!event.invalid ?
+                        <Button bsStyle="warning" onClick={this.syncEvent} disabled={event.isSync}>
+                            Синхронізувати з IFCity
+                        </Button>
+                        : null
+                    }
                 </td>
             </tr>
         );
@@ -225,7 +245,7 @@ class Events extends Component {
             invalid: false,
             notSync: false,
             hidden: false,
-            new: false,
+            new: true,
             showModal: false,
             showRemoveModal: false,
             event: {},
@@ -243,6 +263,8 @@ class Events extends Component {
         this.closeRemoveModal = this.closeRemoveModal.bind(this);
         this.removeEvent = this.removeEvent.bind(this);
         this.applyRemove = this.applyRemove.bind(this);
+
+        this.applySync = this.applySync.bind(this);
     }
 
     componentDidMount() {
@@ -287,13 +309,19 @@ class Events extends Component {
         this.props.dispatch(removeEventAction(event._id));
     }
 
+    applySync(event) {
+        syncEvent({event, categories: this.props.categories.data});
+        //this.props.dispatch(syncEventAction(event));
+    }
+
     newEvent() {
         this.setState({
             showModal: true,
             event: {
                 name: 'Нова подія',
                 category: 'not_set',
-                tags: 'ifcityevent'
+                tags: 'ifcityevent',
+                isSync: false
             },
             modalTitle: 'Нова подія',
             editType: 'new'
@@ -301,9 +329,11 @@ class Events extends Component {
     }
 
     updateEvent(event) {
+        let evt = _.cloneDeep(event);
+        evt.isSync = false;
         this.setState({
             showModal: true,
-            event,
+            event: evt,
             modalTitle: `Редагувати "${event.name}"`,
             editType: 'update'
         });
@@ -341,6 +371,7 @@ class Events extends Component {
                             categories={this.props.categories.data}
                             updateEvent={this.updateEvent}
                             removeEvent={this.removeEvent}
+                            syncEvent={this.applySync}
                         />
                     </Loading>
                 </Col>

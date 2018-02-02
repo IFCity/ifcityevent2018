@@ -20,6 +20,7 @@ import {
     EventMetadata
 } from '../components/eventAttributes.jsx';
 import appSettings from '../constants/aplication';
+import converter from '../services/daysBitsConverter';
 
 
 export const EventDefault = (props) => {
@@ -90,7 +91,16 @@ const Divider = ({text}) => (
 
 const today = moment();
 const isToday = event => {
-    return moment(event.start_time).format('YYYY-MM-DD') <= today.format('YYYY-MM-DD');
+    let result = moment(event.start_time).format('YYYY-MM-DD') <= today.format('YYYY-MM-DD');
+    if (result) {
+        if (!event.weeklyRecurrence) {
+            result = true;
+        } else {
+            const days = converter.bitToDays(event.weeklyRecurrence);
+            result = days[moment().day()];
+        }
+    }
+    return result;
 };
 
 class EventsList extends Component {
@@ -114,7 +124,7 @@ class EventsList extends Component {
             </NoData>;
         return (
             <div>
-                <Divider text="Сьогодні"/>
+                <Divider text={`Сьогодні, ${today.format('D MMMM')}`}/>
                 {todayEvents.length ?
                     todayEvents.map((event, index) => (
                         <EventDefault
