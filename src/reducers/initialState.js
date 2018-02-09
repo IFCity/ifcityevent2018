@@ -33,5 +33,9 @@ export default {
     mostviewed: {
         data: [],
         metadata: {}
-    }
+    },
+    authors: {
+        data: [],
+        metadata: {}
+    },
 };

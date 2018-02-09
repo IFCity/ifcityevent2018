@@ -7,7 +7,13 @@ import { slugify } from 'transliteration';
 import _ from 'lodash';
 
 import { Loading, NoData } from '../../components/tools.jsx';
-import { getEventsAction, removeEventAction, updateEventAction, addEventAction } from '../../actions/eventsActions';
+import {
+    getEventsAction,
+    removeEventAction,
+    updateEventAction,
+    addEventAction,
+    syncEventAction
+} from '../../actions/eventsActions';
 import { getCategoriesAction } from '../../actions/categoriesActions';
 import {
     EventType,
@@ -18,7 +24,7 @@ import {
     EventSource
 } from '../../components/eventAttributes.jsx';
 import EventForm from './form/eventForm.jsx';
-import { syncEvent } from '../../api/sync';
+import moment from "moment/moment";
 
 
 class Event extends Component {
@@ -73,17 +79,20 @@ class Event extends Component {
                     {event.invalid ? <span className="label label-danger">невалідна</span> : null}
                 </td>
                 <td>
-                    <img style={{width: '33%'}} src={_.get(event, 'cover.source', '')}/>
+                    <img style={{maxWidth: '100%'}} src={_.get(event, 'cover.source', '')}/>
                 </td>
                 <td>
-                    <Button bsStyle="success" onClick={this.updateEvent}>Редагувати</Button>
+                    {event.description}
+                </td>
+                <td>
+                    <Button bsStyle="success" bsSize="small" onClick={this.updateEvent}>Редагувати</Button>
                     <br/>
                     <br/>
-                    <Button bsStyle="danger" onClick={this.removeEvent}>Видалити</Button>
+                    <Button bsStyle="danger" bsSize="small" onClick={this.removeEvent}>Видалити</Button>
                     <br/>
                     <br/>
                     {!event.invalid ?
-                        <Button bsStyle="warning" onClick={this.syncEvent} disabled={event.isSync}>
+                        <Button bsStyle="warning" bsSize="small" onClick={this.syncEvent} disabled={event.isSync}>
                             Синхронізувати з IFCity
                         </Button>
                         : null
@@ -112,8 +121,11 @@ class EventsList extends Component {
                         <th>
                             Подія
                         </th>
-                        <th>
+                        <th style={{width: '20%'}}>
                             Зображення
+                        </th>
+                        <th style={{width: '50%'}}>
+                            Опис
                         </th>
                         <th>
                             Редагування / Синхронізація
@@ -310,8 +322,7 @@ class Events extends Component {
     }
 
     applySync(event) {
-        syncEvent({event, categories: this.props.categories.data});
-        //this.props.dispatch(syncEventAction(event));
+        this.props.dispatch(syncEventAction({event, categories: this.props.categories.data}));
     }
 
     newEvent() {
@@ -320,6 +331,8 @@ class Events extends Component {
             event: {
                 name: 'Нова подія',
                 category: 'not_set',
+                start_time: moment().format('YYYY-MM-DDTHH:mm:00ZZ'),
+                end_time: '',
                 tags: 'ifcityevent',
                 isSync: false
             },

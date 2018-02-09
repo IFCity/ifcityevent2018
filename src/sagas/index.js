@@ -4,6 +4,7 @@ import {
     watchGetEvent,
     watchRemoveEvent,
     watchUpdateEvent,
+    watchSyncEvent,
     watchAddEvent,
     watchIncViewEvent,
     watchSaveEvents,
@@ -14,7 +15,8 @@ import {
     watchLogout,
     watchCheckStatus,
     watchAggregateFB,
-    watchMostviewed
+    watchMostviewed,
+    watchGetAuthors
 } from './watchers';
 
 
@@ -24,6 +26,7 @@ export default function* root() {
         fork(watchGetEvent),
         fork(watchRemoveEvent),
         fork(watchUpdateEvent),
+        fork(watchSyncEvent),
         fork(watchAddEvent),
         fork(watchIncViewEvent),
         fork(watchSaveEvents),
@@ -34,6 +37,7 @@ export default function* root() {
         fork(watchLogout),
         fork(watchCheckStatus),
         fork(watchAggregateFB),
-        fork(watchMostviewed)
+        fork(watchMostviewed),
+        fork(watchGetAuthors)
     ]);
 }

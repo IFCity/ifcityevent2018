@@ -48,6 +48,13 @@ export default function (state = initialState.events, action) {
         case types.ADD_EVENT_FAILURE:
             return mapMetadataFailure(state, action, 'events');
 
+        case types.SYNC_EVENT_REQUEST:
+            return mapMetadataRequest(state);
+        case types.SYNC_EVENT_SUCCESS:
+            return mapMetadataSuccessUpdate(state, action, 'events');
+        case types.SYNC_EVENT_FAILURE:
+            return mapMetadataFailure(state, action, 'events');
+
         default:
             return state;
     }

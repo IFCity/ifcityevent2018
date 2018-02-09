@@ -1,5 +1,6 @@
 import { put, call } from 'redux-saga/effects';
 import { fetchEvent, removeEvent, updateEvent, addEvent, incViewCountEvent } from '../api/events';
+import { syncEvent } from '../api/sync';
 import * as types from '../constants/actionTypes';
 
 
@@ -82,5 +83,21 @@ export function* incViewEventSaga({ payload }) {
             }
         };
         yield put({ type: types.INCVIEW_EVENT_FAILURE, event: response });
+    }
+}
+
+export function* syncEventSaga({ payload }) {
+    try {
+        const response = yield call(syncEvent, payload);
+        yield [
+            put({ type: types.SYNC_EVENT_SUCCESS, payload, events: response }),
+        ]
+    } catch (error) {
+        const response = {
+            metadata: {
+                error
+            }
+        };
+        yield put({ type: types.SYNC_EVENT_FAILURE, events: response });
     }
 }

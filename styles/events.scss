@@ -67,7 +67,6 @@ $lines-to-show: 8;
   a {
     color: #0070c9;
     text-decoration: none;
-    font-size: 17px;
 
     > h4 {
       color: #333;
@@ -77,7 +76,7 @@ $lines-to-show: 8;
   .place, .date {
     margin-bottom: 8px;
 
-    span:nth-child(3), span:nth-child(5) {
+    .detailed-address, .full-time {
       color: #bbb;
     }
   }
@@ -95,7 +94,7 @@ $lines-to-show: 8;
 
   .phone {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 16px;
     color: orange;
   }
 

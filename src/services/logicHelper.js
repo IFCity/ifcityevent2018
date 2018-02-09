@@ -95,6 +95,11 @@ export const priceObj = (price) => {
         isFree: false
     };
 
+    if (price && price.text) {
+        result.str = price.text;
+        return result;
+    }
+
     if (!price || (!price.from && !price.to)) {
         result.str = noPrice;
         return result;

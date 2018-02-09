@@ -13,7 +13,14 @@ const transformEvent = ({event,categories}) => {
         hidden: event.hidden,
         type: parseInt(catObj[event.category].ifc_type),
         price: null,
-        
+        place: null,
+        ticketLink: null,
+        startDate: null,
+        endDate: null,
+        phone: null,
+        weeklyRecurrence: null,
+        imageLink: null,
+        description: null
     };
     //ticketLink
     if (event.ticketUrl) {

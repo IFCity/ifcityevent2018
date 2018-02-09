@@ -34,3 +34,8 @@ export const incViewEventAction = (payload) => ({
     type: types.INCVIEW_EVENT_REQUEST,
     payload
 });
+
+export const syncEventAction = (payload) => ({
+    type: types.SYNC_EVENT_REQUEST,
+    payload
+});

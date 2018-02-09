@@ -103,10 +103,7 @@ export const aggregateFB = (token) => {
                                     let items = _(_.get(resp[pagesList[index].id], 'events.data', []))
                                         .filter(event => isNewEvent(event.start_time, event.end_time))
                                         .map(item => {
-                                            item.author = {
-                                                id: pagesList[index].id,
-                                                name: _.get(pagesList[index], 'title')
-                                            };
+                                            item.author = pagesList[index];
                                             return item;
                                         })
                                         .value();

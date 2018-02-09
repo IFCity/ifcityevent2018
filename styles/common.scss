@@ -1,3 +1,9 @@
+#root {
+  min-height: calc(100vh - 60px);
+  position: relative;
+  padding-bottom: 60px;
+}
+
 .container-fluid-full {
   margin-top: 60px;
   padding-left: 0;
@@ -11,4 +17,22 @@
 
 .no-data {
   color: #bbb;
+}
+
+.navbar-bottom {
+  border-radius: 0;
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.up {
+
+  > div {
+    padding: 5px 10px;
+    background-color: #ccc;
+    border-radius: 4px;
+    color: #fff;
+  }
 }

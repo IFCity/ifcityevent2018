@@ -3,11 +3,11 @@ import {Modal, Button, FormGroup, ControlLabel, FormControl, HelpBlock, Row, Col
 import moment from 'moment';
 import DateTime from 'react-datetime';
 
-import { CategoryDropdown } from '../../../components/formElements.jsx';
-import { EventRecurrenceCheckboxes } from '../../../components/eventAttributes.jsx';
+import {CategoryDropdown} from '../../../components/formElements.jsx';
+import {EventRecurrenceCheckboxes} from '../../../components/eventAttributes.jsx';
 
 
-const FieldGroup = ({ id, label, help, ...props }) => {
+const FieldGroup = ({id, label, help, ...props}) => {
     return (
         <FormGroup controlId={id}>
             <ControlLabel className="required">{label}</ControlLabel>
@@ -27,12 +27,14 @@ class EventForm extends Component {
         this.handleWeeklyRecurrenceChange = this.handleWeeklyRecurrenceChange.bind(this);
         this.handleStartTimeChange = this.handleStartTimeChange.bind(this);
         this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
+        this.handleEndTimeClearChange = this.handleEndTimeClearChange.bind(this);
         this.handlePhoneChange = this.handlePhoneChange.bind(this);
         this.handleTicketUrlChange = this.handleTicketUrlChange.bind(this);
         this.handleCategoryChange = this.handleCategoryChange.bind(this);
         this.handleTagsChange = this.handleTagsChange.bind(this);
         this.handleMinPriceChange = this.handleMinPriceChange.bind(this);
         this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
+        this.handleTextPriceChange = this.handleTextPriceChange.bind(this);
         this.handleInvalidChange = this.handleInvalidChange.bind(this);
         this.handleHiddenChange = this.handleHiddenChange.bind(this);
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
@@ -95,7 +97,7 @@ class EventForm extends Component {
         let prevValue = event.start_time;
         try {
             event.start_time = t.format('YYYY-MM-DDTHH:mm:00ZZ');
-        } catch(e) {
+        } catch (e) {
             console.warn(e);
             event.start_time = prevValue;
         }
@@ -107,9 +109,19 @@ class EventForm extends Component {
         let prevValue = event.end_time;
         try {
             event.end_time = t.format('YYYY-MM-DDTHH:mm:00ZZ');
-        } catch(e) {
+        } catch (e) {
             console.warn(e);
             event.end_time = prevValue;
+        }
+        this.setState({event: event});
+    }
+
+    handleEndTimeClearChange(t) {
+        let event = this.state.event;
+        if (event.end_time === '') {
+            event.end_time = moment().format('YYYY-MM-DDTHH:mm:00ZZ');
+        } else {
+            event.end_time = '';
         }
         this.setState({event: event});
     }
@@ -149,6 +161,13 @@ class EventForm extends Component {
         let event = this.state.event;
         event.price = event.price || {};
         event.price.to = e.target.value;
+        this.setState({event: event});
+    }
+
+    handleTextPriceChange(e) {
+        let event = this.state.event;
+        event.price = event.price || {};
+        event.price.text = e.target.value;
         this.setState({event: event});
     }
 
@@ -195,7 +214,12 @@ class EventForm extends Component {
             }]
         }];
         return (
-            <Modal show={show} onHide={onHide}>
+            <Modal
+                show={show}
+                onHide={onHide}
+                bsSize="large"
+                backdrop="static"
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>{title || 'Вікно'}</Modal.Title>
                 </Modal.Header>
@@ -210,7 +234,7 @@ class EventForm extends Component {
                             onChange={this.handleNameChange}
                         />
                         <Row>
-                            <Col md={8}>
+                            <Col md={7}>
                                 <FieldGroup
                                     id="image"
                                     type="text"
@@ -219,8 +243,14 @@ class EventForm extends Component {
                                     value={_.get(event, 'cover.source', '')}
                                     onChange={this.handleImageChange}
                                 />
+                                <ControlLabel>Категорія</ControlLabel>
+                                <CategoryDropdown
+                                    categories={categories}
+                                    event={event}
+                                    onChange={this.handleCategoryChange}
+                                />
                             </Col>
-                            <Col md={4}>
+                            <Col md={5}>
                                 <img src={_.get(event, 'cover.source', '')} style={{maxWidth: '100%'}}/>
                             </Col>
                         </Row>
@@ -235,48 +265,38 @@ class EventForm extends Component {
                             />
                         </FormGroup>
                         <Row>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <ControlLabel>Дата від</ControlLabel>
                                 <DateTime
                                     onChange={this.handleStartTimeChange}
                                     value={moment(event.start_time)}
                                 />
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <ControlLabel>Дата до</ControlLabel>
                                 <DateTime
                                     onChange={this.handleEndTimeChange}
                                     value={moment(event.end_time)}
                                 />
-                            </Col>
-                        </Row>
-                        <ControlLabel>Тижнева повторюваність</ControlLabel>
-                        <EventRecurrenceCheckboxes
-                            weeklyRecurrence={event.weeklyRecurrence}
-                            onChange={this.handleWeeklyRecurrenceChange}
-                        />
-                        <Row>
-                            <Col md={6}>
-                                <FieldGroup
-                                    id="phone"
-                                    type="text"
-                                    label="Телефон"
-                                    placeholder="Введіть телефон"
-                                    value={event.phone}
-                                    onChange={this.handlePhoneChange}
+                                <input
+                                    name="isEndDate"
+                                    type="checkbox"
+                                    checked={event.end_time === ''}
+                                    onChange={this.handleEndTimeClearChange}
                                 />
+                                {' '}
+                                <ControlLabel>не вказано</ControlLabel>
                             </Col>
-                            <Col md={6}>
-                                <ControlLabel>Категорія</ControlLabel>
-                                <CategoryDropdown
-                                    categories={categories}
-                                    event={event}
-                                    onChange={this.handleCategoryChange}
+                            <Col md={4}>
+                                <ControlLabel>Тижнева повторюваність</ControlLabel>
+                                <EventRecurrenceCheckboxes
+                                    weeklyRecurrence={event.weeklyRecurrence}
+                                    onChange={this.handleWeeklyRecurrenceChange}
                                 />
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6}>
+                            <Col md={3}>
                                 <FieldGroup
                                     id="priceFrom"
                                     type="text"
@@ -286,7 +306,7 @@ class EventForm extends Component {
                                     onChange={this.handleMinPriceChange}
                                 />
                             </Col>
-                            <Col md={6}>
+                            <Col md={3}>
                                 <FieldGroup
                                     id="priceTo"
                                     type="text"
@@ -296,92 +316,116 @@ class EventForm extends Component {
                                     onChange={this.handleMaxPriceChange}
                                 />
                             </Col>
-                        </Row>
-                        <HelpBlock>
-                            <li>ціна невідома - залиште поля порожніми</li>
-                            <li>захід безкоштовний - введіть "0" в поле "Ціна від"</li>
-                            <li>одна ціна - введіть значення тільки в полі "Ціна від"</li>
-                        </HelpBlock>
-                        <FieldGroup
-                            id="ticketUrl"
-                            type="text"
-                            label="Купити квиток"
-                            placeholder="Вставте посилання на сайт для купівлі квитка"
-                            value={event.ticketUrl}
-                            onChange={this.handleTicketUrlChange}
-                        />
-                    </form>
-                    <Row>
-                        <Col md={6}>
-                            <FieldGroup
-                                id="place"
-                                type="text"
-                                label="Місце проведення (назва)"
-                                placeholder="Введіть назву місця проведення заходу, або адресу якщо назви немає"
-                                value={_.get(event, 'place.name', '')}
-                                onChange={this.handlePlaceChange}
-                            />
-                        </Col>
-                        <Col md={6}>
-                            <FieldGroup
-                                id="address"
-                                type="text"
-                                label="Детальна адреса місця проведення"
-                                placeholder="Введіть детальну адресу місця проведення заходу"
-                                value={_.get(event, 'place.location.street', '')}
-                                onChange={this.handleAddressChange}
-                            />
-                        </Col>
-                    </Row>
-                    <FieldGroup
-                        id="tags"
-                        type="text"
-                        label="Теги"
-                        placeholder="Введіть теги через кому"
-                        value={event.tags}
-                        onChange={this.handleTagsChange}
-                    />
-                    <Row>
-                        <Col md={6}>
-                            <FormGroup controlId="metadata">
-                                <ControlLabel>Додаткові поля</ControlLabel>
-                                <FormControl
-                                    componentClass="textarea"
-                                    placeholder="Введіть додаткові поля в форматі JSON"
-                                    value={JSON.stringify(event.metadata)}
-                                    rows={5}
-                                    onChange={this.handleMetadataChange}
+                            <Col md={6}>
+                                <FieldGroup
+                                    id="priceText"
+                                    type="text"
+                                    label="Ціна інше"
+                                    placeholder="Наприклад, 'Тільки по запрошеннях'"
+                                    value={_.get(event, 'price.text', '')}
+                                    onChange={this.handleTextPriceChange}
                                 />
-                            </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                            <HelpBlock>
-                                {JSON.stringify(metaExample)}
-                            </HelpBlock>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={6}>
-                            <ControlLabel>Валідна подія</ControlLabel>
-                            {' '}
-                            <input
-                                name="isValid"
-                                type="checkbox"
-                                checked={!event.invalid}
-                                onChange={this.handleInvalidChange}
-                            />
-                        </Col>
-                        <Col md={6}>
-                            <ControlLabel>Прихована подія</ControlLabel>
-                            {' '}
-                            <input
-                                name="isHidden"
-                                type="checkbox"
-                                checked={event.hidden}
-                                onChange={this.handleHiddenChange}
-                            />
-                        </Col>
-                    </Row>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <HelpBlock>
+                                    <li>ціна невідома - залиште поля порожніми</li>
+                                    <li>захід безкоштовний - введіть "0" в поле "Ціна від"</li>
+                                    <li>одна ціна - введіть значення тільки в полі "Ціна від"</li>
+                                    <li>якщо введено "Ціна інше", то інші поля ігноруються</li>
+                                </HelpBlock>
+                            </Col>
+                            <Col md={6}>
+                                <FieldGroup
+                                    id="ticketUrl"
+                                    type="text"
+                                    label="Купити квиток"
+                                    placeholder="Вставте посилання на сайт для купівлі квитка"
+                                    value={event.ticketUrl}
+                                    onChange={this.handleTicketUrlChange}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={3}>
+                                <FieldGroup
+                                    id="phone"
+                                    type="text"
+                                    label="Телефон"
+                                    placeholder="Введіть телефон"
+                                    value={event.phone}
+                                    onChange={this.handlePhoneChange}
+                                />
+                            </Col>
+                            <Col md={3}>
+                                <FieldGroup
+                                    id="place"
+                                    type="text"
+                                    label="Місце проведення (назва)"
+                                    placeholder="Введіть назву місця проведення заходу, або адресу якщо назви немає"
+                                    value={_.get(event, 'place.name', '')}
+                                    onChange={this.handlePlaceChange}
+                                />
+                            </Col>
+                            <Col md={6}>
+                                <FieldGroup
+                                    id="address"
+                                    type="text"
+                                    label="Детальна адреса місця проведення"
+                                    placeholder="Введіть детальну адресу місця проведення заходу"
+                                    value={_.get(event, 'place.location.street', '')}
+                                    onChange={this.handleAddressChange}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <FormGroup controlId="metadata">
+                                    <ControlLabel>Додаткові поля (JSON)</ControlLabel>
+                                    <FormControl
+                                        componentClass="textarea"
+                                        placeholder="Введіть додаткові поля в форматі JSON"
+                                        value={JSON.stringify(event.metadata)}
+                                        rows={5}
+                                        onChange={this.handleMetadataChange}
+                                    />
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FieldGroup
+                                    id="tags"
+                                    type="text"
+                                    label="Теги"
+                                    placeholder="Введіть теги через кому"
+                                    value={event.tags}
+                                    onChange={this.handleTagsChange}
+                                />
+                                <Row>
+                                    <Col md={6}>
+                                        <input
+                                            name="isValid"
+                                            type="checkbox"
+                                            checked={!event.invalid}
+                                            onChange={this.handleInvalidChange}
+                                        />
+                                        {' '}
+                                        <ControlLabel>валідна подія</ControlLabel>
+                                    </Col>
+                                    <Col md={6}>
+                                        <input
+                                            name="isHidden"
+                                            type="checkbox"
+                                            checked={event.hidden}
+                                            onChange={this.handleHiddenChange}
+                                        />
+                                        {' '}
+                                        <ControlLabel>прихована подія</ControlLabel>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle="success" onClick={this.handleSave}>Зберегти</Button>

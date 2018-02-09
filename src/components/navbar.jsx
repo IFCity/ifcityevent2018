@@ -35,7 +35,7 @@ class MainNavbar extends Component {
         const mainMenuItems = _(mainMenuRoutes)
             .map(item => {
                 return (
-                    <li>
+                    <li className={item.disabled ? 'disabled' : ''}>
                         <Link to={item.path}>{item.title}</Link>
                     </li>
                 );
@@ -45,7 +45,7 @@ class MainNavbar extends Component {
             _(adminMenuRoutes)
                 .map(item => {
                     return (
-                        <li>
+                        <li className={item.disabled ? 'disabled' : ''}>
                             <Link to={item.path}>{item.title}</Link>
                         </li>
                     );

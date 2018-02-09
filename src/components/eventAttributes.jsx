@@ -36,7 +36,7 @@ export const EventPlace = ({place, plain}) => {
             <span>{placeObj(place).name}</span>
             {detailedAddress ? [
                 <br/>,
-                <span>
+                <span className="detailed-address">
                     <span>{detailedAddress}</span>
                 </span>] : null}
         </div>
@@ -50,13 +50,11 @@ export const EventPrice = ({event, plain}) => {
     const price = priceObj(event.price);
     const btn = event.ticketUrl ?
         <a href={event.ticketUrl} target="_blank">
-            купити квиток
+            (купити квиток)
         </a> : null;
     return (
         <div>
-            <p className="price">{price.str}</p>
-            {' '}
-            {btn}
+            <p className="price">{price.str} {btn}</p>
         </div>
     );
 };
@@ -67,7 +65,7 @@ export const EventPhone = ({phone}) => {
     }
     return (
         <div className="phone">
-            <span className="glyphicon glyphicon-earphone" aria-hidden="true"/>&nbsp;
+            <span className="glyphicon glyphicon-phone" aria-hidden="true"/>&nbsp;
             {phone}
         </div>
     );
@@ -94,7 +92,7 @@ export const EventTime = ({event, plain}) => {
             <span className="glyphicon glyphicon-calendar" aria-hidden="true"/>&nbsp;
             {eventTimeObj(event).shortTime}
             <EventRecurrenceView event={event}/>
-            {fullTime ? [<br/>, <span>{fullTime}</span>] : null}
+            {fullTime ? [<br/>, <span className="full-time">{fullTime}</span>] : null}
         </div>
     );
 };
@@ -197,13 +195,11 @@ export const EventRecurrenceView = ({event}) => {
         .orderBy(['order'])
         .map(item => item.longName)
         .value();
-    return [
-        <br/>,
+    return (
         <span>
-            <span className="glyphicon glyphicon-repeat" aria-hidden="true"/>&nbsp;
-            <span>кожного(ї){' '}</span>{result.join(', ').replace(/,(?=[^,]*$)/, ' та')}
+            {' '}(кожного(ї) {result.join(', ').replace(/,(?=[^,]*$)/, ' та')}{')'}
         </span>
-    ];
+    );
 };
 
 class EventRecurrenceCheckboxes extends Component {

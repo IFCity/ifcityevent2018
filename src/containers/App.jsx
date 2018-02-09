@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router';
+import ScrollToTop from 'react-scroll-up';
 
 import routes from '../routes';
 import Navbar from '../components/navbar.jsx';
+import Footer from '../components/footer.jsx';
 import {NotFound } from '../components/tools.jsx';
 import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
@@ -26,6 +28,12 @@ class App extends Component {
                         <Route component={NotFound}/>
                     </Switch>
                     <GoogleAnalytics />
+                </div>
+                <Footer/>
+                <div className="up">
+                    <ScrollToTop showUnder={160}>
+                        <span>Нагору</span>
+                    </ScrollToTop>
                 </div>
             </div>
         );

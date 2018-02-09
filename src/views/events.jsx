@@ -19,6 +19,7 @@ import {
     EventSource,
     EventMetadata
 } from '../components/eventAttributes.jsx';
+import Toolbar from '../components/Toolbar.jsx';
 import appSettings from '../constants/aplication';
 import converter from '../services/daysBitsConverter';
 
@@ -89,8 +90,8 @@ const Divider = ({text}) => (
     </div>
 );
 
-const today = moment();
 const isToday = event => {
+    const today = moment();
     let result = moment(event.start_time).format('YYYY-MM-DD') <= today.format('YYYY-MM-DD');
     if (result) {
         if (!event.weeklyRecurrence) {
@@ -105,6 +106,7 @@ const isToday = event => {
 
 class EventsList extends Component {
     render() {
+        const today = moment();
         let {events} = this.props;
         let todayEvents = _(events)
             .filter(event => isToday(event))
@@ -179,11 +181,12 @@ class Events extends Component {
 
     render() {
         const {data, metadata} = this.props.events;
-        return (
+        return [
+            <Toolbar/>,
             <Loading {...metadata} mask={true}>
                 <EventsList events={data} categories={this.props.categories.data} dispatch={this.props.dispatch}/>
             </Loading>
-        );
+        ];
     }
 }
 

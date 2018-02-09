@@ -88,6 +88,9 @@ class EventToAggregate extends Component {
                     </p>
                 </td>
                 <td>
+                    {event.description}
+                </td>
+                <td>
                     <Row>
                         <Col md={6}>
                             <ControlLabel>Час від</ControlLabel>
@@ -199,8 +202,11 @@ class AggregationList extends Component {
                         <th>
                             Зображення
                         </th>
-                        <th>
+                        <th style={{width: "20%"}}>
                             Основні дані
+                        </th>
+                        <th style={{width: "30%"}}>
+                            Опис
                         </th>
                         <th>
                             Дані для редагування
@@ -285,6 +291,13 @@ class Aggregation extends Component {
                             events={data}
                         />
                     </Loading>
+                </Col>
+            </Row>,
+            <Row>
+                <Col md={12}>
+                    <Button bsStyle="success" onClick={this.doAggregate}>Перечитати Facebook-події</Button>
+                    &nbsp;
+                    <Button bsStyle="danger" onClick={this.doSave}>Записати в базу</Button>
                 </Col>
             </Row>
         ];
