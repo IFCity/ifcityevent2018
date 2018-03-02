@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import _ from 'lodash';
+import map from 'lodash/map';
 
 
 class CategoryDropdown extends Component {
@@ -13,9 +13,7 @@ class CategoryDropdown extends Component {
     }
 
     render() {
-        const options = _(this.props.categories)
-            .map(cat => <option value={cat.id}>{cat.name}</option>)
-            .value();
+        const options = map(this.props.categories, cat => <option value={cat.id}>{cat.name}</option>);
         return (
             <select
                 className="form-control"

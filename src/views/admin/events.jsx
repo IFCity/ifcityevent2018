@@ -21,7 +21,8 @@ import {
     EventTime,
     EventPrice,
     EventPhone,
-    EventSource
+    EventSource,
+    EventTags
 } from '../../components/eventAttributes.jsx';
 import EventForm from './form/eventForm.jsx';
 import moment from "moment/moment";
@@ -65,6 +66,7 @@ class Event extends Component {
                     <EventPrice event={event}/>
                     <EventPhone phone={event.phone}/>
                     <EventSource event={event}/>
+                    <EventTags tags={event.tags}/>
                     {event.isSync || event.syncId ?
                         <span>
                             <span className="label label-success">
@@ -188,7 +190,7 @@ class Toolbar extends Component {
 
     toggleSync() {
         this.setState({
-            notSync: !this.state.notSync
+            isSync: !this.state.isSync
         }, () => {
             this.props.onFilter(this.state)
         })
@@ -211,7 +213,7 @@ class Toolbar extends Component {
                     checked={this.state.new}
                     onChange={this.toggleNew}/>
                 {' '}
-                <ControlLabel>нові</ControlLabel>
+                <ControlLabel>додані/змінені сьогодні</ControlLabel>
                 <br/>
                 <input
                     name="isValid"
@@ -232,7 +234,7 @@ class Toolbar extends Component {
                 <input
                     name="isFeature"
                     type="checkbox"
-                    checked={this.state.notSync}
+                    checked={!this.state.isSync}
                     onChange={this.toggleSync}/>
                 {' '}
                 <ControlLabel>несинхронізовані з IFCity</ControlLabel>
@@ -255,7 +257,7 @@ class Events extends Component {
         this.state = {
             all: false,
             invalid: false,
-            notSync: false,
+            isSync: true,
             hidden: false,
             new: true,
             showModal: false,

@@ -6,6 +6,7 @@ import {Row, Col} from 'react-bootstrap';
 import Events from '../views/events.jsx';
 import MostViewed from '../views/mostViewed.jsx';
 
+
 class ListPage extends Component {
     render() {
         return (
@@ -15,7 +16,7 @@ class ListPage extends Component {
                         <Events {...this.props}/>
                     </Col>
                     <Col md={3}>
-                        <MostViewed/>
+                        <MostViewed title="Популярні події" type="mostviewed"/>
                     </Col>
                 </Row>
             </div>

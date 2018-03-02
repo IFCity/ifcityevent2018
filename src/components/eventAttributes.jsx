@@ -341,3 +341,24 @@ export const EventMetadata = ({event}) => {
         </div>
     );
 };
+
+export const EventTags = ({tags}) => {
+    if (!tags) {
+        return null;
+    }
+    const tagsArray = _(_.isArray(tags) ? tags : tags.split(','))
+        .map(item => {
+            item = item.trim();
+            return (
+                <Link to={`/tags/${encodeURIComponent(item)}`}>
+                    {`#${item}`}
+                </Link>
+            );
+        })
+        .value();
+    return (
+        <div className="tags">
+            {tagsArray}
+        </div>
+    );
+};

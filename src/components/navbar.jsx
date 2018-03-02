@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import _ from 'lodash';
+import map from 'lodash/map';
 
 import appSettings from '../constants/aplication';
 import { loginAction, logoutAction, checkStatusAction } from '../actions/authorizationActions';
@@ -32,25 +32,21 @@ class MainNavbar extends Component {
 
     render() {
         const { userData, authData } = this.props.authorization.data;
-        const mainMenuItems = _(mainMenuRoutes)
-            .map(item => {
+        const mainMenuItems = map(mainMenuRoutes, item => {
                 return (
                     <li className={item.disabled ? 'disabled' : ''}>
                         <Link to={item.path}>{item.title}</Link>
                     </li>
                 );
-            })
-            .value();
+            });
         const adminMenuItems = userData.id && (authData.role === 'admin') ?
-            _(adminMenuRoutes)
-                .map(item => {
+            map(adminMenuRoutes, item => {
                     return (
                         <li className={item.disabled ? 'disabled' : ''}>
                             <Link to={item.path}>{item.title}</Link>
                         </li>
                     );
                 })
-                .value()
             : null;
         const userMenu = userData.id ?
             <ul className="nav navbar-nav navbar-right">

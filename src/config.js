@@ -1,8 +1,8 @@
 import routes from './routes';
 import rootReducer from './reducers';
 import rootSaga from './sagas';
-import { apiHandler, reactRender, pageRender } from 'react-redux-saga-server-side-render-helper';
-import _ from 'lodash';
+import { apiHandler, reactRender, pageRender } from './ssr/helper';
+import isFunction from 'lodash/isFunction';
 
 import App from './containers/App.jsx';
 
@@ -18,7 +18,7 @@ export const appData = {
 
 const pageConfig = {
     appName,
-    getPageTitle: (route, data) => `${route ? (_.isFunction(route.pageTitle) ? route.pageTitle(data) : route.pageTitle) + ' - ' : ''}${appName}`,
+    getPageTitle: (route, data) => `${route ? (isFunction(route.pageTitle) ? route.pageTitle(data) : route.pageTitle) + ' - ' : ''}${appName}`,
     appData
 };
 

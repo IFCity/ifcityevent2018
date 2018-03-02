@@ -73,11 +73,18 @@ $lines-to-show: 8;
     }
   }
 
-  .place, .date {
+  .place, .date, .tags {
     margin-bottom: 8px;
 
     .detailed-address, .full-time {
       color: #bbb;
+    }
+  }
+
+  .tags {
+
+    > a {
+      margin-right: 8px;
     }
   }
 
@@ -174,5 +181,81 @@ $lines-to-show: 8;
     height: 200px;
     object-fit: cover;
 
+  }
+}
+
+.event-new-wrapper {
+  padding: 8px;
+  width: 33%;
+  float: left;
+
+  .event-new {
+    border-radius: 4px;
+    height: 350px;
+    color: #363a43;
+    overflow: hidden;
+    position: relative;
+
+    &:hover {
+      border: 1px solid #eee;
+    }
+
+    .image-wrapper {
+      background-color: #eee;
+
+      img {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+
+    main {
+
+      .date-side {
+        width: 80px;
+        float: left;
+        padding: 8px;
+
+        > span {
+          display: block;
+          width: 100%;
+          text-align: center;
+
+          &.day {
+            font-size: 18px;
+          }
+
+          &.month {
+            color: #f6682f;
+            text-transform: uppercase;
+          }
+        }
+      }
+
+      .main-side {
+        padding: 8px 8px 8px 80px;
+
+        h3 {
+          font-size: 18px;
+          margin: 0;
+        }
+
+        .place, .price {
+          font-size: 12px;
+          color: #666a73;
+          display: block;
+        }
+
+        .price {
+          position: absolute;
+          right: 8px;
+          top: 10px;
+          padding: 4px 10px;
+          background-color: rgba(255,255,255,.92);
+          text-transform: uppercase;
+        }
+      }
+    }
   }
 }

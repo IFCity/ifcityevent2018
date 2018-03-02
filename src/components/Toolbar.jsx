@@ -7,7 +7,7 @@ import { categoryMenuRoutes } from '../routes';
 
 class Toolbar extends Component {
     render() {
-        const categoryMenuItems = _(categoryMenuRoutes)
+        const categoryMenuItems = _(categoryMenuRoutes(this.props.path))
             .map(item => {
                 return (
                     <li className={item.disabled ? 'disabled' : ''}>

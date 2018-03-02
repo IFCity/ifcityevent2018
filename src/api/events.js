@@ -1,5 +1,6 @@
 import fetch from '../services/fetchAdapter';
 import appSettings from '../constants/aplication';
+import moment from "moment/moment";
 
 
 export const fetchEvents = (payload) => {
@@ -26,6 +27,23 @@ export const fetchEvents = (payload) => {
         if (payload.all) {
             config.body.show_all = true;
         }
+        if (payload.tag) {
+            config.body.tag = payload.tag;
+        }
+        if (payload.limit) {
+            config.body.limit = payload.limit;
+        }
+        if (payload.weekend) {
+            config.body.weekend = true;
+        }
+        if (payload.page) {
+            config.body.page = payload.page;
+        }
+        config.body.show_not_sync = !payload.isSync;
+        if (payload.itemsPerPage) {
+            config.body.itemsPerPage = payload.itemsPerPage;
+        }
+
         config.body = JSON.stringify(config.body);
     }
     return fetch(`${appSettings.apiURL}/events/search`, config)

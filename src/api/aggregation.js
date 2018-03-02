@@ -40,7 +40,9 @@ export const aggregateFB = (token) => {
                                         .map(item => {
                                             item.author = {
                                                 id: placesList[index].id,
-                                                name: _.get(placesList[index], 'name')
+                                                name: _.get(placesList[index], 'name'),
+                                                link: _.get(placesList[index], 'link'),
+                                                cover: _.get(placesList[index], 'cover')
                                             };
                                             return item;
                                         })
@@ -143,9 +145,7 @@ export const aggregateFB = (token) => {
                             .map(item => {
                                 item.category = 'not_set';
                                 item.source = 'facebook';
-                                item.tags = [
-                                    'facebook'
-                                ];
+                                item.tags = '';
                                 item.integrate = true;
                                 return item;
                             })

@@ -1,6 +1,7 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ContextReplacementPlugin = require('webpack/lib/ContextReplacementPlugin');
 const {distPath, srcPath, nodeModulePath, staticPath} = require('./path');
 
 module.exports = {
@@ -44,6 +45,7 @@ module.exports = {
         new CopyWebpackPlugin([
             {from: staticPath}
         ]),
-        new ExtractTextPlugin('main.css')
+        new ExtractTextPlugin('main.css'),
+        new ContextReplacementPlugin(/moment[\/\\]locale$/, /uk/)
     ]
 };

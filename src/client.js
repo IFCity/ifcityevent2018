@@ -1,4 +1,4 @@
-import { doClient } from 'react-redux-saga-server-side-render-helper';
+import { doClient } from './ssr/helper';
 import { appData } from './config';
 import appSettings from './constants/aplication';
 import '../styles/index.scss';

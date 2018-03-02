@@ -86,7 +86,7 @@ class Authors extends Component {
         return [
             <Row>
                 <Col md={12}>
-                    <h1>Організатори</h1>
+                    <h1>Організатори/розповсюджувачі</h1>
                 </Col>
             </Row>,
             <Row>

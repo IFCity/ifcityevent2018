@@ -5,6 +5,8 @@ import appSettings from '../constants/aplication';
 import { updateEvent } from './events';
 
 
+const NULL_VALUE = { '__op': 'Delete'};
+
 const transformEvent = ({event,categories}) => {
     const catObj = _(categories).mapKeys('id').value();
     let result = {
@@ -12,15 +14,15 @@ const transformEvent = ({event,categories}) => {
         title: event.name,
         hidden: event.hidden,
         type: parseInt(catObj[event.category].ifc_type),
-        price: null,
-        place: null,
-        ticketLink: null,
-        startDate: null,
-        endDate: null,
-        phone: null,
-        weeklyRecurrence: null,
-        imageLink: null,
-        description: null
+        price: NULL_VALUE,
+        place: NULL_VALUE,
+        ticketLink: NULL_VALUE,
+        startDate: NULL_VALUE,
+        endDate: NULL_VALUE,
+        phone: NULL_VALUE,
+        weeklyRecurrence: NULL_VALUE,
+        imageLink: NULL_VALUE,
+        description: NULL_VALUE
     };
     //ticketLink
     if (event.ticketUrl) {
@@ -28,7 +30,7 @@ const transformEvent = ({event,categories}) => {
     }
     //place
     if (event.place) {
-        let place = event.place.name ? event.place.name : '';
+        let place = event.place.name ? event.place.name : NULL_VALUE;
         if (place) {
             if (event.place.location && event.place.location.street) {
                 place = `${place} (${event.place.location.street})`
@@ -42,7 +44,7 @@ const transformEvent = ({event,categories}) => {
     }
     //price
     if (event.price) {
-        let price = '';
+        let price = NULL_VALUE;
         if (event.price.text) {
             price = event.price.text;
         } else if (event.price.from && event.price.to) {
@@ -59,7 +61,7 @@ const transformEvent = ({event,categories}) => {
         result.price = price;
     }
     //endDate
-    if (event.end_time) {
+    if (event.end_time && (moment(event.start_time).format('LL') !== moment(event.end_time).format('LL'))) {
         result.endDate = {
             '__type': 'Date',
             'iso': moment(event.end_time).format('YYYY-MM-DDTHH:mm:00.000[Z]')
@@ -78,7 +80,7 @@ const transformEvent = ({event,categories}) => {
     }
     //weeklyRecurrence
     if (event.weeklyRecurrence) {
-        result.weeklyRecurrence = event.weeklyRecurrence;
+        result.weeklyRecurrence = parseInt(event.weeklyRecurrence);
     }
     //imageLink
     if (event.cover && event.cover.source) {
@@ -123,7 +125,7 @@ export const updateSync = ({event, categories, auth}) => {
 
 export const syncEvent = ({event, categories}) => {
     const config = {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'X-Parse-Application-Id': appSettings.parse.appId,
             'X-Parse-REST-API-Key': appSettings.parse.apiKey,

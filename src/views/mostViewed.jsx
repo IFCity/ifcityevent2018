@@ -8,6 +8,7 @@ import { slugify } from 'transliteration';
 import { connect } from 'react-redux';
 
 import { NoData, Loading } from '../components/tools.jsx';
+import { getEventsAction } from '../actions/eventsActions';
 import { getMostViewedAction } from '../actions/mostviewedActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
 
@@ -26,14 +27,14 @@ const EventSmall = ({event}) => {
 
 class MostViewedList extends Component {
     render() {
-        let {events} = this.props;
+        let {events, title} = this.props;
         const noData =
             <NoData>
                 <h1>Немає подій</h1>
             </NoData>;
         return (
             <div>
-                <h3>Популярні події</h3>
+                <h3>{title}</h3>
                 {events.length ?
                     events.map(event => (
                         <EventSmall
@@ -55,12 +56,25 @@ class MostViewed extends Component {
     }
 
     componentDidMount() {
-        this.fetch();
+        this.fetch(this.props);
         this.fetchCategories();
     }
 
-    fetch() {
-        this.props.dispatch(getMostViewedAction());
+    fetch(props) {
+        if (props.type === 'mostviewed') {
+            props.dispatch(getMostViewedAction());
+        } else {
+            if (!props.eventsParams.tag) {
+                props.eventsParams.tag = 'never existing tag';
+            }
+            props.dispatch(getEventsAction(props.eventsParams));
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if ((this.props.type !== nextProps.type) || (this.props.eventsParams !== nextProps.eventsParams)) {
+            this.fetch(nextProps);
+        }
     }
 
     fetchCategories() {
@@ -68,13 +82,13 @@ class MostViewed extends Component {
     }
 
     render() {
-        const {data, metadata} = this.props.mostviewed;
+        const {data, metadata} = this.props.type === 'mostviewed' ? this.props.mostviewed : this.props.similar;
         return (
             <Loading {...metadata} mask={true}>
                 <MostViewedList
                     events={data}
                     categories={this.props.categories.data}
-                    dispatch={this.props.dispatch}
+                    {...this.props}
                 />
             </Loading>
         );
@@ -83,6 +97,7 @@ class MostViewed extends Component {
 
 
 MostViewed.propTypes = {
+    similar: PropTypes.object,
     mostviewed: PropTypes.object,
     categories: PropTypes.object,
     dispatch: PropTypes.func.isRequired
@@ -90,6 +105,7 @@ MostViewed.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
+        similar: state.events,
         mostviewed: state.mostviewed,
         categories: state.categories
     };

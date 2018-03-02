@@ -16,7 +16,7 @@ class AuthorsPage extends Component {
                         <Authors {...this.props}/>
                     </Col>
                     <Col md={3}>
-                        <MostViewed/>
+                        <MostViewed title="Популярні події" type="mostviewed"/>
                     </Col>
                 </Row>
             </div>

@@ -8,6 +8,7 @@ import { getEventAction, incViewEventAction } from '../actions/eventsActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
 import { Loading } from '../components/tools.jsx';
 import { EventJSON } from '../components/eventAttributes.jsx';
+import MostViewed from '../views/mostViewed.jsx';
 
 
 class EventPage extends Component {
@@ -23,14 +24,15 @@ class EventPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        if (typeof (window) !== 'undefined') {
+            window.scrollTo(0, 0);
+        }
         if (this.props.match.params.eventid !== nextProps.match.params.eventid) {
             this.fetch(nextProps);
-            this.incViewCount(nextProps);
         }
     }
 
     fetch(props) {
-        console.log('fetch and inc');
         props.dispatch(getEventAction(props.match.params.eventid));
         props.dispatch(incViewEventAction(props.match.params.eventid));
     }
@@ -55,7 +57,7 @@ class EventPage extends Component {
                         </Loading>
                     </Col>
                     <Col md={3}>
-                        <h4>Вас також можуть зацікавити</h4>
+                        <MostViewed title="Схожі події" type="bytags" eventsParams={{tag: data.tags}}/>
                     </Col>
                 </Row>
                 <EventJSON event={data}/>

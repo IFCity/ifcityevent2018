@@ -1,5 +1,5 @@
 import Express from 'express';
-import { handleRender as defaultHandleRender } from 'react-redux-saga-server-side-render-helper';
+import { handleRender as defaultHandleRender } from './ssr/helper';
 import { appConfig } from './config';
 import appSettings from './constants/aplication';
 

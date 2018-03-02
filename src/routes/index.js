@@ -5,9 +5,28 @@ import AuthorsPage from '../containers/AuthorsPage.jsx';
 import { fetchEvents, fetchEvent } from '../api/events';
 import { fetchCategories } from '../api/categories';
 import {fetchAuthors} from "../api/authors";
+import moment from "moment/moment";
+
 
 const eventsLoadData = match => {
-    return Promise.all([fetchEvents(match && match.params.categoryid ? {category: match.params.categoryid} : null), fetchCategories()]);
+    let params = {};
+    if (match && match.params.categoryid) {
+        params.category = match.params.categoryid;
+    }
+    if (match && match.params.tagname) {
+        params.tag = decodeURIComponent(match.params.tagname);
+    }
+    return Promise.all([fetchEvents(params), fetchCategories()]);
+};
+
+const eventsLoadDataWeekend = match => {
+    let params = {
+        weekend: true
+    };
+    if (match && match.params.categoryid) {
+        params.category = match.params.categoryid;
+    }
+    return Promise.all([fetchEvents(params), fetchCategories()]);
 };
 
 const eventsPreloadedState = data => {
@@ -65,7 +84,7 @@ export default [
     },
     {
         path: '/category/:categoryid',
-        key: 'sport',
+        key: 'category',
         exact: true,
         component: ListPage,
         loadData: match => eventsLoadData(match),
@@ -95,6 +114,33 @@ export default [
         loadData: () => authorsLoadData(),
         getPreloadedState: data => authorsPreloadedState(data),
         pageTitle: () => 'Організатори'
+    },
+    {
+        path: '/tags/:tagname',
+        key: 'tags',
+        exact: true,
+        component: ListPage,
+        loadData: match => eventsLoadData(match),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => 'Теги'
+    },
+    {
+        path: '/:holiday/:categoryid',
+        key: 'weekend',
+        exact: false,
+        component: ListPage,
+        loadData: match => eventsLoadDataWeekend(match),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => `Вікенд (${moment().day(6).format('LL')} - ${moment().day(7).format('LL')})`
+    },
+    {
+        path: '/:holiday',
+        key: 'weekend',
+        exact: false,
+        component: ListPage,
+        loadData: match => eventsLoadDataWeekend(match),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => `Вікенд (${moment().day(6).format('LL')} - ${moment().day(7).format('LL')})`
     }
 ];
 
@@ -102,54 +148,51 @@ export default [
 export const mainMenuRoutes = [
     {
         path: '/',
-        title: 'Події'
+        title: 'Всі події'
+    },
+    {
+        path: '/weekend',
+        title: 'Вікенд'
     },
     {
         path: '/authors',
         title: 'Організатори'
-    },
-    {
-        path: '/places',
-        title: 'Місця проведення',
-        disabled: true
-    },
-    {
-        path: '/weekend',
-        title: 'Вікенд',
-        disabled: true
     }
 ];
 
-export const categoryMenuRoutes = [
-    {
-        path: '/category/film',
-        title: 'Кіно'
-    }, {
-        path: '/category/concert',
-        title: 'Концерти'
-    }, {
-        path: '/category/sport',
-        title: 'Спорт'
-    }, {
-        path: '/category/teatr',
-        title: 'Театр'
-    }, {
-        path: '/category/exibition',
-        title: 'Виставки'
-    }, {
-        path: '/category/disco',
-        title: 'Клуб'
-    }, {
-        path: '/category/not_set',
-        title: 'Масові заходи'
-    }, {
-        path: '/category/attention',
-        title: 'Увага!'
-    }, {
-        path: '/category/discounts',
-        title: 'Акції та знижки'
-    }
-];
+export const categoryMenuRoutes = path => {
+    path = path || 'category';
+    return [
+            {
+                path: `/${path || ''}/film`,
+                title: 'Кіно'
+            }, {
+                path: `/${path || ''}/concert`,
+                title: 'Концерти'
+            }, {
+                path: `/${path || ''}/sport`,
+                title: 'Спорт'
+            }, {
+                path: `/${path || ''}/teatr`,
+                title: 'Театр'
+            }, {
+                path: `/${path || ''}/exibition`,
+                title: 'Виставки'
+            }, {
+                path: `/${path || ''}/disco`,
+                title: 'Клуб'
+            }, {
+                path: `/${path || ''}/not_set`,
+                title: 'Масові заходи'
+            }, {
+                path: `/${path || ''}/attention`,
+                title: 'Увага!'
+            }, {
+                path: `/${path || ''}/discounts`,
+                title: 'Акції та знижки'
+            }
+        ];
+};
 
 export const adminMenuRoutes = [
     {
