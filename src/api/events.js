@@ -39,13 +39,117 @@ export const fetchEvents = (payload) => {
         if (payload.page) {
             config.body.page = payload.page;
         }
-        config.body.show_not_sync = !payload.isSync;
+        config.body.show_not_sync = payload.showNotSync;
         if (payload.itemsPerPage) {
             config.body.itemsPerPage = payload.itemsPerPage;
         }
 
         config.body = JSON.stringify(config.body);
     }
+    return fetch(`${appSettings.apiURL}/events/search`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const fetchFilmEvents = (payload) => {
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    config.body = {};
+    config.body.categories = ['film'];
+    config.body = JSON.stringify(config.body);
+    return fetch(`${appSettings.apiURL}/events/search`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const fetchChildEvents = (payload) => {
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    config.body = {};
+    config.body.tag = 'підходить для дітей';
+    config.body = JSON.stringify(config.body);
+    return fetch(`${appSettings.apiURL}/events/search`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const fetchPromoEvents = (payload) => {
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    config.body = {};
+    config.body.categories = ['discounts'];
+    config.body = JSON.stringify(config.body);
+    return fetch(`${appSettings.apiURL}/events/search`, config)
+        .then(response => {
+            return response.json();
+        })
+        .then(json => {
+            return { data: json };
+        })
+        .catch(ex => (
+            {
+                metadata: {
+                    error: ex
+                }
+            }
+        ));
+};
+
+export const fetchAttentionEvents = (payload) => {
+    let config = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+    config.body = {};
+    config.body.categories = ['attention'];
+    config.body = JSON.stringify(config.body);
     return fetch(`${appSettings.apiURL}/events/search`, config)
         .then(response => {
             return response.json();

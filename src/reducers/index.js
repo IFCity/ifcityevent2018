@@ -7,6 +7,10 @@ import users from './usersReducer';
 import authorization from './authorizationReducer';
 import aggregation from './aggregationReducer';
 import mostviewed from './mostviewedReducer';
+import film from './filmReducer';
+import child from './childReducer';
+import promo from './promoReducer';
+import attention from './attentionReducer';
 import authors from './authorsReducer';
 import { routerReducer } from 'react-router-redux';
 
@@ -20,6 +24,10 @@ const rootReducer = combineReducers({
     authorization,
     aggregation,
     mostviewed,
+    film,
+    child,
+    promo,
+    attention,
     authors,
     routing: routerReducer
 });

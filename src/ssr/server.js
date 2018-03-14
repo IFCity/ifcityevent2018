@@ -84,6 +84,7 @@ export function pageRender(config) {
                     <title>${config.getPageTitle(route, data)}</title>
                     <link href="/main.css" rel="stylesheet">
                     <link href="/vendor.css" rel="stylesheet">
+                    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
                 </head>
                 <body>
                     <div id="root">${html}</div>

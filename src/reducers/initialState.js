@@ -34,6 +34,22 @@ export default {
         data: [],
         metadata: {}
     },
+    film: {
+        data: [],
+        metadata: {}
+    },
+    child: {
+        data: [],
+        metadata: {}
+    },
+    promo: {
+        data: [],
+        metadata: {}
+    },
+    attention: {
+        data: [],
+        metadata: {}
+    },
     authors: {
         data: [],
         metadata: {}

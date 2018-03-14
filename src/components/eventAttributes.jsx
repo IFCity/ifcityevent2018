@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import _ from 'lodash';
-import {slugify} from 'transliteration';
 import { Row, Col, ControlLabel } from 'react-bootstrap';
 
 import {eventTimeObj, placeObj, priceObj} from '../services/logicHelper';
@@ -10,7 +9,7 @@ import recurrenceConverter from '../services/daysBitsConverter';
 
 
 export const EventShare = ({event}) => {
-    const shareUrl = `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`;
+    const shareUrl = `${appSettings.appUrl}/event/${event._id}`;
     return (
         <div className="share">
             <div className="views">
@@ -119,7 +118,7 @@ export const EventJSON = ({event}) => {
         description: event.description,
         offers: {
             "@type": "Offer",
-            url: event.ticketUrl || `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`,
+            url: event.ticketUrl || `${appSettings.appUrl}/event/${event._id}`,
             price: (event.price || {}).from,
             priceCurrency: "UAH",
             availability: "http://schema.org/InStock",

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {Row, Col, ControlLabel, Button, Modal} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { slugify } from 'transliteration';
 import _ from 'lodash';
 
 import { Loading, NoData } from '../../components/tools.jsx';
@@ -50,7 +49,7 @@ class Event extends Component {
 
     render() {
         const {event, categories} = this.props;
-        const detailedLink = `/event/${event._id}/${slugify(event.name)}`;
+        const detailedLink = `/event/${event._id}`;
         return (
             <tr
                 key={event._id}
@@ -77,6 +76,7 @@ class Event extends Component {
                             </span>
                             {' '}
                         </span> : null}
+                    {event.editorChoice ? <span className="label label-info">вибір редакції</span> : null}
                     {event.hidden ? <span><span className="label label-warning">прихована</span>{' '}</span> : null}
                     {event.invalid ? <span className="label label-danger">невалідна</span> : null}
                 </td>
@@ -190,7 +190,7 @@ class Toolbar extends Component {
 
     toggleSync() {
         this.setState({
-            isSync: !this.state.isSync
+            showNotSync: !this.state.showNotSync
         }, () => {
             this.props.onFilter(this.state)
         })
@@ -234,7 +234,7 @@ class Toolbar extends Component {
                 <input
                     name="isFeature"
                     type="checkbox"
-                    checked={!this.state.isSync}
+                    checked={this.state.showNotSync}
                     onChange={this.toggleSync}/>
                 {' '}
                 <ControlLabel>несинхронізовані з IFCity</ControlLabel>
@@ -331,11 +331,11 @@ class Events extends Component {
         this.setState({
             showModal: true,
             event: {
-                name: 'Нова подія',
+                name: '',
                 category: 'not_set',
                 start_time: moment().format('YYYY-MM-DDTHH:mm:00ZZ'),
                 end_time: '',
-                tags: 'ifcityevent',
+                tags: '',
                 isSync: false
             },
             modalTitle: 'Нова подія',

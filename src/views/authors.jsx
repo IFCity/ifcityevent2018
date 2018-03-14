@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 import { Loading, NoData } from '../components/tools.jsx';
 import { getAuthorsAction } from '../actions/authorsActions';
-import {slugify} from 'transliteration';
 
 
 const Author = ({author}) => {
@@ -22,7 +21,7 @@ const Author = ({author}) => {
     }
     let events = _(firstEvents)
         .map(event => {
-            const url = `/event/${event._id}/${slugify(event.name)}`;
+            const url = `/event/${event._id}`;
             return (
                 <li>
                     <Link to={url}>

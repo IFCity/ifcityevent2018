@@ -20,7 +20,7 @@ class App extends Component {
         return (
             <div>
                 <Navbar/>
-                <div className="container-fluid container-fluid-full">
+                <div className="container container-fluid-full">
                     <Switch>
                         {routes.map(route => (
                             <Route {...route} {...this.props}/>

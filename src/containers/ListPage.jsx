@@ -12,11 +12,8 @@ class ListPage extends Component {
         return (
             <div className="content-wrapper">
                 <Row>
-                    <Col md={9}>
+                    <Col md={12}>
                         <Events {...this.props}/>
-                    </Col>
-                    <Col md={3}>
-                        <MostViewed title="Популярні події" type="mostviewed"/>
                     </Col>
                 </Row>
             </div>

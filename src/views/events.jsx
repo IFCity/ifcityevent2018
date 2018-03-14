@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col} from 'react-bootstrap';
+import {Row, Col, OverlayTrigger, Tooltip} from 'react-bootstrap';
 import moment from 'moment';
 import _ from 'lodash';
 import {Link} from 'react-router-dom';
-import {slugify} from 'transliteration';
 
 import {getEventsAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
@@ -25,76 +24,183 @@ import appSettings from '../constants/aplication';
 import {placeObj, priceObj} from '../services/logicHelper';
 
 
-export const EventDefault = (props) => {
-    const {event, even, categories, showShareLinks, deepLinking, divider} = props;
-    const detailedLink = `/event/${event._id}/${slugify(event.name)}`;
-    const info =
-        <Col md={6}>
-            {deepLinking ?
-                <Link to={detailedLink}>
-                    <h4>{event.name}</h4>
-                </Link> :
-                <h4>{event.name}</h4>}
-            <EventType category={event.category} categories={categories}/>
-            <EventPlace place={event.place}/>
-            <EventTime event={event}/>
-            <EventPrice event={event}/>
-            <EventPhone phone={event.phone}/>
-            <EventSource event={event}/>
-            <EventMetadata event={event}/>
-            <EventTags tags={event.tags}/>
-            {showShareLinks ? <EventShare event={event}/> : null}
-            <p className={deepLinking ? 'description wrap' : 'description'}>{event.description}</p>
-            {deepLinking ? <a className="detailed" href={detailedLink}>...показати більше</a> : null}
-        </Col>;
-    const cover =
-        <Col md={6}>
-            <img src={_.get(event, 'cover.source', '')}/>
-        </Col>;
-    const result = [
-        divider,
-        <Row
-            key={event._id}
-            className={`event-default event-default-${even ? 'even' : 'odd'}`}
-        >
-            {even ? [info, cover] : [cover, info]}
-        </Row>
-    ];
-    return divider ? result : result[1];
-};
+class EventDefault extends Component {
+    constructor(props) {
+        super(props);
+        this.share = this.share.bind(this);
+    }
+    share() {
+        const {event} = this.props;
+        window.FB.init({
+            appId: appSettings.FBPageId,
+            cookie: true,
+            xfbml: true,
+            version: 'v2.5'
+        });
+        window.FB.ui(
+            {
+                method: 'share',
+                href: `http://ifcityevent.com/event/${event._id}`
+            },
+            (response) => {
+                if (response && response.post_id) {
+                    // alert('success');
+                } else {
+                    // alert('Помилка');
+                }
+            }
+        );
+    }
+    render() {
+        const {event, even, categories, showShareLinks, deepLinking, divider} = this.props;
+        const detailedLink = `/event/${event._id}`;
+        const sharer = (
+            <a href="#" onClick={this.share}>
+                Поділитись <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+            </a>
+        );
+        const info =
+            <Col md={6}>
+                {deepLinking ?
+                    <Link to={detailedLink}>
+                        <h4>{event.name}</h4>
+                    </Link> :
+                    <h4>{event.name}</h4>}
+                <EventType category={event.category} categories={categories}/>
+                <EventPlace place={event.place}/>
+                <EventTime event={event}/>
+                <EventPrice event={event}/>
+                <EventPhone phone={event.phone}/>
+                <EventSource event={event}/>
+                <EventMetadata event={event}/>
+                <EventTags tags={event.tags}/>
+                {showShareLinks ? sharer : null}
+                <p className={deepLinking ? 'description wrap' : 'description'}>{event.description}</p>
+                {deepLinking ? <a className="detailed" href={detailedLink}>...показати більше</a> : null}
+            </Col>;
+        const cover =
+            <Col md={6}>
+                <img src={_.get(event, 'cover.source', '')}/>
+            </Col>;
+        const result = [
+            divider,
+            <Row
+                key={event._id}
+                className={`event-default event-default-${even ? 'even' : 'odd'}`}
+            >
+                {even ? [info, cover] : [cover, info]}
+            </Row>
+        ];
+        return divider ? result : result[1];
+    };
+}
 
-export const EventRedesign = (props) => {
-    const {event, even, categories, showShareLinks, deepLinking, divider} = props;
-    const detailedLink = `/event/${event._id}/${slugify(event.name)}`;
-    return (
-        <div className="event-new-wrapper">
-            <div className="event-new">
-                <aside className="image-content">
-                    <a href={detailedLink} className="">
-                        <div className="image-wrapper">
-                            <img className="eds-media-card-content__image eds-max-img" src={_.get(event, 'cover.source', '')}/>
+moment.updateLocale('uk', {
+    calendar : {
+        sameDay : '[Сьогодні] о HH:mm',
+        nextDay : '[Завтра] о HH:mm',
+        nextWeek : '[Цього тижня] в ddd о HH:mm',
+        sameElse : 'ddd о HH:mm'
+    }
+});
+
+class EventRedesign extends Component {
+    constructor(props) {
+        super(props);
+        this.share = this.share.bind(this);
+    }
+
+    share() {
+        const {event} = this.props;
+        window.FB.init({
+            appId: appSettings.FBPageId,
+            cookie: true,
+            xfbml: true,
+            version: 'v2.5'
+        });
+        window.FB.ui(
+            {
+                method: 'share',
+                href: `http://ifcityevent.com/event/${event._id}`
+            },
+            (response) => {
+                if (response && response.post_id) {
+                    // alert('success');
+                } else {
+                    // alert('Помилка');
+                }
+            }
+        );
+    }
+
+    render() {
+        const {event, categories} = this.props;
+        const detailedLink = `/event/${event._id}`;
+        const categoryName = _(categories)
+            .filter(item => item.id === event.category)
+            .value();
+        const tooltip = (
+            <Tooltip id="tooltip">Поділитись</Tooltip>
+        );
+        const tagsArray = _(_.isArray(event.tags) ? event.tags : event.tags.split(','))
+            .map(item => {
+                item = item.trim();
+                return item ? (
+                    <Link to={`/tags/${encodeURIComponent(item)}`}>
+                        {`#${item}`}
+                    </Link>
+                ) : null;
+            })
+            .value();
+        const place = placeObj(event.place);
+        return (
+            <div className="event-new-wrapper">
+                <div className="event-new">
+                    <aside className="image-content">
+                        <Link to={detailedLink}>
+                            <div className="image-wrapper">
+                                <img className="eds-media-card-content__image eds-max-img"
+                                     src={_.get(event, 'cover.source', '')}/>
+                            </div>
+                        </Link>
+                    </aside>
+                    <main className="main-content">
+                        <div className="date-side">
+                            <span className="day">{moment(event.startCalcDate).format('DD')}</span>
+                            <span className="month">{moment(event.startCalcDate).format('MMM')}</span>
                         </div>
-                    </a>
-                </aside>
-                <main className="main-content">
-                    <div className="date-side">
-                        <span className="day">{moment(event.startCalcDate).format('DD')}</span>
-                        <span className="month">{moment(event.startCalcDate).format('MMM')}</span>
+                        <div className="main-side">
+                            <Link to={detailedLink}>
+                                <h3>{event.name}</h3>
+                            </Link>
+                            <span className="place">{moment(event.startCalcDate).calendar()} · {place.name} {place.location ? `(${place.location})` : null}</span>
+                            <span className="price">{priceObj(event.price).str}</span>
+                        </div>
+                    </main>
+                    <div className="footer">
+                        <span className="category">
+                            {_.get(categoryName, '[0].name', event.category)}
+                        </span>
+                        <div className="tags">
+                            {_.get(tagsArray, '[0]', null)}
+                            {_.get(tagsArray, '[1]', null)}
+                        </div>
+                        <span className="links share">
+                            <OverlayTrigger placement="top" overlay={tooltip}>
+                              <span class="glyphicon glyphicon-share-alt" aria-hidden="true"
+                                    onClick={this.share}></span>
+                            </OverlayTrigger>
+                        </span>
                     </div>
-                    <div className="main-side">
-                        <h3>{event.name}</h3>
-                        <span className="place">{placeObj(event.place).name}</span>
-                        <span className="price">{priceObj(event.price).str}</span>
-                    </div>
-                </main>
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
+}
 
 export const EventText = (props) => {
     const {event} = props;
-    const detailedLink = `${appSettings.appUrl}/event/${event._id}/${slugify(event.name)}`;
+    const detailedLink = `${appSettings.appUrl}/event/${event._id}`;
     return (
         <p>
             {event.name}{' ('}
@@ -234,15 +340,20 @@ class Events extends Component {
         const {data, metadata} = this.props.events;
         return [
             <Toolbar path={this.props.match.params.holiday}/>,
-            <Loading {...metadata} mask={true}>
+            <Loading {...metadata} mask={true} className="event-region">
                 {this.props.match.params.tagname ?
-                    <h3>Пошук за тегом: {decodeURIComponent(this.props.match.params.tagname)}</h3> : null}
+                    (
+                        <Row className="event-region-title">
+                            <Col sm={6}>
+                                <h2>Пошук за тегом: <span>{decodeURIComponent(this.props.match.params.tagname)}</span></h2>
+                            </Col>
+                        </Row>
+                    ): null}
+
                 <EventsList
                     events={data}
                     categories={this.props.categories.data}
                     dispatch={this.props.dispatch}
-                    showDivider={!this.props.match.params.holiday}
-                    title={!!this.props.match.params.holiday ? `Вікенд (${moment().day(6).format('LL')} - ${moment().day(7).format('LL')})` : null}
                 />
             </Loading>
         ];
@@ -256,3 +367,4 @@ Events.propTypes = {
 };
 
 export default Events;
+export { EventDefault };

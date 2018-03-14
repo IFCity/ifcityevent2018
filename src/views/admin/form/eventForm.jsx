@@ -40,6 +40,7 @@ class EventForm extends Component {
         this.handlePlaceChange = this.handlePlaceChange.bind(this);
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleMetadataChange = this.handleMetadataChange.bind(this);
+        this.handleEditorChoiceChange = this.handleEditorChoiceChange.bind(this);
 
         this.state = {
             event: _.cloneDeep(props.event)
@@ -53,6 +54,7 @@ class EventForm extends Component {
     }
 
     handleSave() {
+        console.log(this.state.event);
         this.props.onSave(this.state.event);
     }
 
@@ -183,6 +185,12 @@ class EventForm extends Component {
         this.setState({event: event});
     }
 
+    handleEditorChoiceChange() {
+        let event = this.state.event;
+        event.editorChoice = !event.editorChoice;
+        this.setState({event: event});
+    }
+
     handlePlaceChange(e) {
         let event = this.state.event;
         event.place = event.place || {};
@@ -276,7 +284,7 @@ class EventForm extends Component {
                                 <ControlLabel>Дата до</ControlLabel>
                                 <DateTime
                                     onChange={this.handleEndTimeChange}
-                                    value={moment(event.end_time)}
+                                    value={event.end_time ? moment(event.end_time) : null}
                                 />
                                 <input
                                     name="isEndDate"
@@ -402,7 +410,7 @@ class EventForm extends Component {
                                     onChange={this.handleTagsChange}
                                 />
                                 <Row>
-                                    <Col md={6}>
+                                    <Col md={4}>
                                         <input
                                             name="isValid"
                                             type="checkbox"
@@ -412,7 +420,7 @@ class EventForm extends Component {
                                         {' '}
                                         <ControlLabel>валідна подія</ControlLabel>
                                     </Col>
-                                    <Col md={6}>
+                                    <Col md={4}>
                                         <input
                                             name="isHidden"
                                             type="checkbox"
@@ -421,6 +429,16 @@ class EventForm extends Component {
                                         />
                                         {' '}
                                         <ControlLabel>прихована подія</ControlLabel>
+                                    </Col>
+                                    <Col md={4}>
+                                        <input
+                                            name="editorChoice"
+                                            type="checkbox"
+                                            checked={event.editorChoice}
+                                            onChange={this.handleEditorChoiceChange}
+                                        />
+                                        {' '}
+                                        <ControlLabel>вибір редакції</ControlLabel>
                                     </Col>
                                 </Row>
                             </Col>

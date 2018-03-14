@@ -16,6 +16,10 @@ import {
     watchCheckStatus,
     watchAggregateFB,
     watchMostviewed,
+    watchFilm,
+    watchChild,
+    watchPromo,
+    watchAttention,
     watchGetAuthors
 } from './watchers';
 
@@ -38,6 +42,10 @@ export default function* root() {
         fork(watchCheckStatus),
         fork(watchAggregateFB),
         fork(watchMostviewed),
+        fork(watchFilm),
+        fork(watchChild),
+        fork(watchPromo),
+        fork(watchAttention),
         fork(watchGetAuthors)
     ]);
 }

@@ -1,4 +1,5 @@
 import ListPage from '../containers/ListPage.jsx';
+import DashboardPage from '../containers/DashboardPage.jsx';
 import EventPage from '../containers/EventPage.jsx';
 import AdminPage from '../containers/AdminPage.jsx';
 import AuthorsPage from '../containers/AuthorsPage.jsx';
@@ -75,6 +76,15 @@ const authorsPreloadedState = data => {
 export default [
     {
         path: '/',
+        key: 'dashboard',
+        exact: true,
+        component: DashboardPage,
+        loadData: () => eventsLoadData(),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => 'Відкрий цікаві події Івано-Франківська'
+    },
+    {
+        path: '/legacy',
         key: 'root',
         exact: true,
         component: ListPage,
@@ -92,7 +102,7 @@ export default [
         pageTitle: () => 'Категорія'
     },
     {
-        path: '/event/:eventid/:trname',
+        path: '/event/:eventid',
         key: 'sport',
         exact: true,
         component: EventPage,
@@ -147,17 +157,25 @@ export default [
 
 export const mainMenuRoutes = [
     {
-        path: '/',
-        title: 'Всі події'
+        path: '/category/film',
+        title: 'Кіно'
     },
     {
-        path: '/weekend',
-        title: 'Вікенд'
+        path: '/category/teatr',
+        title: 'Театр'
     },
     {
-        path: '/authors',
-        title: 'Організатори'
-    }
+        path: '/tags/%D0%BF%D1%96%D0%B4%D1%85%D0%BE%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B4%D0%BB%D1%8F%20%D0%B4%D1%96%D1%82%D0%B5%D0%B9',
+        title: 'Для дітей'
+    },
+    {
+        path: '/tags/%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%B4%D0%B5%D0%BD%D1%8C-2018',
+        title: 'Великдень 2018'
+    },
+    {
+        path: '/legacy',
+        title: 'Стара версія'
+    },
 ];
 
 export const categoryMenuRoutes = path => {

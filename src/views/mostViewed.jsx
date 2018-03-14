@@ -1,20 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col} from 'react-bootstrap';
-import moment from 'moment';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
-import { slugify } from 'transliteration';
 import { connect } from 'react-redux';
 
 import { NoData, Loading } from '../components/tools.jsx';
 import { getEventsAction } from '../actions/eventsActions';
 import { getMostViewedAction } from '../actions/mostviewedActions';
 import { getCategoriesAction } from '../actions/categoriesActions';
+import { EventRedesign } from './events.jsx';
 
 
 const EventSmall = ({event}) => {
-    const detailedLink = `/event/${event._id}/${slugify(event.name)}`;
+    const detailedLink = `/event/${event._id}`;
     return (
         <div className="event event-small">
             <Link to={detailedLink}>

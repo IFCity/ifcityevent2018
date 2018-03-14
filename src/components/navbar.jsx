@@ -67,7 +67,7 @@ class MainNavbar extends Component {
                 <Button bsStyle="success" onClick={this.doLogin}>Вхід</Button>
             </form>;
         return (
-            <nav className="navbar navbar-inverse navbar-fixed-top">
+            <nav className="navbar navbar-fixed-top">
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <Link className="navbar-brand" to="/">
