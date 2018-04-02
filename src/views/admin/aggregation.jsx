@@ -23,6 +23,17 @@ import { Loading, NoData } from '../../components/tools.jsx';
 import { CategoryDropdown } from '../../components/formElements.jsx';
 
 
+const FieldGroup = ({id, label, help, ...props}) => {
+    return (
+        <FormGroup controlId={id}>
+            <ControlLabel className="required">{label}</ControlLabel>
+            <FormControl {...props} />
+            {help && <HelpBlock>{help}</HelpBlock>}
+        </FormGroup>
+    );
+};
+
+
 class EventToAggregate extends Component {
     constructor(props) {
         super(props);
@@ -234,6 +245,14 @@ class Aggregation extends Component {
         this.doAggregate = this.doAggregate.bind(this);
         this.doSave = this.doSave.bind(this);
         this.fetchCategories = this.fetchCategories.bind(this);
+        this.handleTokenChange = this.handleTokenChange.bind(this);
+        this.state = {
+            token: this.props.authorization.data.authData.accessToken
+        }
+    }
+
+    handleTokenChange(e) {
+        this.setState({token: e.target.value});
     }
 
     doAggregate() {
@@ -243,7 +262,7 @@ class Aggregation extends Component {
             eventAction: 'search',
             eventLabel: this.props.authorization.data.authData.name
         });
-        this.props.dispatch(aggregateFBAction(this.props.authorization.data.authData.accessToken));
+        this.props.dispatch(aggregateFBAction(this.state.token));
     }
 
     fetchCategories() {
@@ -268,6 +287,8 @@ class Aggregation extends Component {
         this.fetchCategories();
     }
 
+
+
     render() {
         const {data, metadata} = this.props.aggregation;
         return [
@@ -278,6 +299,14 @@ class Aggregation extends Component {
             </Row>,
             <Row>
                 <Col md={12}>
+                    <FieldGroup
+                        id="token"
+                        type="text"
+                        label="Token"
+                        placeholder="Введіть FB Token"
+                        value={this.state.token}
+                        onChange={this.handleTokenChange}
+                    />
                     <Button bsStyle="success" onClick={this.doAggregate}>Перечитати Facebook-події</Button>
                     &nbsp;
                     <Button bsStyle="danger" onClick={this.doSave}>Записати в базу</Button>

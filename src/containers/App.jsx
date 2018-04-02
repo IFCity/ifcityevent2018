@@ -8,11 +8,11 @@ import Footer from '../components/footer.jsx';
 import {NotFound } from '../components/tools.jsx';
 import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
-
 class App extends Component {
-    componentDidMount() {
-        this.state = {
-            isClient: true
+
+    componentDidUpdate() {
+        if (typeof window !== undefined) {
+            window.scrollTo(0, 0);
         }
     }
 
@@ -23,7 +23,7 @@ class App extends Component {
                 <div className="container container-fluid-full">
                     <Switch>
                         {routes.map(route => (
-                            <Route {...route} {...this.props}/>
+                            <Route onUpdate={() => console.log('update')} {...route} {...this.props}/>
                         ))}
                         <Route component={NotFound}/>
                     </Switch>

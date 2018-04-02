@@ -14,7 +14,7 @@ const dev = {
 };
 
 const prod = {
-    appUrl: 'http://ifcityevent.com',
+    appUrl: '//ifcityevent.com',
     FBPageId: '111526136320923',
     apiURL: 'http://api.ifcityevent.com',
     port: 80,

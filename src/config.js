@@ -6,8 +6,7 @@ import isFunction from 'lodash/isFunction';
 
 import App from './containers/App.jsx';
 
-
-const appName = 'IF City Event';
+const appName = 'IFCityEvent';
 
 export const appData = {
     routes,
@@ -18,7 +17,9 @@ export const appData = {
 
 const pageConfig = {
     appName,
-    getPageTitle: (route, data) => `${route ? (isFunction(route.pageTitle) ? route.pageTitle(data) : route.pageTitle) + ' - ' : ''}${appName}`,
+    getPageTitle: (route, data, match) => {
+        return `${route ? (isFunction(route.pageTitle) ? route.pageTitle(data, match) : route.pageTitle) : appName}`
+    },
     appData
 };
 

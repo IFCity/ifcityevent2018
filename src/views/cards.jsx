@@ -7,10 +7,13 @@ import {Link} from 'react-router-dom';
 class CategoryCard extends Component {
     render() {
         return (
-            <Col md={this.props.size} className={`category-${this.props.category}`}>
-                <div>
-                    <Link to={this.props.link}>{this.props.label}</Link>
-                </div>
+            <Col md={this.props.size}>
+                <Link to={this.props.link}>
+                    <div className={`category-${this.props.category}`}>
+                        <h4>{this.props.label}</h4>
+                        <span>{this.props.helpText}</span>
+                    </div>
+                </Link>
             </Col>
         )
     }
@@ -43,13 +46,17 @@ class AlsoCards extends Component {
                     </Row>
                     <Row className="category-panel">
                         <CategoryCard size={3} category="weekend" link="legacy" label="Куди піти на вихідних"/>
-                        <CategoryCard size={5} category="teatr" link="category/teatr" label="Театр"/>
-                        <CategoryCard size={4} category="sport" link="category/sport" label="Спорт"/>
+                        <CategoryCard size={5} category="teatr" link="category/teatr" label="Театр" helpText="Вистави, дитячі вистави"/>
+                        <CategoryCard size={4} category="sport" link="category/sport" label="Спорт" helpText="Футбол, здоров'я, бойові мистецва, йога"/>
                     </Row>
                     <Row className="category-panel">
                         <CategoryCard size={4} category="concert" link="category/concert" label="Концерти"/>
-                        <CategoryCard size={3} category="exibition" link="category/exibition" label="Виставки"/>
-                        <CategoryCard size={5} category="disco" link="category/disco" label="Клуб / Диско"/>
+                        <CategoryCard size={3} category="art" link={`tags/${encodeURIComponent('мистецтво')}`} label="Мистецтво" helpText="Мистецтво, живопис, виставки, перформенс"/>
+                        <CategoryCard size={5} category="disco" link="category/disco" label="Клуб/Диско" helpText="Party, клубне життя, вечірки"/>
+                    </Row>
+                    <Row className="category-panel">
+                        <CategoryCard size={5} category="conference" link={`tags/${encodeURIComponent('конференція')}`} label="Конференції" helpText="Дискусії, бізнес-зустрічі"/>
+                        <CategoryCard size={7} category="workshop" link={`tags/${encodeURIComponent('воркшоп')}`} label="Воркшопи"  helpText="Навчання, воркшопи, майстер-класи"/>
                     </Row>
                 </Col>
             </Row>

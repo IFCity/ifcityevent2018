@@ -39,10 +39,10 @@ export function apiHandler(config)  {
                 });
             Promise.all(promises)
                 .then(data => {
-                    config.next(req, res, selectedRoutes[selectedRoutes.length - 1].r, data);
+                    config.next(req, res, selectedRoutes[selectedRoutes.length - 1].r, data, selectedRoutes[selectedRoutes.length - 1].m);
                 })
                 .catch(ex => {
-                    config.next(req, res, selectedRoutes[selectedRoutes.length - 1].r, ex);
+                    config.next(req, res, selectedRoutes[selectedRoutes.length - 1].r, ex, selectedRoutes[selectedRoutes.length - 1].m);
                 })
         }
     }
@@ -50,7 +50,7 @@ export function apiHandler(config)  {
 
 export function reactRender(config) {
 
-    return function (req, res, route, data) {
+    return function (req, res, route, data, match) {
         let preloadedState = route && route.getPreloadedState ? route.getPreloadedState(data) : {};
         const store = configureStore({preloadedState, ...config.appData});
         const context = {};
@@ -68,22 +68,21 @@ export function reactRender(config) {
 
         const finalState = store.getState();
 
-        res.send(config.next(html, finalState, route, data));
+        res.send(config.next(html, finalState, route, data, match));
     }
 }
 
 export function pageRender(config) {
 
-    return function(html, preloadedState, route, data) {
+    return function(html, preloadedState, route, data, match) {
         return `
             <!doctype html>
             <html>
                 <head>
                     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <title>${config.getPageTitle(route, data)}</title>
+                    <title>${config.getPageTitle(route, data, match)}</title>
                     <link href="/main.css" rel="stylesheet">
-                    <link href="/vendor.css" rel="stylesheet">
                     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
                 </head>
                 <body>
@@ -108,7 +107,8 @@ export function pageRender(config) {
                     <noscript>
                         <img height="1" width="1" src="https://www.facebook.com/tr?id=349141378826255&ev=PageView&noscript=1"/>
                     </noscript>
-                    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+                    <script src="/jquery.slim.js"></script>
+                    <script src="/bootstrap.js"></script>
                     <script src="/client.bundle.js"></script>
                 </body>
             </html>

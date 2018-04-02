@@ -8,7 +8,6 @@ import { PopularEventRegion, AttentionEventRegion, PromoEventRegion, TodayEventR
 import {getMostViewedAction} from "../actions/mostviewedActions";
 import {getEventsAction} from "../actions/eventsActions";
 import {getChildAction} from "../actions/childActions";
-import {getFilmAction} from "../actions/filmActions";
 import {getPromoAction} from "../actions/promoActions";
 import {getCategoriesAction} from "../actions/categoriesActions";
 import {getAttentionAction} from "../actions/attentionActions";
@@ -25,9 +24,6 @@ class DashboardPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (typeof (window) !== 'undefined') {
-            window.scrollTo(0, 0);
-        }
         if (nextProps.type !== this.props.type) {
             this.search(nextProps);
         }
@@ -38,7 +34,6 @@ class DashboardPage extends Component {
 
         this.props.dispatch(getAttentionAction());
         this.props.dispatch(getMostViewedAction());
-        this.props.dispatch(getFilmAction());
         this.props.dispatch(getChildAction());
         this.props.dispatch(getPromoAction());
         this.props.dispatch(getEventsAction());
@@ -92,10 +87,16 @@ const mapStateToProps = (state) => {
     return {
         events: state.events,
         mostviewed: state.mostviewed,
-        film: state.film,
+        film: {
+            data: state.events.data.filter(item => item.category === 'film'),
+        },
         child: state.child,
-        promo: state.promo,
-        attention: state.attention,
+        promo: {
+            data: state.events.data.filter(item => item.category === 'promo'),
+        },
+        attention: {
+            data: state.events.data.filter(item => item.category === 'attention'),
+        },
         categories: state.categories
     };
 };

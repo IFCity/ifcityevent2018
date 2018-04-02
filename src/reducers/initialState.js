@@ -34,10 +34,6 @@ export default {
         data: [],
         metadata: {}
     },
-    film: {
-        data: [],
-        metadata: {}
-    },
     child: {
         data: [],
         metadata: {}

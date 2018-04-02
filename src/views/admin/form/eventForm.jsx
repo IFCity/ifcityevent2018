@@ -208,19 +208,6 @@ class EventForm extends Component {
     render() {
         const {show, onHide, title, categories} = this.props;
         const event = this.state.event;
-        const metaExample = [{
-            name: 'Зал',
-            value: 'Агатовий'
-        }, {
-            name: 'Сеанси',
-            value: [{
-                name: 'Вівторок',
-                value: '17:00, 19:15, 23:10'
-            }, {
-                name: 'Середа',
-                value: '11:00'
-            }]
-        }];
         return (
             <Modal
                 show={show}
@@ -278,6 +265,7 @@ class EventForm extends Component {
                                 <DateTime
                                     onChange={this.handleStartTimeChange}
                                     value={moment(event.start_time)}
+                                    timeConstraints={{minutes: {step: 5}}}
                                 />
                             </Col>
                             <Col md={4}>
@@ -285,6 +273,7 @@ class EventForm extends Component {
                                 <DateTime
                                     onChange={this.handleEndTimeChange}
                                     value={event.end_time ? moment(event.end_time) : null}
+                                    timeConstraints={{minutes: {step: 5}}}
                                 />
                                 <input
                                     name="isEndDate"

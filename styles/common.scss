@@ -8,7 +8,7 @@
 }
 
 .container-fluid-full {
-  margin-top: 60px;
+  margin-top: 51px;
   padding-left: 0;
   padding-right: 0;
 
@@ -72,7 +72,25 @@
 .col-md-9, .col-md-12 {
 
   .event-new-wrapper {
-    width: 33.33333%;
+    width: 100%;
+  }
+
+  @media only screen and (min-width: 320px) {
+    .event-new-wrapper {
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    .event-new-wrapper {
+      width: 50%;
+    }
+  }
+
+  @media only screen and (min-width: 1024px) {
+    .event-new-wrapper {
+      width: 33.3333%;
+    }
   }
 }
 
@@ -94,5 +112,29 @@
         text-transform: uppercase;
       }
     }
+  }
+}
+
+
+.react-add-to-calendar {
+  float: left;
+
+  .react-add-to-calendar__icon--left {
+    font-size: 20px;
+    color: #0278b8;
+  }
+}
+
+.react-add-to-calendar__button {
+  background-color: transparent;
+  border: none;
+}
+
+.react-add-to-calendar__dropdown {
+  z-index: 9;
+  min-width: 140px;
+
+  ul {
+    padding: 0;
   }
 }

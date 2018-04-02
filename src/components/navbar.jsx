@@ -48,6 +48,12 @@ class MainNavbar extends Component {
                     );
                 })
             : null;
+        const rightMenu =
+            <ul className="nav navbar-nav navbar-right">
+                <li>
+                    <Link to="/docs/addevent">Як додати подію на сайт?</Link>
+                </li>
+            </ul>;
         const userMenu = userData.id ?
             <ul className="nav navbar-nav navbar-right">
                 <li className="dropdown">
@@ -79,6 +85,7 @@ class MainNavbar extends Component {
                             {mainMenuItems}
                         </ul>
                         {userMenu}
+                        {rightMenu}
                     </div>
                 </div>
             </nav>

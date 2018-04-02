@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
 
 import Events from '../views/events.jsx';
-import MostViewed from '../views/mostViewed.jsx';
 
 
 class ListPage extends Component {
@@ -23,12 +22,23 @@ class ListPage extends Component {
 
 ListPage.propTypes = {
     events: PropTypes.object,
+    filteredEvents: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, props) => {
+    let data = _.cloneDeep(state.events.data);
+    if (props.match.params.categoryid) {
+        data = data.filter(item => item.category === props.match.params.categoryid);
+    }
+    if (props.match.params.tagname) {
+        data = data.filter(item => (item.tags || '').toUpperCase().includes(decodeURIComponent(props.match.params.tagname).toUpperCase()));
+    }
     return {
-        events: state.events,
+        events: {
+            data: data,
+            metadata: state.events.metadata
+        },
         categories: state.categories
     };
 };

@@ -7,7 +7,6 @@ import users from './usersReducer';
 import authorization from './authorizationReducer';
 import aggregation from './aggregationReducer';
 import mostviewed from './mostviewedReducer';
-import film from './filmReducer';
 import child from './childReducer';
 import promo from './promoReducer';
 import attention from './attentionReducer';
@@ -24,7 +23,6 @@ const rootReducer = combineReducers({
     authorization,
     aggregation,
     mostviewed,
-    film,
     child,
     promo,
     attention,

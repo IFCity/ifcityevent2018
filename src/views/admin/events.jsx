@@ -333,7 +333,7 @@ class Events extends Component {
             event: {
                 name: '',
                 category: 'not_set',
-                start_time: moment().format('YYYY-MM-DDTHH:mm:00ZZ'),
+                start_time: moment().format('YYYY-MM-DDT10:00:00ZZ'),
                 end_time: '',
                 tags: '',
                 isSync: false

@@ -7,7 +7,6 @@
 }
 
 .loading {
-  position: relative;
   min-height: 200px;
 
   &.full {
@@ -18,11 +17,15 @@
     @extend .full-container;
     z-index: 9999;
     cursor: wait;
+    margin: 25px 15px 0;
+    background: #eee;
+    opacity: 0.6;
+    border-radius: 6px;
   }
 
   .spinner-container {
     @extend .full-container;
-    margin: 40px auto;
+    margin: 80px auto;
     height: 12px;
     z-index: 9999;
     cursor: wait;
@@ -32,10 +35,12 @@
     color: #333;
 
     .spinner {
-      background: url(~/public/images/processing.gif) no-repeat center center;
-      width: 200px;
-      height: 150px;
+      background: rgba(245, 245, 245, 0.8) url(~/public/images/processing.gif) no-repeat center center;
       margin: 0 auto;
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      border: 1px solid #eee;
     }
   }
 

@@ -4,15 +4,11 @@ import {Row, Col} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
 import { Loading } from '../components/tools.jsx';
-import { EventsList } from '../views/eventsNew.jsx';
+import { EventsList } from '../views/events.jsx';
 import { FacebookCard } from '../views/cards.jsx';
 
 
 class EventsBlock extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const {data, metadata} = this.props.events;
         const events = data.slice(0, this.props.limit || 6);
@@ -112,6 +108,7 @@ class PromoEventRegion extends Component {
                 limit={3}
                 type='promo'
                 link='/categories/discounts'
+                hideEmpty
                 {...this.props}
             />
         )
@@ -145,7 +142,7 @@ class FilmEventRegion extends Component {
                 title={title}
                 limit={6}
                 type='film'
-                link='/categories/film'
+                link='/category/film'
                 {...this.props}
             />
         )

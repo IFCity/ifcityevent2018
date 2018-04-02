@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import {Row, Col} from 'react-bootstrap';
 
-import { EventDefault } from '../views/events.jsx';
-import { getEventAction, incViewEventAction } from '../actions/eventsActions';
-import { getCategoriesAction } from '../actions/categoriesActions';
-import { Loading } from '../components/tools.jsx';
-import { EventJSON } from '../components/eventAttributes.jsx';
-import MostViewed from '../views/mostViewed.jsx';
+import {getEventAction, incViewEventAction} from '../actions/eventsActions';
+import {getCategoriesAction} from '../actions/categoriesActions';
+import {Loading} from '../components/tools.jsx';
+import {EventJSON} from '../components/eventAttributes.jsx';
+import {EventFullScreen} from "../views/event/event.jsx";
 
 
 class EventPage extends Component {
@@ -24,9 +22,6 @@ class EventPage extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (typeof (window) !== 'undefined') {
-            window.scrollTo(0, 0);
-        }
         if (this.props.match.params.eventid !== nextProps.match.params.eventid) {
             this.fetch(nextProps);
         }
@@ -45,21 +40,14 @@ class EventPage extends Component {
         const {data, metadata} = this.props.event;
         return (
             <div className="content-wrapper">
-                <Row>
-                    <Col md={9}>
-                        <Loading {...metadata} mask={true}>
-                            <EventDefault
-                                {...this.props}
-                                showShareLinks
-                                event={data}
-                                categories={this.props.categories.data}
-                            />
-                        </Loading>
-                    </Col>
-                    <Col md={3}>
-                        <MostViewed title="Схожі події" type="bytags" eventsParams={{tag: data.tags}}/>
-                    </Col>
-                </Row>
+                <Loading {...metadata} mask={true}>
+                    <EventFullScreen
+                        {...this.props}
+                        showShareLinks
+                        event={data}
+                        categories={this.props.categories.data}
+                    />
+                </Loading>
                 <EventJSON event={data}/>
             </div>
         );

@@ -3,10 +3,13 @@ import DashboardPage from '../containers/DashboardPage.jsx';
 import EventPage from '../containers/EventPage.jsx';
 import AdminPage from '../containers/AdminPage.jsx';
 import AuthorsPage from '../containers/AuthorsPage.jsx';
+import AddEventPage from '../containers/AddEventPage.jsx';
+import TermsPage from '../containers/TermsPage.jsx';
 import { fetchEvents, fetchEvent } from '../api/events';
 import { fetchCategories } from '../api/categories';
 import {fetchAuthors} from "../api/authors";
-import moment from "moment/moment";
+
+import _ from 'lodash';
 
 
 const eventsLoadData = match => {
@@ -81,7 +84,7 @@ export default [
         component: DashboardPage,
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Відкрий цікаві події Івано-Франківська'
+        pageTitle: () => 'IFCityEvent - Відкрий цікаві події Івано-Франківська'
     },
     {
         path: '/legacy',
@@ -90,7 +93,7 @@ export default [
         component: ListPage,
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Всі події'
+        pageTitle: () => 'Всі події - IFCityEvent'
     },
     {
         path: '/category/:categoryid',
@@ -99,7 +102,12 @@ export default [
         component: ListPage,
         loadData: match => eventsLoadData(match),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Категорія'
+        pageTitle: (data, match) => {
+            const category = _(data[0][1].data)
+                .filter(item => item.id === match.params.categoryid)
+                .value()[0].name;
+            return `${category} - IFCityEvent`;
+        }
     },
     {
         path: '/event/:eventid',
@@ -108,13 +116,13 @@ export default [
         component: EventPage,
         loadData: match => eventLoadData(match),
         getPreloadedState: data => eventPreloadedState(data),
-        pageTitle: data => data[0][0].data.name
+        pageTitle: data => `${data[0][0].data.name} - IFCityEvent`
     },
     {
         path: '/admin',
         key: 'admin',
         component: AdminPage,
-        pageTitle: 'Адміністрування'
+        pageTitle: 'Адміністрування - IFCityEvent'
     },
     {
         path: '/authors',
@@ -123,7 +131,7 @@ export default [
         component: AuthorsPage,
         loadData: () => authorsLoadData(),
         getPreloadedState: data => authorsPreloadedState(data),
-        pageTitle: () => 'Організатори'
+        pageTitle: () => 'Організатори - IFCityEvent'
     },
     {
         path: '/tags/:tagname',
@@ -132,25 +140,21 @@ export default [
         component: ListPage,
         loadData: match => eventsLoadData(match),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Теги'
+        pageTitle: (data, match) => `Пошук за тегом "${decodeURIComponent(match.params.tagname)}" - IFCityEvent`
     },
     {
-        path: '/:holiday/:categoryid',
-        key: 'weekend',
-        exact: false,
-        component: ListPage,
-        loadData: match => eventsLoadDataWeekend(match),
-        getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => `Вікенд (${moment().day(6).format('LL')} - ${moment().day(7).format('LL')})`
+        path: '/docs/addevent',
+        key: 'addevent',
+        exact: true,
+        component: AddEventPage,
+        pageTitle: () => 'Як додати подію - IFCityEvent'
     },
     {
-        path: '/:holiday',
-        key: 'weekend',
-        exact: false,
-        component: ListPage,
-        loadData: match => eventsLoadDataWeekend(match),
-        getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => `Вікенд (${moment().day(6).format('LL')} - ${moment().day(7).format('LL')})`
+        path: '/docs/terms',
+        key: 'terms',
+        exact: true,
+        component: TermsPage,
+        pageTitle: () => 'Умови використання - IFCityEvent'
     }
 ];
 
@@ -165,11 +169,11 @@ export const mainMenuRoutes = [
         title: 'Театр'
     },
     {
-        path: '/tags/%D0%BF%D1%96%D0%B4%D1%85%D0%BE%D0%B4%D0%B8%D1%82%D1%8C%20%D0%B4%D0%BB%D1%8F%20%D0%B4%D1%96%D1%82%D0%B5%D0%B9',
+        path: `/tags/${encodeURIComponent('підходить для дітей')}`,
         title: 'Для дітей'
     },
     {
-        path: '/tags/%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%B4%D0%B5%D0%BD%D1%8C-2018',
+        path: `/tags/${encodeURIComponent('Великдень-2018')}`,
         title: 'Великдень 2018'
     },
     {
