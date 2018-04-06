@@ -101,6 +101,10 @@
   .navbar-brand {
     color: #f6682f;
     font-weight: bold;
+
+    &:hover, &:focus, &:active {
+      color: #f6682f;
+    }
   }
 
   .navbar-nav {

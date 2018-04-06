@@ -2,11 +2,24 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
+import _ from 'lodash';
 
 import Events from '../views/events.jsx';
 
 
 class ListPage extends Component {
+    componentDidMount() {
+        if (typeof window !== undefined) {
+            window.scrollTo(0, 0);
+        }
+    }
+    
+    componentWillReceiveProps() {
+        if (typeof window !== undefined) {
+            window.scrollTo(0, 0);
+        }
+    }
+
     render() {
         return (
             <div className="content-wrapper">

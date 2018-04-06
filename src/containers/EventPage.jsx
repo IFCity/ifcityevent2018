@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
-import {getEventAction, incViewEventAction} from '../actions/eventsActions';
+import {getEventAction, getEventsAction, incViewEventAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
 import {Loading} from '../components/tools.jsx';
 import {EventJSON} from '../components/eventAttributes.jsx';
-import {EventFullScreen} from "../views/event/event.jsx";
+import {EventFullScreen} from '../views/event/event.jsx';
+import { RelatedEventRegion } from '../views/eventRegions.jsx';
 
 
 class EventPage extends Component {
@@ -14,6 +15,7 @@ class EventPage extends Component {
         super(props);
         this.fetch = this.fetch.bind(this);
         this.fetchCategories = this.fetchCategories.bind(this);
+        this.filterRelatedEvents = this.filterRelatedEvents.bind(this);
     }
 
     componentDidMount() {
@@ -27,9 +29,25 @@ class EventPage extends Component {
         }
     }
 
+    filterRelatedEvents(data) {
+        let result = [];
+        if (data && data.tags) {
+            const tag = data.tags.split(',')[0].trim();
+            result = this.props.events.data.filter(item => {
+                if (item.id === data.id) {
+                    return false;
+                }
+                return (item.tags || '').toUpperCase().includes(tag.toUpperCase());
+            });
+        }
+        return result;
+    }
+
     fetch(props) {
+        props.dispatch(getEventsAction());
         props.dispatch(getEventAction(props.match.params.eventid));
         props.dispatch(incViewEventAction(props.match.params.eventid));
+        this.filterRelatedEvents();
     }
 
     fetchCategories() {
@@ -38,6 +56,7 @@ class EventPage extends Component {
 
     render() {
         const {data, metadata} = this.props.event;
+        const relatedEvents = this.filterRelatedEvents(data);
         return (
             <div className="content-wrapper">
                 <Loading {...metadata} mask={true}>
@@ -46,6 +65,15 @@ class EventPage extends Component {
                         showShareLinks
                         event={data}
                         categories={this.props.categories.data}
+                    />
+                    <RelatedEventRegion
+                        {...this.props}
+                        hideLinks
+                        noLimit
+                        events={{
+                            data: relatedEvents,
+                            metadata
+                        }}
                     />
                 </Loading>
                 <EventJSON event={data}/>
@@ -56,6 +84,7 @@ class EventPage extends Component {
 
 EventPage.propTypes = {
     event: PropTypes.object,
+    events: PropTypes.object,
     categories: PropTypes.object,
     dispatch: PropTypes.func.isRequired
 };
@@ -63,6 +92,7 @@ EventPage.propTypes = {
 const mapStateToProps = (state) => {
     return {
         event: state.event,
+        events: state.events,
         categories: state.categories
     };
 };

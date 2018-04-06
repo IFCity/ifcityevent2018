@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom';
 import appSettings from '../../constants/aplication';
 import {eventTimeObj, placeObj, priceObj} from '../../services/logicHelper';
 import AddToCalendar from 'react-add-to-calendar';
+import {EventRecurrenceView, EventType} from '../../components/eventAttributes.jsx';
 
 moment.updateLocale('uk', {
     calendar: {
@@ -81,7 +82,7 @@ class EventSmall extends Component {
             })
             .value();
         const place = placeObj(event.place);
-        const startedBefore = moment(event.start_time).isBefore(moment(), 'day');
+        const startedBefore = moment(event.start_time).isSameOrBefore(moment(), 'day') && moment(event.end_time).isAfter(moment(), 'day');
         const calendarDate = startedBefore ? moment(event.start_time).format('о HH:mm') : moment(event.start_time).calendar();
         return (
             <div className="event-new-wrapper">
@@ -118,7 +119,7 @@ class EventSmall extends Component {
                         </div>
                         <span className="links share">
                             <OverlayTrigger placement="top" overlay={tooltip}>
-                              <span class="glyphicon glyphicon-open" aria-hidden="true"
+                              <span className="glyphicon glyphicon-open" aria-hidden="true"
                                     onClick={this.share}></span>
                             </OverlayTrigger>
                         </span>
@@ -128,6 +129,10 @@ class EventSmall extends Component {
         );
     };
 }
+
+const sourcesMap = {
+    facebook: id => `https://www.facebook.com/events/${id}`
+};
 
 class EventFullScreen extends Component {
     constructor(props) {
@@ -201,6 +206,15 @@ class EventFullScreen extends Component {
                             <div className="author">
                                 <p>від <a href="#">{event.author.name}</a></p>
                             </div>: null}
+                        {event.source ?
+                            <div className="source">Джерело:&nbsp;
+                                {_.get(sourcesMap, event.source) ?
+                                    <a target="_blank" href={sourcesMap[event.source](event.id)}>
+                                        {event.source}
+                                    </a> :
+                                    event.source
+                                }
+                            </div> : null}
                         <span className="price">{priceObj(event.price).str}</span>
                     </Col>
                 </Row>
@@ -238,9 +252,12 @@ class EventFullScreen extends Component {
                     <Col md={12 - aSiseSize}>
                         <h3>Дата і час</h3>
                         <span className="date-full">{eventTimeObj(event).fullTime}</span>
+                        <EventRecurrenceView event={event}/>
                         <h3>Локація</h3>
                         <span className="date-full">{place.name}</span>
                         {place.location ? <span className="date-full">{place.location}</span> : null}
+                        <h3>Категорія</h3>
+                        <EventType category={event.category} categories={categories}/>
                     </Col>
                 </Row>
             </div>

@@ -19,6 +19,7 @@ import appSettings from '../constants/aplication';
 import {EventSmall} from './event/event.jsx';
 
 import { Sticky } from '../components/sticky.jsx';
+import {categoryMenuRoutes} from "../routes";
 
 moment.updateLocale('uk', {
     calendar: {
@@ -49,11 +50,26 @@ const Divider = ({text}) => (
     </div>
 );
 
-const isToday = event => moment(event.startCalcDate).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD');
+const isToday = event => moment(event.startCalcDate).isSame(moment(), 'day');
 
-const isTomorrow = event => moment(event.startCalcDate).format('YYYY-MM-DD') === moment().add(1, 'days').format('YYYY-MM-DD');
+const isTomorrow = event =>
+    (
+        moment(event.startCalcDate).isSame(moment().add(1, 'days'), 'day') ||
+        (
+            moment(event.startCalcDate).isSameOrBefore(moment().add(1, 'days'), 'day') &&
+            moment(event.end_time).isSameOrAfter(moment().add(1, 'days'), 'day')
+        )
+    );
 
-const isLater = event => moment(event.startCalcDate).format('YYYY-MM-DD') > moment().add(1, 'days').format('YYYY-MM-DD');
+const isLater = event =>
+    (
+        moment(event.startCalcDate).isSame(moment().add(2, 'days'), 'day') ||
+        (
+            moment(event.startCalcDate).isSameOrBefore(moment().add(2, 'days'), 'day') &&
+            moment(event.end_time).isSameOrAfter(moment().add(2, 'days'), 'day')
+        ) ||
+        moment(event.startCalcDate).isSameOrAfter(moment().add(2, 'days'), 'day')
+    );
 
 
 class EventsList extends Component {
@@ -133,11 +149,27 @@ class EventsListOld extends Component {
     }
 }
 
+class ContentDescription extends Component {
+    render() {
+        return (
+            <Row className="content-description">
+                <Col xs={12}>
+                    <div dangerouslySetInnerHTML={{ __html: this.props.content.replace(/\n/g, '<br />')}} />
+                </Col>
+            </Row>
+        );
+    }
+}
+
 class Events extends Component {
     constructor(props) {
         super(props);
         this.search = this.search.bind(this);
         this.fetchCategories = this.fetchCategories.bind(this);
+        this.toggleGroup = this.toggleGroup.bind(this);
+        this.state = {
+            groupEvents: false
+        }
     }
 
     componentDidMount() {
@@ -167,9 +199,14 @@ class Events extends Component {
         this.props.dispatch(getCategoriesAction());
     }
 
+    toggleGroup() {
+        this.setState({groupEvents: !this.state.groupEvents});
+    }
+
     render() {
         const today = moment();
         const tomorrow = today.clone().add(1, 'days');
+        const later = today.clone().add(2, 'days');
         const {data, metadata} = this.props.events;
         let todayEvents = [];
         let tomorrowEvents = [];
@@ -184,10 +221,32 @@ class Events extends Component {
                 if (isLater(event)) {
                     laterEvents.push(event);
                 }
-        })
+            })
             .value();
+        if (this.state.groupEvents) {
+            todayEvents = _(todayEvents)
+                .uniqBy(item => item.name)
+                .value();
+            tomorrowEvents = _(tomorrowEvents)
+                .uniqBy(item => item.name)
+                .value();
+            laterEvents = _(laterEvents)
+                .uniqBy(item => item.name)
+                .value();
+        }
+        let content = '';
+        if (this.props.match.params.categoryid) {
+            content = _.get(_(this.props.categories.data)
+                .filter(item => item.id === this.props.match.params.categoryid)
+                .value(), '[0].descr', '');
+        }
         return [
-            <Toolbar path={this.props.match.params.holiday}/>,
+            <Toolbar
+                params={this.props.match.params}
+                toggleGroup={this.toggleGroup}
+                groupEvents={this.state.groupEvents}
+            />,
+            <ContentDescription content={content}/>,
             <Loading {...metadata} mask={true} className="event-region">
                 {this.props.match.params.tagname ?
                     (
@@ -198,30 +257,42 @@ class Events extends Component {
                             </Col>
                         </Row>
                     ) : null}
-                <Sticky className="sticky-one" data={data}>
-                    <h3>Сьогодні, <strong>{today.format('D MMMM')}</strong></h3>
-                </Sticky>
-                <EventsList
-                    events={todayEvents}
-                    categories={this.props.categories.data}
-                    dispatch={this.props.dispatch}
-                />
-                <Sticky className="sticky-two" data={data}>
-                    <h3>Завтра, <strong>{tomorrow.format('D MMMM')}</strong></h3>
-                </Sticky>
-                <EventsList
-                    events={tomorrowEvents}
-                    categories={this.props.categories.data}
-                    dispatch={this.props.dispatch}
-                />
-                <Sticky className="sticky-three" data={data}>
-                    <h3>Пізніше</h3>
-                </Sticky>
-                <EventsList
-                    events={laterEvents}
-                    categories={this.props.categories.data}
-                    dispatch={this.props.dispatch}
-                />
+                {todayEvents.length > 0 ? [
+                    <Sticky className="sticky-one" data={data}>
+                        <div className="container">
+                            <h3>Сьогодні, <strong>{today.format('D MMMM')}</strong></h3>
+                        </div>
+                    </Sticky>,
+                    <EventsList
+                        events={todayEvents}
+                        categories={this.props.categories.data}
+                        dispatch={this.props.dispatch}
+                    />
+                ] : null}
+                {tomorrowEvents.length > 0 ? [
+                    <Sticky className="sticky-two" data={data}>
+                        <div className="container">
+                            <h3>Завтра, <strong>{tomorrow.format('D MMMM')}</strong></h3>
+                        </div>
+                    </Sticky>,
+                    <EventsList
+                        events={tomorrowEvents}
+                        categories={this.props.categories.data}
+                        dispatch={this.props.dispatch}
+                    />
+                ] : null}
+                {laterEvents.length > 0 ? [
+                    <Sticky className="sticky-three" data={data}>
+                        <div className="container">
+                            <h3><strong>{later.format('D MMMM')} та пізніше</strong></h3>
+                        </div>
+                    </Sticky>,
+                    <EventsList
+                        events={laterEvents}
+                        categories={this.props.categories.data}
+                        dispatch={this.props.dispatch}
+                    />
+                ] : null}
             </Loading>
         ];
     }

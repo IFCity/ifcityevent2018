@@ -10,14 +10,16 @@ export class Sticky extends Component {
 
 
     update() {
+        const topOffset = 51;
+        const stickyHeight = 40;
         const setInitialHeights = (elements) => {
             [].forEach.call(elements, (sticky, index) => {
-                let offset = 51;
+                let offset = topOffset;
                 if (index === 1) {
-                    offset = 66 * (index + 1) + 51;
+                    offset = stickyHeight * (index + 1) + topOffset + 30;
                 }
                 if (index === 2) {
-                    offset = 66 * (index + 1) + 51;
+                    offset = stickyHeight * (index + 1) + topOffset + 30;
                 }
                 sticky.setAttribute('data-sticky-initial', sticky.getBoundingClientRect().top - offset);
             });

@@ -11,7 +11,10 @@ import { FacebookCard } from '../views/cards.jsx';
 class EventsBlock extends Component {
     render() {
         const {data, metadata} = this.props.events;
-        const events = data.slice(0, this.props.limit || 6);
+        let events = data;
+        if (!this.props.noLimit) {
+            events = data.slice(0, this.props.limit || 6);
+        }
 
         return [
             <Loading {...metadata} mask={true} className="event-region">
@@ -72,7 +75,7 @@ class PopularEventRegion extends Component {
                 limit={11}
                 additionalCard={<FacebookCard/>}
                 type='mostviewed'
-                link='/legacy'
+                link='/search'
                 {...this.props}
             />
         )
@@ -125,7 +128,7 @@ class TodayEventRegion extends Component {
                 title={title}
                 limit={9}
                 type='today'
-                link='/legacy'
+                link='/search'
                 {...this.props}
             />
         )
@@ -166,5 +169,29 @@ class ChildEventRegion extends Component {
     }
 }
 
+class RelatedEventRegion extends Component {
+    render() {
+        const title = (
+            <h2>Схожі заходи</h2>
+        );
+        return (
+            <EventRegion
+                title={title}
+                limit={6}
+                type='related'
+                {...this.props}
+            />
+        )
+    }
+}
+
 export default EventRegion;
-export { PopularEventRegion, AttentionEventRegion, PromoEventRegion, TodayEventRegion, FilmEventRegion, ChildEventRegion }
+export {
+    PopularEventRegion,
+    AttentionEventRegion,
+    PromoEventRegion,
+    TodayEventRegion,
+    FilmEventRegion,
+    ChildEventRegion,
+    RelatedEventRegion
+}

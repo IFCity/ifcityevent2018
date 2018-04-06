@@ -195,8 +195,8 @@ export const EventRecurrenceView = ({event}) => {
         .map(item => item.longName)
         .value();
     return (
-        <span>
-            {' '}(кожного(ї) {result.join(', ').replace(/,(?=[^,]*$)/, ' та')}{')'}
+        <span className="recc">
+            кожного(ї) {result.join(', ').replace(/,(?=[^,]*$)/, ' та')}
         </span>
     );
 };

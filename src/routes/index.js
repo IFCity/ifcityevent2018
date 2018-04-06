@@ -20,7 +20,7 @@ const eventsLoadData = match => {
     if (match && match.params.tagname) {
         params.tag = decodeURIComponent(match.params.tagname);
     }
-    return Promise.all([fetchEvents(params), fetchCategories()]);
+    return Promise.all([fetchEvents(), fetchCategories()]);
 };
 
 const eventsLoadDataWeekend = match => {
@@ -85,6 +85,15 @@ export default [
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
         pageTitle: () => 'IFCityEvent - Відкрий цікаві події Івано-Франківська'
+    },
+    {
+        path: '/search',
+        key: 'root',
+        exact: true,
+        component: ListPage,
+        loadData: () => eventsLoadData(),
+        getPreloadedState: data => eventsPreloadedState(data),
+        pageTitle: () => 'Всі події - IFCityEvent'
     },
     {
         path: '/legacy',
@@ -161,6 +170,11 @@ export default [
 
 export const mainMenuRoutes = [
     {
+        path: '/search',
+        title: ' Пошук',
+        icon: 'search'
+    },
+    {
         path: '/category/film',
         title: 'Кіно'
     },
@@ -174,11 +188,11 @@ export const mainMenuRoutes = [
     },
     {
         path: `/tags/${encodeURIComponent('Великдень-2018')}`,
-        title: 'Великдень 2018'
+        title: 'Великдень'
     },
     {
-        path: '/legacy',
-        title: 'Стара версія'
+        path: `/tags/${encodeURIComponent('День Матері 2018')}`,
+        title: 'День Матері'
     },
 ];
 
@@ -186,6 +200,9 @@ export const categoryMenuRoutes = path => {
     path = path || 'category';
     return [
             {
+                path: `/search`,
+                title: 'Всі події'
+            }, {
                 path: `/${path || ''}/film`,
                 title: 'Кіно'
             }, {

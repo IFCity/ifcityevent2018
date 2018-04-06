@@ -45,7 +45,7 @@ class AlsoCards extends Component {
                         </Col>
                     </Row>
                     <Row className="category-panel">
-                        <CategoryCard size={3} category="weekend" link="legacy" label="Куди піти на вихідних"/>
+                        <CategoryCard size={3} category="weekend" link="search" label="Куди піти на вихідних"/>
                         <CategoryCard size={5} category="teatr" link="category/teatr" label="Театр" helpText="Вистави, дитячі вистави"/>
                         <CategoryCard size={4} category="sport" link="category/sport" label="Спорт" helpText="Футбол, здоров'я, бойові мистецва, йога"/>
                     </Row>

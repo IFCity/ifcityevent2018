@@ -337,7 +337,6 @@ $lines-to-show: 8;
   }
 
   .event-region-title {
-    margin-top: 26px;
 
     > div {
       padding: 0 7px;
@@ -446,6 +445,10 @@ $lines-to-show: 8;
   background: #fcf8e3;
 }
 
+.related-region {
+  margin: 50px 0;
+}
+
 .attention-region {
 
   h2 {
@@ -518,10 +521,15 @@ $lines-to-show: 8;
       .author {
         float: left;
         color: #45494E;
+        width: 100%;
 
         a, a:hover, a:focus {
           color: #45494E;
         }
+      }
+
+      .source {
+        float: left;
       }
     }
   }
@@ -594,6 +602,22 @@ $lines-to-show: 8;
            display: block;
            text-transform: uppercase;
          }
+
+         .recc {
+           color: #bbb;
+           text-transform: uppercase;
+           font-weight: bold;
+           font-size: 12px;
+         }
+
+         .event-type {
+           display: block;
+           text-transform: uppercase;
+
+           a, a:hover, a:focus {
+
+           }
+         }
        }
 
        .tags {
@@ -605,6 +629,8 @@ $lines-to-show: 8;
            margin-right: 14px;
            border: 1px solid #D2D6DF;
            border-radius: 21px;
+           display: inline-block;
+           margin-bottom: 14px;
          }
        }
 

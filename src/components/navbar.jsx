@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import { Button, Navbar, Nav, NavItem, MenuItem, NavDropdown } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import map from 'lodash/map';
@@ -32,30 +32,33 @@ class MainNavbar extends Component {
 
     render() {
         const { userData, authData } = this.props.authorization.data;
-        const mainMenuItems = map(mainMenuRoutes, item => {
+        const mainMenuItems = map(mainMenuRoutes, (item, index) => {
                 return (
-                    <li className={item.disabled ? 'disabled' : ''}>
-                        <Link to={item.path}>{item.title}</Link>
+                    <li className={item.disabled ? 'disabled' : ''} role="presentation">
+                        <Link to={item.path}>
+                            {item.icon ? <span className={`glyphicon glyphicon-${item.icon}`} aria-hidden="true"></span> : null}
+                            {item.title}
+                        </Link>
                     </li>
                 );
             });
         const adminMenuItems = userData.id && (authData.role === 'admin') ?
             map(adminMenuRoutes, item => {
                     return (
-                        <li className={item.disabled ? 'disabled' : ''}>
+                        <li className={item.disabled ? 'disabled' : ''} role="presentation">
                             <Link to={item.path}>{item.title}</Link>
                         </li>
                     );
                 })
             : null;
         const rightMenu =
-            <ul className="nav navbar-nav navbar-right">
-                <li>
+            <Nav pullRight>
+                <li role="presentation">
                     <Link to="/docs/addevent">Як додати подію на сайт?</Link>
                 </li>
-            </ul>;
+            </Nav>;
         const userMenu = userData.id ?
-            <ul className="nav navbar-nav navbar-right">
+            <Nav pullRight>
                 <li className="dropdown">
                     <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         Вітаємо, {userData.first_name} <span className="caret"></span>
@@ -63,32 +66,33 @@ class MainNavbar extends Component {
                     <ul className="dropdown-menu">
                         {adminMenuItems}
                         <li role="separator" className="divider"></li>
-                        <li>
+                        <li role="presentation">
                             <a href="#" onClick={this.doLogout}>Вийти</a>
                         </li>
                     </ul>
                 </li>
-            </ul>:
+            </Nav>:
             <form className="navbar-form navbar-right">
                 <Button bsStyle="success" onClick={this.doLogin}>Вхід</Button>
             </form>;
         return (
-            <nav className="navbar navbar-fixed-top">
-                <div className="container-fluid">
-                    <div className="navbar-header">
+            <Navbar collapseOnSelect fixedTop fluid bsStyle="default">
+                <Navbar.Header>
+                    <Navbar.Brand>
                         <Link className="navbar-brand" to="/">
                             {appSettings.appName}
                         </Link>
-                    </div>
-                    <div id="navbar" className="navbar-collapse collapse">
-                        <ul className="nav navbar-nav">
-                            {mainMenuItems}
-                        </ul>
-                        {userMenu}
-                        {rightMenu}
-                    </div>
-                </div>
-            </nav>
+                    </Navbar.Brand>
+                    <Navbar.Toggle />
+                </Navbar.Header>
+                <Navbar.Collapse>
+                    <Nav>
+                        {mainMenuItems}
+                    </Nav>
+                    {userMenu}
+                    {rightMenu}
+                </Navbar.Collapse>
+            </Navbar>
         );
     }
 }
