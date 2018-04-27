@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Modal, Button, FormGroup, ControlLabel, FormControl, HelpBlock, Row, Col} from 'react-bootstrap';
 import moment from 'moment';
 import DateTime from 'react-datetime';
+import _ from 'lodash';
 
 import {CategoryDropdown} from '../../../components/formElements.jsx';
 import {EventRecurrenceCheckboxes} from '../../../components/eventAttributes.jsx';
@@ -41,6 +42,7 @@ class EventForm extends Component {
         this.handleAddressChange = this.handleAddressChange.bind(this);
         this.handleMetadataChange = this.handleMetadataChange.bind(this);
         this.handleEditorChoiceChange = this.handleEditorChoiceChange.bind(this);
+        this.handleIsForChildren = this.handleIsForChildren.bind(this);
 
         this.state = {
             event: _.cloneDeep(props.event)
@@ -54,7 +56,6 @@ class EventForm extends Component {
     }
 
     handleSave() {
-        console.log(this.state.event);
         this.props.onSave(this.state.event);
     }
 
@@ -110,7 +111,9 @@ class EventForm extends Component {
         let event = this.state.event;
         let prevValue = event.end_time;
         try {
-            event.end_time = t.format('YYYY-MM-DDTHH:mm:00ZZ');
+            if (event.end_time) {
+                event.end_time = t.format('YYYY-MM-DDTHH:mm:00ZZ');
+            }
         } catch (e) {
             console.warn(e);
             event.end_time = prevValue;
@@ -120,8 +123,8 @@ class EventForm extends Component {
 
     handleEndTimeClearChange(t) {
         let event = this.state.event;
-        if (event.end_time === '') {
-            event.end_time = moment().format('YYYY-MM-DDTHH:mm:00ZZ');
+        if (!event.end_time) {
+            event.end_time = moment().format('YYYY-MM-DDT10:00:00ZZ');
         } else {
             event.end_time = '';
         }
@@ -176,6 +179,31 @@ class EventForm extends Component {
     handleInvalidChange() {
         let event = this.state.event;
         event.invalid = !event.invalid;
+        this.setState({event: event});
+    }
+
+    handleIsForChildren() {
+        const tagName = 'підходить для дітей';
+        let event = this.state.event;
+        event.isForChildren = !event.isForChildren;
+        let tags = event.tags ?
+            _(event.tags.split(','))
+                .map(item => item.trim().toLocaleLowerCase())
+                .value() : [];
+        const hasChildTag = _(tags)
+            .filter(item => item === tagName)
+            .value()
+            .length > 0;
+        if (event.isForChildren) {
+            if (!hasChildTag) {
+                tags.push(tagName);
+            }
+        } else {
+            tags = _(tags)
+                .filter(item => item !== tagName)
+                .value();
+        }
+        event.tags = tags.join(', ');
         this.setState({event: event});
     }
 
@@ -271,14 +299,15 @@ class EventForm extends Component {
                             <Col md={4}>
                                 <ControlLabel>Дата до</ControlLabel>
                                 <DateTime
+                                    disabled={event.end_time}
                                     onChange={this.handleEndTimeChange}
-                                    value={event.end_time ? moment(event.end_time) : null}
+                                    value={event.end_time ? moment(event.end_time) : ''}
                                     timeConstraints={{minutes: {step: 5}}}
                                 />
                                 <input
                                     name="isEndDate"
                                     type="checkbox"
-                                    checked={event.end_time === ''}
+                                    checked={!event.end_time}
                                     onChange={this.handleEndTimeClearChange}
                                 />
                                 {' '}
@@ -377,17 +406,33 @@ class EventForm extends Component {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md={6}>
-                                <FormGroup controlId="metadata">
-                                    <ControlLabel>Додаткові поля (JSON)</ControlLabel>
-                                    <FormControl
-                                        componentClass="textarea"
-                                        placeholder="Введіть додаткові поля в форматі JSON"
-                                        value={JSON.stringify(event.metadata)}
-                                        rows={5}
-                                        onChange={this.handleMetadataChange}
-                                    />
-                                </FormGroup>
+                            <Col md={6} style={{background: '#ffff002e'}}>
+                                <input
+                                    name="isValid"
+                                    type="checkbox"
+                                    checked={!event.invalid}
+                                    onChange={this.handleInvalidChange}
+                                />
+                                {' '}
+                                <ControlLabel>валідна подія</ControlLabel>
+                                <br/>
+                                <input
+                                    name="isHidden"
+                                    type="checkbox"
+                                    checked={event.hidden}
+                                    onChange={this.handleHiddenChange}
+                                />
+                                {' '}
+                                <ControlLabel>прихована подія</ControlLabel>
+                                <br/>
+                                <input
+                                    name="editorChoice"
+                                    type="checkbox"
+                                    checked={event.editorChoice}
+                                    onChange={this.handleEditorChoiceChange}
+                                />
+                                {' '}
+                                <ControlLabel>вибір редакції</ControlLabel>
                             </Col>
                             <Col md={6}>
                                 <FieldGroup
@@ -399,35 +444,15 @@ class EventForm extends Component {
                                     onChange={this.handleTagsChange}
                                 />
                                 <Row>
-                                    <Col md={4}>
+                                    <Col md={12}>
                                         <input
                                             name="isValid"
                                             type="checkbox"
-                                            checked={!event.invalid}
-                                            onChange={this.handleInvalidChange}
+                                            checked={event.isForChildren}
+                                            onChange={this.handleIsForChildren}
                                         />
                                         {' '}
-                                        <ControlLabel>валідна подія</ControlLabel>
-                                    </Col>
-                                    <Col md={4}>
-                                        <input
-                                            name="isHidden"
-                                            type="checkbox"
-                                            checked={event.hidden}
-                                            onChange={this.handleHiddenChange}
-                                        />
-                                        {' '}
-                                        <ControlLabel>прихована подія</ControlLabel>
-                                    </Col>
-                                    <Col md={4}>
-                                        <input
-                                            name="editorChoice"
-                                            type="checkbox"
-                                            checked={event.editorChoice}
-                                            onChange={this.handleEditorChoiceChange}
-                                        />
-                                        {' '}
-                                        <ControlLabel>вибір редакції</ControlLabel>
+                                        <ControlLabel>підходить для дітей</ControlLabel>
                                     </Col>
                                 </Row>
                             </Col>

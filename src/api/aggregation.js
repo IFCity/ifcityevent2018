@@ -55,11 +55,7 @@ export const aggregateFB = (token) => {
                         error => { throw error; }
                     )
                     .catch(error => {
-                        return {
-                            metadata: {
-                                error: error
-                            }
-                        };
+                        throw error;
                     });
             },
             error => { throw error; }
@@ -117,11 +113,7 @@ export const aggregateFB = (token) => {
                         error => { throw error; }
                     )
                     .catch(error => {
-                        return {
-                            metadata: {
-                                error: error
-                            }
-                        };
+                        throw error;
                     });
             },
             error => { throw error; }
@@ -154,20 +146,14 @@ export const aggregateFB = (token) => {
                             data: _.uniqBy(events, 'id')
                         }
                     })
-                    .catch(ex => (
-                        {
-                            metadata: {
-                                error: ex
-                            }
-                        }
-                    ));
+                    .catch(error => { throw error; });
             },
             error => { throw error; }
         )
         .catch(error => {
             return {
                 metadata: {
-                    error: error
+                    error:  error.error || error
                 }
             };
         });

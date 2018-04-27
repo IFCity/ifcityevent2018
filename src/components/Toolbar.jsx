@@ -1,38 +1,105 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import {Row, Col, FormControl, Button} from 'react-bootstrap';
 
-import { categoryMenuRoutes } from '../routes';
 
+export const categoryMenuRoutes = [
+    {
+        value: '/search',
+        title: 'Всі події'
+    }, {
+        value: '/category/film',
+        title: 'Кіно'
+    }, {
+        value: '/category/concert',
+        title: 'Концерти'
+    }, {
+        value: '/category/sport',
+        title: 'Спорт'
+    }, {
+        value: '/category/teatr',
+        title: 'Театр'
+    }, {
+        value: '/category/exibition',
+        title: 'Виставки'
+    }, {
+        value: '/category/masterclass',
+        title: 'Майстер-класи'
+    }, {
+        value: '/category/disco',
+        title: 'Клуб'
+    }, {
+        value: '/category/not_set',
+        title: 'Масові заходи'
+    }, {
+        value: '/category/attention',
+        title: 'Увага!'
+    }, {
+        value: '/category/discounts',
+        title: 'Акції та знижки'
+    }
+];
+
+export const periodMenuRoutes = [
+    {
+        value: 'all',
+        title: 'За весь час'
+    }, {
+        value: 'today',
+        title: 'Сьогодні'
+    }, {
+        value: 'tomorrow',
+        title: 'Завтра'
+    }
+];
 
 class Toolbar extends Component {
     constructor(props) {
         super(props);
+        console.log(props);
+        this.state = {
+            categoryId: props.params.categoryid ? `/category/${props.params.categoryid}` : '/search',
+            period: (props.query && props.query.period) || 'all'
+        };
+        this.goTo = this.goTo.bind(this);
         this.changeCategory = this.changeCategory.bind(this);
+        this.changePeriod = this.changePeriod.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.params.categoryid !== nextProps.params.categoryid) {
+            this.setState({
+                categoryId: nextProps.params.categoryid ? `/category/${nextProps.params.categoryid}` : '/search'
+            });
+        }
     }
 
     changeCategory(e) {
-        this.context.router.history.push(e.target.value);
+        this.setState({
+            categoryId: e.target.value
+        }, () => this.goTo());
+    }
+
+    changePeriod(e) {
+        this.setState({
+            period: e.target.value
+        }, () => this.goTo());
+    }
+
+    goTo() {
+        this.context.router.history.push(`${this.state.categoryId}/?period=${this.state.period}`);
     }
 
     render() {
-        const timeItems = [{
-            id: 'today',
-            title: 'За весь час'
-        }];
-        let categoryMenuOptions = _(categoryMenuRoutes())
-            .map(item => <option value={item.path}>{item.title}</option>)
+        let categoryMenuOptions = _(categoryMenuRoutes)
+            .map(item => <option value={item.value}>{item.title}</option>)
             .value();
-        const timeOptions = _(timeItems)
-            .map(item => <option value={item.id}>{item.title}</option>)
+
+        let periodMenuOptions = _(periodMenuRoutes)
+            .map(item => <option value={item.value}>{item.title}</option>)
             .value();
-        let categoryId = '/search';
-        if (this.props.params.categoryid) {
-            categoryId = _.get(_(categoryMenuRoutes())
-                .filter(item => item.path === `/category/${this.props.params.categoryid}`)
-                .value(), '[0].path', '/search');
-        }
+
         let searchText = this.props.params.tagname || '';
         return (
             <Row className="toolbar">
@@ -41,19 +108,18 @@ class Toolbar extends Component {
                     <select
                         className="form-control"
                         onChange={this.changeCategory}
-                        value={categoryId}
+                        value={this.state.categoryId}
                     >
                         {categoryMenuOptions}
                     </select>
                 </Col>
                 <Col md={3}>
                     <select
-                        disabled={true}
                         className="form-control"
-                        onChange={this.handleChange}
-                        value={{}}
+                        onChange={this.changePeriod}
+                        value={this.state.period}
                     >
-                        {timeOptions}
+                        {periodMenuOptions}
                     </select>
                 </Col>
                 <Col md={4}>

@@ -16,10 +16,18 @@
       font-size: 22px;
       color: #F86820;
       opacity: 0.9;
+      float: left;
 
       > strong {
         font-size: 18px;
       }
+    }
+
+    h4 {
+      font-size: 12px;
+      color: #ccc;
+      float: right;
+      margin-right: 30px;
     }
   }
 

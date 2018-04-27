@@ -75,7 +75,7 @@ class PopularEventRegion extends Component {
                 limit={11}
                 additionalCard={<FacebookCard/>}
                 type='mostviewed'
-                link='/search'
+                hideLinks
                 {...this.props}
             />
         )
@@ -92,7 +92,7 @@ class AttentionEventRegion extends Component {
                 title={title}
                 limit={6}
                 type='attention'
-                link='/categories/attention'
+                link='/category/attention'
                 hideEmpty
                 {...this.props}
             />
@@ -110,7 +110,7 @@ class PromoEventRegion extends Component {
                 title={title}
                 limit={3}
                 type='promo'
-                link='/categories/discounts'
+                link='/category/discounts'
                 hideEmpty
                 {...this.props}
             />
@@ -128,7 +128,7 @@ class TodayEventRegion extends Component {
                 title={title}
                 limit={9}
                 type='today'
-                link='/search'
+                link='/search/?period=today'
                 {...this.props}
             />
         )

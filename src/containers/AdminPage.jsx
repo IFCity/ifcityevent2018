@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Switch, Route } from 'react-router';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import _ from 'lodash';
 
 import Aggregation from '../views/admin/aggregation.jsx';
 import Pages from '../views/admin/pages.jsx';

@@ -19,6 +19,7 @@ import { getPromoSaga } from './promoSaga';
 import { getAttentionSaga } from './attentionSaga';
 import { getAuthorsSaga } from './authorsSaga';
 import * as types from '../constants/actionTypes';
+import {getTagsLookupSaga} from './tagsLookupSaga';
 
 
 export function* watchGetEvents() {
@@ -99,4 +100,8 @@ export function* watchAttention() {
 
 export function* watchGetAuthors() {
     yield takeEvery(types.GET_AUTHORS_REQUEST, getAuthorsSaga);
+}
+
+export function* watchTagsLookup() {
+    yield takeEvery(types.GET_TAGS_LOOKUP_REQUEST, getTagsLookupSaga);
 }

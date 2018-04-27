@@ -10,9 +10,11 @@ import { fetchCategories } from '../api/categories';
 import {fetchAuthors} from "../api/authors";
 
 import _ from 'lodash';
+import {fetchTagsLookup} from '../api/tagsLookup';
 
 
 const eventsLoadData = match => {
+    console.log("AAAAAAAAAA");
     let params = {};
     if (match && match.params.categoryid) {
         params.category = match.params.categoryid;
@@ -20,7 +22,7 @@ const eventsLoadData = match => {
     if (match && match.params.tagname) {
         params.tag = decodeURIComponent(match.params.tagname);
     }
-    return Promise.all([fetchEvents(), fetchCategories()]);
+    return Promise.all([fetchEvents(), fetchCategories(), fetchTagsLookup()]);
 };
 
 const eventsLoadDataWeekend = match => {
@@ -34,6 +36,8 @@ const eventsLoadDataWeekend = match => {
 };
 
 const eventsPreloadedState = data => {
+    console.log('============');
+    console.log(data[0]);
     return {
         events: {
             data: data[0][0].data || [],
@@ -42,6 +46,10 @@ const eventsPreloadedState = data => {
         categories: {
             data: data[0][1].data || [],
             metadata : data[0][1].metadata || {}
+        },
+        tagsLookup: {
+            data: data[0][2].data || [],
+            metadata : data[0][2].metadata || {}
         }
     }
 };
@@ -84,7 +92,7 @@ export default [
         component: DashboardPage,
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'IFCityEvent - Відкрий цікаві події Івано-Франківська'
+        pageTitle: () => 'IFCityEvent - Відкрий цікаві події Івано-Франківська. Афіша подій'
     },
     {
         path: '/search',
@@ -93,7 +101,7 @@ export default [
         component: ListPage,
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Всі події - IFCityEvent'
+        pageTitle: () => 'Пошук. Афіша подій Івано-Франківська, події у Івано-Франкіську на сьогодні - IFCityEvent'
     },
     {
         path: '/legacy',
@@ -187,51 +195,14 @@ export const mainMenuRoutes = [
         title: 'Для дітей'
     },
     {
-        path: `/tags/${encodeURIComponent('Великдень-2018')}`,
-        title: 'Великдень'
-    },
-    {
         path: `/tags/${encodeURIComponent('День Матері 2018')}`,
         title: 'День Матері'
     },
+    {
+        path: `/tags/${encodeURIComponent('День міста')}`,
+        title: 'День міста'
+    },
 ];
-
-export const categoryMenuRoutes = path => {
-    path = path || 'category';
-    return [
-            {
-                path: `/search`,
-                title: 'Всі події'
-            }, {
-                path: `/${path || ''}/film`,
-                title: 'Кіно'
-            }, {
-                path: `/${path || ''}/concert`,
-                title: 'Концерти'
-            }, {
-                path: `/${path || ''}/sport`,
-                title: 'Спорт'
-            }, {
-                path: `/${path || ''}/teatr`,
-                title: 'Театр'
-            }, {
-                path: `/${path || ''}/exibition`,
-                title: 'Виставки'
-            }, {
-                path: `/${path || ''}/disco`,
-                title: 'Клуб'
-            }, {
-                path: `/${path || ''}/not_set`,
-                title: 'Масові заходи'
-            }, {
-                path: `/${path || ''}/attention`,
-                title: 'Увага!'
-            }, {
-                path: `/${path || ''}/discounts`,
-                title: 'Акції та знижки'
-            }
-        ];
-};
 
 export const adminMenuRoutes = [
     {

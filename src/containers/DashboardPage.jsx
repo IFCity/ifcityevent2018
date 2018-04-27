@@ -92,7 +92,7 @@ const mapStateToProps = (state) => {
         },
         child: state.child,
         promo: {
-            data: state.events.data.filter(item => item.category === 'promo'),
+            data: state.events.data.filter(item => item.category === 'discounts'),
         },
         attention: {
             data: state.events.data.filter(item => item.category === 'attention'),

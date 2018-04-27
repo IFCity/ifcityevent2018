@@ -336,7 +336,8 @@ class Events extends Component {
                 start_time: moment().format('YYYY-MM-DDT10:00:00ZZ'),
                 end_time: '',
                 tags: '',
-                isSync: false
+                isSync: false,
+                isForChildren: false
             },
             modalTitle: 'Нова подія',
             editType: 'new'

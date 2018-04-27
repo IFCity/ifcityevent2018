@@ -11,6 +11,10 @@ export const eventSimpleOneTimeStr = (eventTime) => {
     return moment(eventTime).format('D MMM YYYY о LT');
 };
 
+export const eventOneTimeStrFull = (eventTime) => {
+    return moment(eventTime).format('D MMM YYYY, LT');
+};
+
 export const eventSameDateStr = ({start_time, end_time}) => {
     return `${moment(start_time).format('D MMM YYYY, LT')} - ${moment(end_time).format('LT')}`;
 };
@@ -26,13 +30,15 @@ export const eventSimpleRangeStr = ({start_time, end_time}) => {
 export const eventTimeObj = ({start_time, end_time}) => {
     if (!start_time) {
         return {
-            shortTime: 'Дата події не вказана'
+            shortTime: 'Дата події не вказана',
+            fullTime:  'Дата події не вказана'
         };
     }
     if (!end_time) {
         return {
             startTime: moment(start_time).format('YYYY-MM-DDThh:mm'),
-            shortTime: eventOneTimeStr(start_time)
+            shortTime: eventOneTimeStr(start_time),
+            fullTime: eventOneTimeStrFull(start_time)
         };
     }
     if (moment(start_time).format('LL') === moment(end_time).format('LL')) {

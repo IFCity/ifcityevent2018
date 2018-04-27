@@ -50,4 +50,8 @@ export default {
         data: [],
         metadata: {}
     },
+    tagsLookup: {
+        data: [],
+        metadata: {}
+    },
 };

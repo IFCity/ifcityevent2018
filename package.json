@@ -1,6 +1,6 @@
 {
   "name": "IFCityEvent2018",
-  "version": "5.1.0",
+  "version": "7.0.0",
   "description": "IFCityEvent2018 universal application",
   "main": "index.js",
   "scripts": {
@@ -66,6 +66,7 @@
     "moment": "^2.20.1",
     "node-fetch": "^1.7.3",
     "prop-types": "^15.6.0",
+    "query-string": "^6.0.0",
     "react": "^16.2.0",
     "react-add-to-calendar": "^0.1.5",
     "react-bootstrap": "^0.31.5",

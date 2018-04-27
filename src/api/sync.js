@@ -22,7 +22,8 @@ const transformEvent = ({event,categories}) => {
         phone: NULL_VALUE,
         weeklyRecurrence: NULL_VALUE,
         imageLink: NULL_VALUE,
-        description: NULL_VALUE
+        description: NULL_VALUE,
+        isForChildren: !!event.isForChildren
     };
     //ticketLink
     if (event.ticketUrl) {

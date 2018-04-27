@@ -167,7 +167,6 @@ class EventFullScreen extends Component {
         const {event, categories} = this.props;
         const aSiseSize = 7;
         const startedBefore = moment(event.start_time).isBefore(moment(), 'day');
-        const calendarDate = startedBefore ? moment(event.start_time).format('о HH:mm') : moment(event.start_time).calendar();
         const place = placeObj(event.place);
         const tagsArray = _(_.isArray(event.tags) ? event.tags : (event.tags || '').split(','))
             .map(item => {
@@ -256,6 +255,8 @@ class EventFullScreen extends Component {
                         <h3>Локація</h3>
                         <span className="date-full">{place.name}</span>
                         {place.location ? <span className="date-full">{place.location}</span> : null}
+                        <h3>Телефон</h3>
+                        {event.phone ? <span className="date-full">{event.phone}</span> : null}
                         <h3>Категорія</h3>
                         <EventType category={event.category} categories={categories}/>
                     </Col>

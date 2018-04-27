@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, OverlayTrigger, Tooltip, Button} from 'react-bootstrap';
+import {Row, Col} from 'react-bootstrap';
 import moment from 'moment';
 import _ from 'lodash';
-import {Link} from 'react-router-dom';
+import queryString from 'query-string';
 
 import {getEventsAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
@@ -18,8 +18,8 @@ import appSettings from '../constants/aplication';
 
 import {EventSmall} from './event/event.jsx';
 
-import { Sticky } from '../components/sticky.jsx';
-import {categoryMenuRoutes} from "../routes";
+import {Sticky} from '../components/sticky.jsx';
+import {getTagsLookupAction} from '../actions/tagslookupActions';
 
 moment.updateLocale('uk', {
     calendar: {
@@ -74,7 +74,7 @@ const isLater = event =>
 
 class EventsList extends Component {
     render() {
-        let { events, additionalCard } = this.props;
+        let {events, additionalCard} = this.props;
         return (
             <div>
                 {events.length ?
@@ -96,65 +96,12 @@ class EventsList extends Component {
     }
 }
 
-class EventsListOld extends Component {
-    render() {
-        const today = moment();
-        const tomorrow = moment().add(1, 'days');
-        const todayDivider = <Divider text={`Сьогодні, ${today.format('D MMMM')}`}/>;
-        const tomorrowDivider = <Divider text={`Завтра, ${tomorrow.format('D MMMM')}`}/>;
-        const laterDivider = <Divider text="Пізніше"/>;
-        let {events, title} = this.props;
-        return (
-            <div>
-                {title ? <Row><Col md={12}><h1>{title}</h1></Col></Row> : null}
-                {events.length ?
-                    events.map((event, index) => {
-                        let divider = null;
-                        if (index === 0) {
-                            if (isToday(event)) {
-                                divider = todayDivider;
-                            }
-                            if (isTomorrow(event)) {
-                                divider = tomorrowDivider;
-                            }
-                            if (isLater(event)) {
-                                divider = laterDivider;
-                            }
-                        } else {
-                            if (moment(event.startCalcDate).format('YYYY-MM-DD') !== moment(events[index - 1].startCalcDate).format('YYYY-MM-DD')) {
-                                if (isToday(event)) {
-                                    divider = todayDivider;
-                                }
-                                if (isTomorrow(event)) {
-                                    divider = tomorrowDivider;
-                                }
-                                if (isLater(event) && (isToday(events[index - 1]) || isTomorrow(events[index - 1]))) {
-                                    divider = laterDivider;
-                                }
-                            }
-                        }
-                        return (
-                            <EventSmall
-                                {...this.props}
-                                divider={divider}
-                                deepLinking
-                                event={event}
-                                even={index % 2 === 0}
-                            />
-                        );
-                    })
-                    : <NoData/>}
-            </div>
-        );
-    }
-}
-
 class ContentDescription extends Component {
     render() {
         return (
             <Row className="content-description">
                 <Col xs={12}>
-                    <div dangerouslySetInnerHTML={{ __html: this.props.content.replace(/\n/g, '<br />')}} />
+                    <div dangerouslySetInnerHTML={{__html: this.props.content.replace(/\n/g, '<br />')}}/>
                 </Col>
             </Row>
         );
@@ -168,7 +115,8 @@ class Events extends Component {
         this.fetchCategories = this.fetchCategories.bind(this);
         this.toggleGroup = this.toggleGroup.bind(this);
         this.state = {
-            groupEvents: false
+            groupEvents: false,
+            query: queryString.parse(props.location.search || '?period=all')
         }
     }
 
@@ -178,12 +126,16 @@ class Events extends Component {
         }
         this.search();
         this.fetchCategories();
+        this.fetchTagsLookup();
     }
 
     componentWillReceiveProps(nextProps) {
         if (typeof window !== undefined) {
             window.scrollTo(0, 0);
         }
+        this.setState({
+            query: queryString.parse(nextProps.location.search || '?period=all')
+        });
         if ((this.props.match.params.categoryid !== nextProps.match.params.categoryid) ||
             (this.props.match.params.tagname !== nextProps.match.params.tagname) ||
             (this.props.match.params.holiday !== nextProps.match.params.holiday)) {
@@ -199,6 +151,11 @@ class Events extends Component {
         this.props.dispatch(getCategoriesAction());
     }
 
+    fetchTagsLookup() {
+        console.log('fetch');
+        this.props.dispatch(getTagsLookupAction());
+    }
+
     toggleGroup() {
         this.setState({groupEvents: !this.state.groupEvents});
     }
@@ -207,21 +164,34 @@ class Events extends Component {
         const today = moment();
         const tomorrow = today.clone().add(1, 'days');
         const later = today.clone().add(2, 'days');
-        const {data, metadata} = this.props.events;
+        let {data, metadata} = this.props.events;
         let todayEvents = [];
         let tomorrowEvents = [];
         let laterEvents = [];
+
+        if (this.state.query.period === 'today') {
+            data = _(data)
+                .filter(event => isToday(event))
+                .value();
+        }
+
+        if (this.state.query.period === 'tomorrow') {
+            data = _(data)
+                .filter(event => isTomorrow(event))
+                .value();
+        }
+
         _(data).map(event => {
-                if (isToday(event)) {
-                    todayEvents.push(event);
-                }
-                if (isTomorrow(event)) {
-                    tomorrowEvents.push(event);
-                }
-                if (isLater(event)) {
-                    laterEvents.push(event);
-                }
-            })
+            if (isToday(event) && ((this.state.query.period === 'today') || (this.state.query.period === 'all'))) {
+                todayEvents.push(event);
+            }
+            if (isTomorrow(event) && ((this.state.query.period === 'tomorrow') || (this.state.query.period === 'all'))) {
+                tomorrowEvents.push(event);
+            }
+            if (isLater(event) && ((this.state.query.period === 'all'))) {
+                laterEvents.push(event);
+            }
+        })
             .value();
         if (this.state.groupEvents) {
             todayEvents = _(todayEvents)
@@ -239,10 +209,15 @@ class Events extends Component {
             content = _.get(_(this.props.categories.data)
                 .filter(item => item.id === this.props.match.params.categoryid)
                 .value(), '[0].descr', '');
+        } else if (this.props.match.params.tagname) {
+            content = _.get(_(this.props.tagsLookup.data)
+                .filter(item => item.tag === decodeURIComponent(this.props.match.params.tagname).toLocaleLowerCase())
+                .value(), '[0].descr', '');
         }
         return [
             <Toolbar
                 params={this.props.match.params}
+                query={queryString.parse(this.props.location.search)}
                 toggleGroup={this.toggleGroup}
                 groupEvents={this.state.groupEvents}
             />,
@@ -257,10 +232,13 @@ class Events extends Component {
                             </Col>
                         </Row>
                     ) : null}
+                {(data.length === 0) && !metadata.isProcessing ?
+                    <NoData><h3>Не знайдено заходів за Вашим запитом</h3></NoData> : null}
                 {todayEvents.length > 0 ? [
                     <Sticky className="sticky-one" data={data}>
                         <div className="container">
                             <h3>Сьогодні, <strong>{today.format('D MMMM')}</strong></h3>
+                            <h4>Події в Івано-Франківську сьогодні</h4>
                         </div>
                     </Sticky>,
                     <EventsList
@@ -273,6 +251,7 @@ class Events extends Component {
                     <Sticky className="sticky-two" data={data}>
                         <div className="container">
                             <h3>Завтра, <strong>{tomorrow.format('D MMMM')}</strong></h3>
+                            <h4>Події в Івано-франківську завтра</h4>
                         </div>
                     </Sticky>,
                     <EventsList

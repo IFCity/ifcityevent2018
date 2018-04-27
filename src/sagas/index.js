@@ -19,7 +19,8 @@ import {
     watchChild,
     watchPromo,
     watchAttention,
-    watchGetAuthors
+    watchGetAuthors,
+    watchTagsLookup
 } from './watchers';
 
 
@@ -44,6 +45,7 @@ export default function* root() {
         fork(watchChild),
         fork(watchPromo),
         fork(watchAttention),
-        fork(watchGetAuthors)
+        fork(watchGetAuthors),
+        fork(watchTagsLookup)
     ]);
 }

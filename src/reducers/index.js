@@ -11,6 +11,7 @@ import child from './childReducer';
 import promo from './promoReducer';
 import attention from './attentionReducer';
 import authors from './authorsReducer';
+import tagsLookup from './tagsLookupReducer';
 import { routerReducer } from 'react-router-redux';
 
 
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
     promo,
     attention,
     authors,
+    tagsLookup,
     routing: routerReducer
 });
 

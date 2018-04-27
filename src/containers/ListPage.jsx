@@ -45,14 +45,20 @@ const mapStateToProps = (state, props) => {
         data = data.filter(item => item.category === props.match.params.categoryid);
     }
     if (props.match.params.tagname) {
-        data = data.filter(item => (item.tags || '').toUpperCase().includes(decodeURIComponent(props.match.params.tagname).toUpperCase()));
+        data = data.filter(item => (item.tags || '').toLocaleUpperCase().includes(decodeURIComponent(props.match.params.tagname).toLocaleUpperCase()));
     }
+    console.log("STATE -----");
+    console.log(state);
     return {
         events: {
             data: data,
             metadata: state.events.metadata
         },
-        categories: state.categories
+        categories: state.categories,
+        tagsLookup: state.tagsLookup || {
+            data: [],
+            metadata: {}
+        }
     };
 };
 

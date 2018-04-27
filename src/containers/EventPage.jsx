@@ -32,12 +32,12 @@ class EventPage extends Component {
     filterRelatedEvents(data) {
         let result = [];
         if (data && data.tags) {
-            const tag = data.tags.split(',')[0].trim();
+            const tag = data.tags.split(',')[0].trim().toLocaleUpperCase();
             result = this.props.events.data.filter(item => {
-                if (item.id === data.id) {
+                if (item._id === data._id) {
                     return false;
                 }
-                return (item.tags || '').toUpperCase().includes(tag.toUpperCase());
+                return (item.tags || '').toLocaleUpperCase().includes(tag);
             });
         }
         return result;
@@ -47,7 +47,7 @@ class EventPage extends Component {
         props.dispatch(getEventsAction());
         props.dispatch(getEventAction(props.match.params.eventid));
         props.dispatch(incViewEventAction(props.match.params.eventid));
-        this.filterRelatedEvents();
+        this.filterRelatedEvents(props.event.data);
     }
 
     fetchCategories() {
