@@ -1,10 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
 import {Row, Col} from 'react-bootstrap';
-
-import Events from '../views/events.jsx';
-import MostViewed from '../views/mostViewed.jsx';
 
 
 class AddEventPage extends Component {

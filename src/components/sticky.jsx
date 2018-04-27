@@ -12,7 +12,6 @@ export class Sticky extends Component {
     update() {
         const topOffset = 51;
         const stickyHeight = this.props.sHeight || 40;
-        console.log(stickyHeight);
         const setInitialHeights = (elements) => {
             [].forEach.call(elements, (sticky, index) => {
                 let offset = topOffset;

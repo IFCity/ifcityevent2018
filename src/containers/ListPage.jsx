@@ -47,8 +47,6 @@ const mapStateToProps = (state, props) => {
     if (props.match.params.tagname) {
         data = data.filter(item => (item.tags || '').toLocaleUpperCase().includes(decodeURIComponent(props.match.params.tagname).toLocaleUpperCase()));
     }
-    console.log("STATE -----");
-    console.log(state);
     return {
         events: {
             data: data,

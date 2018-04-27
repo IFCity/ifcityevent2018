@@ -30,10 +30,6 @@ export default {
         },
         metadata: {}
     },
-    mostviewed: {
-        data: [],
-        metadata: {}
-    },
     child: {
         data: [],
         metadata: {}

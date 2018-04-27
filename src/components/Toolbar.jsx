@@ -57,7 +57,6 @@ export const periodMenuRoutes = [
 class Toolbar extends Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             categoryId: props.params.categoryid ? `/category/${props.params.categoryid}` : '/search',
             period: (props.query && props.query.period) || 'all'

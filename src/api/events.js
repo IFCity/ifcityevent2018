@@ -1,6 +1,5 @@
 import fetch from '../services/fetchAdapter';
 import appSettings from '../constants/aplication';
-import moment from "moment/moment";
 
 
 export const fetchEvents = (payload) => {
@@ -317,23 +316,6 @@ export const addEvent = (event) => {
                     success: true
                 }
             };
-        })
-        .catch(ex => (
-            {
-                metadata: {
-                    error: ex
-                }
-            }
-        ));
-};
-
-export const fetchMostViewedEvents = (payload) => {
-    return fetch(`${appSettings.apiURL}/events/mostviewed`)
-        .then(response => {
-            return response.json();
-        })
-        .then(json => {
-            return { data: json };
         })
         .catch(ex => (
             {

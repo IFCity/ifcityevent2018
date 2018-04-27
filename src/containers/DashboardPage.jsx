@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import Helmet from 'react-helmet';
+import _ from 'lodash';
 
 import { AlsoCards } from '../views/cards.jsx';
 import { PopularEventRegion, AttentionEventRegion, PromoEventRegion, TodayEventRegion, FilmEventRegion,
     ChildEventRegion } from '../views/eventRegions.jsx';
-import {getMostViewedAction} from "../actions/mostviewedActions";
 import {getEventsAction} from "../actions/eventsActions";
-import {getChildAction} from "../actions/childActions";
-import {getPromoAction} from "../actions/promoActions";
 import {getCategoriesAction} from "../actions/categoriesActions";
-import {getAttentionAction} from "../actions/attentionActions";
+import pageTitles from '../constants/pageTitles';
 
 
 class DashboardPage extends Component {
@@ -31,17 +30,15 @@ class DashboardPage extends Component {
 
     fetch() {
         this.props.dispatch(getCategoriesAction());
-
-        this.props.dispatch(getAttentionAction());
-        this.props.dispatch(getMostViewedAction());
-        this.props.dispatch(getChildAction());
-        this.props.dispatch(getPromoAction());
         this.props.dispatch(getEventsAction());
     }
 
     render() {
         return (
             <div className="content-wrapper">
+                <Helmet>
+                    <title>{pageTitles.dashboard}</title>
+                </Helmet>
                 <AttentionEventRegion
                     {...this.props}
                     hideLinks
@@ -86,7 +83,12 @@ DashboardPage.propTypes = {
 const mapStateToProps = (state) => {
     return {
         events: state.events,
-        mostviewed: state.mostviewed,
+        mostviewed: {
+            data: _(state.events.data)
+                .filter(item => item.editorChoice)
+                .sortBy(item => (item.view_count || 0) * -1)
+                .value()
+        },
         film: {
             data: state.events.data.filter(item => item.category === 'film'),
         },

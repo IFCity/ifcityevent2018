@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import Helmet from 'react-helmet';
 
 import {getEventAction, getEventsAction, incViewEventAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
@@ -59,6 +60,9 @@ class EventPage extends Component {
         const relatedEvents = this.filterRelatedEvents(data);
         return (
             <div className="content-wrapper">
+                <Helmet>
+                    <title>{data.name || 'Завантаження'} - IFCityEvent</title>
+                </Helmet>
                 <Loading {...metadata} mask={true}>
                     <EventFullScreen
                         {...this.props}

@@ -4,6 +4,7 @@ import {Row, Col} from 'react-bootstrap';
 import moment from 'moment';
 import _ from 'lodash';
 import queryString from 'query-string';
+import Helmet from 'react-helmet';
 
 import {getEventsAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
@@ -13,6 +14,7 @@ import {
     EventPlace,
     EventPrice
 } from '../components/eventAttributes.jsx';
+import {eventTimeObj, placeObj, priceObj} from '../services/logicHelper';
 import Toolbar from '../components/Toolbar.jsx';
 import appSettings from '../constants/aplication';
 
@@ -35,11 +37,12 @@ export const EventText = (props) => {
     const detailedLink = `${appSettings.appUrl}/event/${event._id}`;
     return (
         <p>
-            {event.name}{' ('}
-            <EventPlace place={event.place} plain/>{'; '}
-            <EventTime event={event} plain/>{'; '}
-            <EventPrice event={event} plain/>{'; '}
-            {detailedLink}{')'}
+            {moment(event.start_time).format('hh:mm')}
+            {' - '}
+            {event.name}
+            {' - '}
+            {placeObj(event.place).name}{' ('}{placeObj(event.place).location}{') - '}
+            {detailedLink}
         </p>
     );
 };
@@ -114,9 +117,12 @@ class Events extends Component {
         this.search = this.search.bind(this);
         this.fetchCategories = this.fetchCategories.bind(this);
         this.toggleGroup = this.toggleGroup.bind(this);
+        this.getHelmet = this.getHelmet.bind(this);
+
         this.state = {
             groupEvents: false,
-            query: queryString.parse(props.location.search || '?period=all')
+            query: queryString.parse(props.location.search || '?period=all'),
+            helmet: this.getHelmet(props)
         }
     }
 
@@ -129,12 +135,25 @@ class Events extends Component {
         this.fetchTagsLookup();
     }
 
+    getHelmet(props) {
+        if (props.match.params.categoryid) {
+            const category = _.get(_(props.categories.data)
+                .filter(item => item.id === props.match.params.categoryid)
+                .value(), '[0]', {});
+            return category.name || '';
+        } else if (props.match.params.tagname) {
+            return `${decodeURIComponent(props.match.params.tagname || '')} - IFCityEvent`;
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
+        console.log(nextProps);
         if (typeof window !== undefined) {
             window.scrollTo(0, 0);
         }
         this.setState({
-            query: queryString.parse(nextProps.location.search || '?period=all')
+            query: queryString.parse(nextProps.location.search || '?period=all'),
+            helmet: this.getHelmet(nextProps)
         });
         if ((this.props.match.params.categoryid !== nextProps.match.params.categoryid) ||
             (this.props.match.params.tagname !== nextProps.match.params.tagname) ||
@@ -152,7 +171,6 @@ class Events extends Component {
     }
 
     fetchTagsLookup() {
-        console.log('fetch');
         this.props.dispatch(getTagsLookupAction());
     }
 
@@ -206,15 +224,19 @@ class Events extends Component {
         }
         let content = '';
         if (this.props.match.params.categoryid) {
-            content = _.get(_(this.props.categories.data)
+            const category = _.get(_(this.props.categories.data)
                 .filter(item => item.id === this.props.match.params.categoryid)
-                .value(), '[0].descr', '');
+                .value(), '[0]', {});
+            content = category.descr || '';
         } else if (this.props.match.params.tagname) {
             content = _.get(_(this.props.tagsLookup.data)
                 .filter(item => item.tag === decodeURIComponent(this.props.match.params.tagname).toLocaleLowerCase())
                 .value(), '[0].descr', '');
         }
         return [
+            <Helmet>
+                <title>{this.state.helmet}</title>
+            </Helmet>,
             <Toolbar
                 params={this.props.match.params}
                 query={queryString.parse(this.props.location.search)}

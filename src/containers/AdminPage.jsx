@@ -9,7 +9,7 @@ import Pages from '../views/admin/pages.jsx';
 import Events from '../views/admin/events.jsx';
 import Categories from '../views/admin/categories.jsx';
 import Users from '../views/admin/users.jsx';
-import TextParser from '../views/admin/textParser.jsx';
+import ShareHelper from '../views/admin/shareHelper.jsx';
 import { NotFound } from '../components/tools.jsx';
 import GoogleAnalytics from '../components/GoogleAnalytics.jsx';
 
@@ -40,10 +40,10 @@ const routes = [{
     exact: true,
     component: Users
 }, {
-    path: '/admin/text',
-    key: 'admin_text',
+    path: '/admin/tomorrow',
+    key: 'admin_tomorrow',
     exact: true,
-    component: TextParser
+    component: ShareHelper
 }];
 
 class AdminPage extends Component {

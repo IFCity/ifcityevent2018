@@ -13,7 +13,6 @@ import { getPagesSaga } from './pagesSaga';
 import { getUsersSaga } from './usersSaga';
 import { loginSaga, logoutSaga, checkStatusSaga } from './authorizationSaga';
 import { aggregateFBSaga } from './aggregationSaga';
-import { getMostviewedSaga } from './mostviewedSaga';
 import { getChildSaga } from './childSaga';
 import { getPromoSaga } from './promoSaga';
 import { getAttentionSaga } from './attentionSaga';
@@ -80,10 +79,6 @@ export function* watchCheckStatus() {
 
 export function* watchAggregateFB() {
     yield takeEvery(types.GET_AGGREGATION_REQUEST, aggregateFBSaga);
-}
-
-export function* watchMostviewed() {
-    yield takeEvery(types.GET_MOSTVIEWEDEVENTS_REQUEST, getMostviewedSaga);
 }
 
 export function* watchChild() {

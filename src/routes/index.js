@@ -2,19 +2,17 @@ import ListPage from '../containers/ListPage.jsx';
 import DashboardPage from '../containers/DashboardPage.jsx';
 import EventPage from '../containers/EventPage.jsx';
 import AdminPage from '../containers/AdminPage.jsx';
-import AuthorsPage from '../containers/AuthorsPage.jsx';
 import AddEventPage from '../containers/AddEventPage.jsx';
 import TermsPage from '../containers/TermsPage.jsx';
 import { fetchEvents, fetchEvent } from '../api/events';
 import { fetchCategories } from '../api/categories';
-import {fetchAuthors} from "../api/authors";
 
 import _ from 'lodash';
 import {fetchTagsLookup} from '../api/tagsLookup';
+import pageTitles from '../constants/pageTitles';
 
 
 const eventsLoadData = match => {
-    console.log("AAAAAAAAAA");
     let params = {};
     if (match && match.params.categoryid) {
         params.category = match.params.categoryid;
@@ -25,31 +23,19 @@ const eventsLoadData = match => {
     return Promise.all([fetchEvents(), fetchCategories(), fetchTagsLookup()]);
 };
 
-const eventsLoadDataWeekend = match => {
-    let params = {
-        weekend: true
-    };
-    if (match && match.params.categoryid) {
-        params.category = match.params.categoryid;
-    }
-    return Promise.all([fetchEvents(params), fetchCategories()]);
-};
-
 const eventsPreloadedState = data => {
-    console.log('============');
-    console.log(data[0]);
     return {
         events: {
-            data: data[0][0].data || [],
-            metadata: data[0][0].metadata || {}
+            data: _.get(data, '[0][0].data', []),
+            metadata: _.get(data, '[0][0].metadata' || {})
         },
         categories: {
-            data: data[0][1].data || [],
-            metadata : data[0][1].metadata || {}
+            data: _.get(data, '[0][1].data', []),
+            metadata : _.get(data, '[0][1].metadata', {})
         },
         tagsLookup: {
-            data: data[0][2].data || [],
-            metadata : data[0][2].metadata || {}
+            data: _.get(data, '[0][2].data', []),
+            metadata : _.get(data, '[0][2].metadata', {})
         }
     }
 };
@@ -61,25 +47,12 @@ const eventLoadData = match => {
 const eventPreloadedState = data => {
     return {
         event: {
-            data: data[0][0].data || [],
-            metadata: data[0][0].metadata || {}
+            data: _.get(data, '[0][0].data', []),
+            metadata: _.get(data, '[0][0].metadata', {})
         },
         categories: {
-            data: data[0][1].data || [],
-            metadata : data[0][1].metadata || {}
-        }
-    }
-};
-
-const authorsLoadData = () => {
-    return fetchAuthors();
-};
-
-const authorsPreloadedState = data => {
-    return {
-        authors: {
-            data: data[0].data || [],
-            metadata: data[0].metadata || {}
+            data: _.get(data, '[0][1].data', []),
+            metadata : _.get(data, '[0][1].metadata', {})
         }
     }
 };
@@ -92,7 +65,7 @@ export default [
         component: DashboardPage,
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'IFCityEvent - Відкрий цікаві події Івано-Франківська. Афіша подій'
+        pageTitle: () => pageTitles.dashboard
     },
     {
         path: '/search',
@@ -102,15 +75,6 @@ export default [
         loadData: () => eventsLoadData(),
         getPreloadedState: data => eventsPreloadedState(data),
         pageTitle: () => 'Пошук. Афіша подій Івано-Франківська, події у Івано-Франкіську на сьогодні - IFCityEvent'
-    },
-    {
-        path: '/legacy',
-        key: 'root',
-        exact: true,
-        component: ListPage,
-        loadData: () => eventsLoadData(),
-        getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: () => 'Всі події - IFCityEvent'
     },
     {
         path: '/category/:categoryid',
@@ -133,7 +97,7 @@ export default [
         component: EventPage,
         loadData: match => eventLoadData(match),
         getPreloadedState: data => eventPreloadedState(data),
-        pageTitle: data => `${data[0][0].data.name} - IFCityEvent`
+        pageTitle: data => `${_.get(data, '[0][0].data.name', '')} - IFCityEvent`
     },
     {
         path: '/admin',
@@ -142,22 +106,13 @@ export default [
         pageTitle: 'Адміністрування - IFCityEvent'
     },
     {
-        path: '/authors',
-        key: 'authors',
-        exact: true,
-        component: AuthorsPage,
-        loadData: () => authorsLoadData(),
-        getPreloadedState: data => authorsPreloadedState(data),
-        pageTitle: () => 'Організатори - IFCityEvent'
-    },
-    {
         path: '/tags/:tagname',
         key: 'tags',
         exact: true,
         component: ListPage,
         loadData: match => eventsLoadData(match),
         getPreloadedState: data => eventsPreloadedState(data),
-        pageTitle: (data, match) => `Пошук за тегом "${decodeURIComponent(match.params.tagname)}" - IFCityEvent`
+        pageTitle: (data, match) => `${decodeURIComponent(match.params.tagname)} - IFCityEvent`
     },
     {
         path: '/docs/addevent',
@@ -195,12 +150,16 @@ export const mainMenuRoutes = [
         title: 'Для дітей'
     },
     {
-        path: `/tags/${encodeURIComponent('День Матері 2018')}`,
-        title: 'День Матері'
+        path: `/tags/${encodeURIComponent('Design Village')}`,
+        title: 'Design Village'
     },
     {
         path: `/tags/${encodeURIComponent('День міста')}`,
         title: 'День міста'
+    },
+    {
+        path: `/tags/${encodeURIComponent('День Матері 2018')}`,
+        title: 'День Матері'
     },
 ];
 
@@ -221,7 +180,7 @@ export const adminMenuRoutes = [
         path: '/admin/users',
         title: 'Користувачі'
     }, {
-        path: '/admin/text',
-        title: 'Текстовий парсер'
+        path: '/admin/tomorrow',
+        title: 'Завтрашні події'
     }
 ];
