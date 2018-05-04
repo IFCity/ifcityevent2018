@@ -23,17 +23,34 @@ const isTomorrow = event =>
 
 class EventsList extends Component {
     render() {
-        const { events } = this.props;
+        const { events, categories } = this.props;
+        const categoryEvents = _(categories)
+            .map(category => <CategoryEvents category={category} events={events}/>)
+            .value();
         return (
             <div>
-                {events.length ?
-                    events.map(event => (
-                        <EventText
-                            {...this.props}
-                            event={event}
-                        />
-                    ))
-                    : <NoData/>}
+                {categoryEvents}
+            </div>
+        );
+    }
+}
+
+class CategoryEvents extends Component {
+    render() {
+        const { events, category } = this.props;
+        const categoryEvents = _(events)
+            .filter(item => item.category === category.id)
+            .map(event =>
+                <EventText
+                    {...this.props}
+                    event={event}
+                />
+            )
+            .value();
+        return (
+            <div>
+                <h5>{category.name}</h5>
+                {categoryEvents}
             </div>
         );
     }

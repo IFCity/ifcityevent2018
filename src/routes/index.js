@@ -181,6 +181,6 @@ export const adminMenuRoutes = [
         title: 'Користувачі'
     }, {
         path: '/admin/tomorrow',
-        title: 'Завтрашні події'
+        title: 'Розсилка - події на завтра'
     }
 ];

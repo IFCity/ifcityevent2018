@@ -1,5 +1,5 @@
 const dev = {
-    appUrl: 'http://localhost',
+    appUrl: '//localhost',
     FBPageId: '144789742902364',
     apiURL: 'http://localhost',
     port: 3030,
@@ -31,7 +31,7 @@ const prod = {
 export default {
     appName: 'IFCityEvent',
     GAID: 'UA-112754571-1',
-    ...prod,
+    ...dev,
     queries: {
         places: '&q=*&type=place&center=48.9166666667%2C24.7166666667&distance=10000&limit=200&fields=name,link,cover'
     },

@@ -117,6 +117,13 @@ class EventSmall extends Component {
                             {_.get(tagsArray, '[0]', null)}
                             {_.get(tagsArray, '[1]', null)}
                         </div>
+                        <span style={{
+                            color: '#ccc',
+                            position: 'absolute',
+                            right: '20px',
+                            margin: '8px 20px',
+                            fontSize: '10px'
+                        }}>{event.view_count}</span>
                         <span className="links share">
                             <OverlayTrigger placement="top" overlay={tooltip}>
                               <span className="glyphicon glyphicon-open" aria-hidden="true"

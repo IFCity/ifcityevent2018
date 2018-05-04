@@ -34,24 +34,17 @@ moment.updateLocale('uk', {
 
 export const EventText = (props) => {
     const {event} = props;
-    const detailedLink = `${appSettings.appUrl}/event/${event._id}`;
+    const detailedLink = `http:${appSettings.appUrl}/event/${event._id}`;
     return (
         <p>
-            {moment(event.start_time).format('hh:mm')}
+            {moment(event.start_time).format('HH:mm')}
             {' - '}
-            {event.name}
+            {`<a href="${detailedLink}" target="_blank">${event.name}</a>`}
             {' - '}
-            {placeObj(event.place).name}{' ('}{placeObj(event.place).location}{') - '}
-            {detailedLink}
+            {placeObj(event.place).name}{placeObj(event.place).location ? ` (${placeObj(event.place).location})` : ''}
         </p>
     );
 };
-
-const Divider = ({text}) => (
-    <div className="divider">
-        <span>{text}</span>
-    </div>
-);
 
 const isToday = event => moment(event.startCalcDate).isSame(moment(), 'day');
 
