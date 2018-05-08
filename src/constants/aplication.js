@@ -31,7 +31,7 @@ const prod = {
 export default {
     appName: 'IFCityEvent',
     GAID: 'UA-112754571-1',
-    ...dev,
+    ...prod,
     queries: {
         places: '&q=*&type=place&center=48.9166666667%2C24.7166666667&distance=10000&limit=200&fields=name,link,cover'
     },
