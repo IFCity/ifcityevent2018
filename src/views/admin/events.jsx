@@ -24,7 +24,8 @@ import {
     EventTags
 } from '../../components/eventAttributes.jsx';
 import EventForm from './form/eventForm.jsx';
-import moment from "moment/moment";
+import moment from "moment";
+import {eventTimeObj, placeObj, priceObj} from '../../services/logicHelper';
 
 
 class Event extends Component {
@@ -33,6 +34,7 @@ class Event extends Component {
         this.removeEvent = this.removeEvent.bind(this);
         this.updateEvent = this.updateEvent.bind(this);
         this.syncEvent = this.syncEvent.bind(this);
+        this.shareEvent = this.shareEvent.bind(this);
     }
 
     removeEvent() {
@@ -45,6 +47,10 @@ class Event extends Component {
 
     syncEvent() {
         this.props.syncEvent(this.props.event);
+    }
+
+    shareEvent() {
+        this.props.shareEvent(this.props.event);
     }
 
     render() {
@@ -99,6 +105,9 @@ class Event extends Component {
                         </Button>
                         : null
                     }
+                    <br/>
+                    <br/>
+                    <Button bsStyle="info" bsSize="small" onClick={this.shareEvent}>Поширити у ФБ</Button>
                 </td>
             </tr>
         );
@@ -262,6 +271,7 @@ class Events extends Component {
             new: true,
             showModal: false,
             showRemoveModal: false,
+            showShareModal: false,
             event: {},
             modalTitle: 'Нова подія'
         };
@@ -279,6 +289,9 @@ class Events extends Component {
         this.applyRemove = this.applyRemove.bind(this);
 
         this.applySync = this.applySync.bind(this);
+
+        this.shareEvent = this.shareEvent.bind(this);
+        this.closeShareModal = this.closeShareModal.bind(this);
     }
 
     componentDidMount() {
@@ -318,6 +331,10 @@ class Events extends Component {
         this.setState({ showRemoveModal: false });
     }
 
+    closeShareModal() {
+        this.setState({ showShareModal: false });
+    }
+
     applyRemove(event) {
         this.closeRemoveModal();
         this.props.dispatch(removeEventAction(event._id));
@@ -344,6 +361,14 @@ class Events extends Component {
         });
     }
 
+    shareEvent(event) {
+        this.setState({
+            showShareModal: true,
+            event: event,
+            modalTitle: `Поширити "${event.name}"`
+        });
+    }
+
     updateEvent(event) {
         let evt = _.cloneDeep(event);
         evt.isSync = false;
@@ -357,6 +382,9 @@ class Events extends Component {
 
     saveModal(event) {
         this.closeModal();
+        if (!event.end_time) {
+            event.end_time = '';
+        }
         if (this.state.editType === 'update') {
             this.props.dispatch(updateEventAction(event));
         } else {
@@ -388,6 +416,7 @@ class Events extends Component {
                             updateEvent={this.updateEvent}
                             removeEvent={this.removeEvent}
                             syncEvent={this.applySync}
+                            shareEvent={this.shareEvent}
                         />
                     </Loading>
                 </Col>
@@ -405,6 +434,11 @@ class Events extends Component {
                 show={this.state.showRemoveModal}
                 onHide={this.closeRemoveModal}
                 onRemove={this.applyRemove}
+            />,
+            <ShareDialog
+                event={this.state.event}
+                show={this.state.showShareModal}
+                onHide={this.closeShareModal}
             />
         ];
     }
@@ -426,6 +460,37 @@ class Dialog extends Component {
                 <Button onClick={onHide}>Закрити</Button>
             </Modal.Footer>
         </Modal>
+        );
+    }
+}
+
+class ShareDialog extends Component {
+    render() {
+        const {onHide, show, event} = this.props;
+        let text = `\<відредагувати опис нижче, затегати місце проведення, видалити посилання на сайт після рендерингу у ФБ\>\n\n${event.description}` +
+            `\n\n${event.name}` +
+            `\n\nВАРТІСТЬ: ${priceObj(event.price).str}` +
+            `\n\nДАТА І ЧАС\n${eventTimeObj(event).fullTime}` +
+            `\n\nЛОКАЦІЯ\n` +
+            `${event.place && event.place.name ? event.place.name + '\n' : ''}` +
+            `${event.place && event.place.location && event.place.location.street ? event.place.location.street : ''}` +
+            `\n\nhttp:\/\/ifcityevent.com\/event\/${event._id}` +
+            `\n\nЯкщо Ви хочете завжди бути в курсі подій у Івано-Франківську - встановлюйте на свій смартфон додаток ` +
+            `IFCITY або долучайся до телеграм каналу https:\/\/t.me\/ifcity1`;
+        return (
+            <Modal show={show} onHide={onHide}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Поширити {event.name}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <textarea style={{width: '100%', height: '300px'}}>
+                        {text}
+                    </textarea>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={onHide}>Закрити</Button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 }

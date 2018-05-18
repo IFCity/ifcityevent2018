@@ -154,12 +154,8 @@ export const mainMenuRoutes = [
         title: 'Design Village'
     },
     {
-        path: `/tags/${encodeURIComponent('День міста')}`,
-        title: 'День міста'
-    },
-    {
-        path: `/tags/${encodeURIComponent('День Матері 2018')}`,
-        title: 'День Матері'
+        path: `/tags/${encodeURIComponent('День Вуличної Музики-2018')}`,
+        title: 'День Вуличної Музики'
     },
 ];
 

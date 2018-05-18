@@ -41,7 +41,7 @@ const GroupEvents = (props) => {
                 });
         })
         .value();
-    return `${title}\n${text}`;
+    return `${title}\<br\/\>\n${text}`;
 };
 
 class ShareHelper extends Component {

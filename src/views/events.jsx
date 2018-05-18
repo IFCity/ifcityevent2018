@@ -9,12 +9,7 @@ import Helmet from 'react-helmet';
 import {getEventsAction} from '../actions/eventsActions';
 import {getCategoriesAction} from '../actions/categoriesActions';
 import {NoData, Loading} from '../components/tools.jsx';
-import {
-    EventTime,
-    EventPlace,
-    EventPrice
-} from '../components/eventAttributes.jsx';
-import {eventTimeObj, placeObj, priceObj} from '../services/logicHelper';
+import {placeObj} from '../services/logicHelper';
 import Toolbar from '../components/Toolbar.jsx';
 import appSettings from '../constants/aplication';
 
@@ -35,7 +30,7 @@ moment.updateLocale('uk', {
 export const EventText = (props) => {
     const {event} = props;
     const detailedLink = `http:${appSettings.appUrl}/event/${event._id}`;
-    return `${moment(event.start_time).format('HH:mm')} <a href="${detailedLink}" target="_blank">${event.name}</a> - ${placeObj(event.place).name}${placeObj(event.place).location ? ` (${placeObj(event.place).location})` : ''}\n`;
+    return `${moment(event.start_time).format('HH:mm')} <a href="${detailedLink}" target="_blank">${event.name}</a> - ${placeObj(event.place).name}${placeObj(event.place).location ? ` (${placeObj(event.place).location})` : ''}\<br\/\>\n`;
 };
 
 const isToday = event => moment(event.startCalcDate).isSame(moment(), 'day');
@@ -132,7 +127,6 @@ class Events extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
         if (typeof window !== undefined) {
             window.scrollTo(0, 0);
         }
