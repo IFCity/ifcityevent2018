@@ -150,12 +150,8 @@ export const mainMenuRoutes = [
         title: 'Для дітей'
     },
     {
-        path: `/tags/${encodeURIComponent('Design Village')}`,
-        title: 'Design Village'
-    },
-    {
-        path: `/tags/${encodeURIComponent('День Вуличної Музики-2018')}`,
-        title: 'День Вуличної Музики'
+        path: `/tags/${encodeURIComponent('Porto Franko')}`,
+        title: 'Porto Franko'
     },
 ];
 
